@@ -30,7 +30,8 @@
 /web-app/plugins
 
 # "temporary" build files
-/target
+target/
+target-eclipse/
 
 # =========================
 # Operating System Files
@@ -78,3 +79,7 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+*.classpath
+*.project
+.gradle/
+.settings/
