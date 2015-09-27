@@ -24,9 +24,11 @@
 			<thead>
 					<tr>
 					
+						<g:sortableColumn property="number" title="${message(code: 'cr.number.label', default: 'Number')}" />
+					
 						<g:sortableColumn property="description" title="${message(code: 'cr.description.label', default: 'Description')}" />
 					
-						<g:sortableColumn property="stage" title="${message(code: 'cr.stage.label', default: 'Stage')}" />
+						<g:sortableColumn property="status" title="${message(code: 'cr.status.label', default: 'Status')}" />
 					
 					</tr>
 				</thead>
@@ -34,9 +36,11 @@
 				<g:each in="${crInstanceList}" status="i" var="crInstance">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 					
-						<td><g:link action="show" id="${crInstance.id}">${fieldValue(bean: crInstance, field: "description")}</g:link></td>
+						<td><g:link action="show" id="${crInstance.id}">${fieldValue(bean: crInstance, field: "number")}</g:link></td>
 					
-						<td>${fieldValue(bean: crInstance, field: "stage")}</td>
+						<td>${fieldValue(bean: crInstance, field: "description")}</td>
+					
+						<td>${fieldValue(bean: crInstance, field: "status")}</td>
 					
 					</tr>
 				</g:each>

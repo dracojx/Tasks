@@ -9,6 +9,7 @@ import grails.transaction.Transactional
 class TaskController {
 	
 	def crService
+	def logService
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
@@ -18,9 +19,6 @@ class TaskController {
     }
 
     def show(Task taskInstance) {
-		taskInstance.properties.each {
-			println it;
-		}
         respond taskInstance
     }
 
@@ -39,14 +37,17 @@ class TaskController {
             respond taskInstance.errors, view:'create'
             return
         }
+		
+		if(params.cr) {
+			def crs = crService.createCrs(params.cr)
+			taskInstance.setCrs(crs)
+		}
 
         taskInstance.save flush:true
 		
-		if(params.crs) {
-			def numbers = crs.split(",")
-			numbers.each {
-				crService.createCr(it)
-			}
+		if(params.product) {
+			def logs = logService.createLogByTask(params.product, taskInstance)
+			taskInstance.setLogs(logs)
 		}
 
         request.withFormat {
@@ -73,9 +74,19 @@ class TaskController {
             respond taskInstance.errors, view:'edit'
             return
         }
+		
+		if(params.cr) {
+			def crs = crService.createCrs(params.cr)
+			taskInstance.getCrs().addAll(crs)
+		}
 
         taskInstance.save flush:true
-
+		
+		if(params.product) {
+			def logs = logService.createLogByTask(params.product, taskInstance)
+			taskInstance.setLogs(logs)
+		}
+		
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'Task.label', default: 'Task'), taskInstance.id])

@@ -1,19 +1,23 @@
 package draco.tasks
 
-class Log {
+class Log implements Comparable{
 	String type
-	Task task
 	Date updateTime
 
-	static belongsTo = [product: Product]
+	static belongsTo = [task: Task, product: Product]
 	
     static constraints = {
 		type(inList: ["c", "u", "d"]) //新增，修改，删除
-		task(nullable:true, blank:true)
     }
 	
 	public String toString() {
 		def user = task?.getUser()
-		return "$task $user,$updateTime"
+		def time = updateTime.format("yyyy-MM-dd HH:mm:ss")
+		return "$task $user, $time"
+	}
+
+	@Override
+	public int compareTo(Object o) {
+		0 - updateTime.compareTo(o.updateTime)
 	}
 }

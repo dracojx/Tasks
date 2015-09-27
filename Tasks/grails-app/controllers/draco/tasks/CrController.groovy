@@ -7,6 +7,7 @@ import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
 class CrController {
+	def crService
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
@@ -61,6 +62,11 @@ class CrController {
             respond crInstance.errors, view:'edit'
             return
         }
+		
+		if(params.product) {
+			def products = crService.updateCr(params.product)
+			crInstance.getProducts().addAll(products)
+		}
 
         crInstance.save flush:true
 

@@ -39,7 +39,7 @@ class ProductController {
         productInstance.save flush:true
 		
 		if(params.req) {
-			logService.createLog("c", params.req, productInstance)
+			logService.createLogByProduct(params.req, productInstance)
 		}
 
         request.withFormat {
@@ -70,8 +70,7 @@ class ProductController {
         productInstance.save flush:true
 		
 		if(params.req) {
-			def type = productInstance.getLogs().size() == 0 ? "c":"u"
-			logService.createLog(type, params.req, productInstance)
+			logService.createLogByProduct(params.req, productInstance)
 		}
 
         request.withFormat {

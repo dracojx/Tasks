@@ -2,6 +2,15 @@
 
 
 
+<div class="fieldcontain ${hasErrors(bean: crInstance, field: 'number', 'error')} required">
+	<label for="number">
+		<g:message code="cr.number.label" default="Number" />
+		<span class="required-indicator">*</span>
+	</label>
+	<g:textField name="number" required="" value="${crInstance?.number}"/>
+
+</div>
+
 <div class="fieldcontain ${hasErrors(bean: crInstance, field: 'description', 'error')} ">
 	<label for="description">
 		<g:message code="cr.description.label" default="Description" />
@@ -11,21 +20,21 @@
 
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: crInstance, field: 'stage', 'error')} required">
-	<label for="stage">
-		<g:message code="cr.stage.label" default="Stage" />
+<div class="fieldcontain ${hasErrors(bean: crInstance, field: 'status', 'error')} required">
+	<label for="status">
+		<g:message code="cr.status.label" default="Status" />
 		<span class="required-indicator">*</span>
 	</label>
-	<g:select name="stage" from="${crInstance.constraints.stage.inList}" required="" value="${crInstance?.stage}" valueMessagePrefix="cr.stage"/>
+	<g:select name="status" from="${crInstance.constraints.status.inList}" required="" value="${crInstance?.status}" valueMessagePrefix="cr.status"/>
 
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: crInstance, field: 'products', 'error')} ">
-	<label for="products">
-		<g:message code="cr.products.label" default="Products" />
+<div class="fieldcontain">
+	<label for="product">
+		<g:message code="product.label" default="Product" />
 		
 	</label>
-	<g:select name="products" from="${draco.tasks.Product.list()}" multiple="multiple" optionKey="id" size="5" value="${crInstance?.products*.id}" class="many-to-many"/>
+	<g:textField name="product" placeholder="${message(code: 'default.textField.placeholder.separated') }" />
 
 </div>
 

@@ -54,16 +54,7 @@
 				<li class="fieldcontain">
 					<span id="status-label" class="property-label"><g:message code="task.status.label" default="Status" /></span>
 					
-						<span class="property-value" aria-labelledby="status-label"><g:fieldValue bean="${taskInstance}" field="status"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${taskInstance?.stage}">
-				<li class="fieldcontain">
-					<span id="stage-label" class="property-label"><g:message code="task.stage.label" default="Stage" /></span>
-					
-						<span class="property-value" aria-labelledby="stage-label"><g:fieldValue bean="${taskInstance}" field="stage"/></span>
+						<span class="property-value" aria-labelledby="status-label"><g:message code="task.status.${fieldValue(bean:taskInstance, field:'status') }" /></span>
 					
 				</li>
 				</g:if>
@@ -83,6 +74,17 @@
 					
 						<g:each in="${taskInstance.crs}" var="c">
 						<span class="property-value" aria-labelledby="crs-label"><g:link controller="cr" action="show" id="${c.id}">${c?.encodeAsHTML()}</g:link></span>
+						</g:each>
+					
+				</li>
+				</g:if>
+			
+				<g:if test="${taskInstance?.logs}">
+				<li class="fieldcontain">
+					<span id="products-label" class="property-label"><g:message code="task.products.label" default="Products" /></span>
+					
+						<g:each in="${taskInstance.logs}" var="l">
+						<span class="property-value" aria-labelledby="products-label"><g:link controller="product" action="show" id="${l.product.id}">${l?.product?.encodeAsHTML()}</g:link></span>
 						</g:each>
 					
 				</li>

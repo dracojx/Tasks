@@ -92,21 +92,3 @@
 
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: productInstance, field: 'logs', 'error')} ">
-	<label for="logs">
-		<g:message code="product.logs.label" default="Logs" />
-		
-	</label>
-	
-<ul class="one-to-many">
-<g:each in="${productInstance?.logs?}" var="l">
-    <li><g:link controller="log" action="show" id="${l.id}">${l?.encodeAsHTML()}</g:link></li>
-</g:each>
-<li class="add">
-<g:link controller="log" action="create" params="['product.id': productInstance?.id]">${message(code: 'default.add.label', args: [message(code: 'log.label', default: 'Log')])}</g:link>
-</li>
-</ul>
-
-
-</div>
-

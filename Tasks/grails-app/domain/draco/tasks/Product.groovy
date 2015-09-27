@@ -10,6 +10,7 @@ class Product {
 	Adapter source
 	Adapter target
 	boolean activate
+	SortedSet logs
 	
 	static hasMany = [logs: Log]
 
@@ -29,6 +30,6 @@ class Product {
 	}
 	
 	public String toString() {
-		return "$itemId($title)"
+		return "$itemId"
 	}
 }

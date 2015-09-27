@@ -32,8 +32,6 @@
 					
 						<g:sortableColumn property="status" title="${message(code: 'task.status.label', default: 'Status')}" />
 					
-						<g:sortableColumn property="stage" title="${message(code: 'task.stage.label', default: 'Stage')}" />
-					
 						<th><g:message code="task.user.label" default="User" /></th>
 					
 					</tr>
@@ -49,8 +47,6 @@
 						<td>${fieldValue(bean: taskInstance, field: "remark")}</td>
 					
 						<td>${fieldValue(bean: taskInstance, field: "status")}</td>
-					
-						<td>${fieldValue(bean: taskInstance, field: "stage")}</td>
 					
 						<td>${fieldValue(bean: taskInstance, field: "user")}</td>
 					

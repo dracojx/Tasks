@@ -54,7 +54,7 @@
 				<li class="fieldcontain">
 					<span id="mode-label" class="property-label"><g:message code="product.mode.label" default="Mode" /></span>
 					
-						<span class="property-value" aria-labelledby="mode-label"><g:fieldValue bean="${productInstance}" field="mode"/></span>
+						<span class="property-value" aria-labelledby="mode-label"><g:message code="product.mode.${fieldValue(bean:productInstance, field:'mode') }" /></span>
 					
 				</li>
 				</g:if>
@@ -109,7 +109,7 @@
 					<span id="logs-label" class="property-label"><g:message code="product.logs.label" default="Logs" /></span>
 					
 						<g:each in="${productInstance.logs}" var="l">
-						<span class="property-value" aria-labelledby="logs-label"><g:link controller="log" action="show" id="${l.id}">${l?.encodeAsHTML()}</g:link></span>
+						<span class="property-value" aria-labelledby="logs-label"><g:link controller="Task" action="show" id="${l.task.id}">${l?.encodeAsHTML()}</g:link></span>
 						</g:each>
 					
 				</li>

@@ -23,6 +23,15 @@
 			</g:if>
 			<ol class="property-list cr">
 			
+				<g:if test="${crInstance?.number}">
+				<li class="fieldcontain">
+					<span id="number-label" class="property-label"><g:message code="cr.number.label" default="Number" /></span>
+					
+						<span class="property-value" aria-labelledby="number-label"><g:fieldValue bean="${crInstance}" field="number"/></span>
+					
+				</li>
+				</g:if>
+			
 				<g:if test="${crInstance?.description}">
 				<li class="fieldcontain">
 					<span id="description-label" class="property-label"><g:message code="cr.description.label" default="Description" /></span>
@@ -32,11 +41,11 @@
 				</li>
 				</g:if>
 			
-				<g:if test="${crInstance?.stage}">
+				<g:if test="${crInstance?.status}">
 				<li class="fieldcontain">
-					<span id="stage-label" class="property-label"><g:message code="cr.stage.label" default="Stage" /></span>
+					<span id="status-label" class="property-label"><g:message code="cr.status.label" default="Status" /></span>
 					
-						<span class="property-value" aria-labelledby="stage-label"><g:fieldValue bean="${crInstance}" field="stage"/></span>
+						<span class="property-value" aria-labelledby="status-label"><g:message code="cr.status.${fieldValue(bean:crInstance, field:'status') }" /></span>
 					
 				</li>
 				</g:if>

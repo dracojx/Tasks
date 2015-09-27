@@ -1,19 +1,28 @@
 package draco.tasks
 
-class Cr {
-	String id
+class Cr implements Comparable{
+	String number
 	String description
-	String stage
+	String status
 	
 	static hasMany = [products: Product]
 
     static constraints = {
-		id(unique:true, nullable:false, blank:false)
+		number(unique:true, nullable:false, blank:false)
 		description(nullable:true, blank:true)
-		stage(inList:["1", "2", "3"]) //单元，集成，发布
+		status(inList:["0", "1", "2", "3"]) //0开发，1单元，2集成，3发布
     }
 	
+	static mapping = {
+		sort number: "desc"
+	}
+	
 	public String toString() {
-		return id
+		return number
+	}
+
+	@Override
+	public int compareTo(Object o) {
+		0 - number.compareTo(o.number)
 	}
 }
