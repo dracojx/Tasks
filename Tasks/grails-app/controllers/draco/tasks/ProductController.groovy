@@ -7,6 +7,7 @@ import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
 class ProductController {
+	def logService
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
@@ -36,6 +37,10 @@ class ProductController {
         }
 
         productInstance.save flush:true
+		
+		if(params.req) {
+			logService.createLog("c", params.req, productInstance)
+		}
 
         request.withFormat {
             form multipartForm {
@@ -63,6 +68,11 @@ class ProductController {
         }
 
         productInstance.save flush:true
+		
+		if(params.req) {
+			def type = productInstance.getLogs().size() == 0 ? "c":"u"
+			logService.createLog(type, params.req, productInstance)
+		}
 
         request.withFormat {
             form multipartForm {

@@ -11,7 +11,7 @@ class Product {
 	Adapter target
 	boolean activate
 	
-	static hasMany = [records: Record]
+	static hasMany = [logs: Log]
 
     static constraints = {
 		itemId(unique:true, nullable:false, blank:false)
@@ -23,6 +23,10 @@ class Product {
 		source(nullable:true, blank:true)
 		target(nullable:true, blank:true)
     }
+	
+	static mapping = {
+		sort itemId: "desc"
+	}
 	
 	public String toString() {
 		return "$itemId($title)"

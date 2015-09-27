@@ -104,12 +104,12 @@
 				</li>
 				</g:if>
 			
-				<g:if test="${productInstance?.records}">
+				<g:if test="${productInstance?.logs}">
 				<li class="fieldcontain">
-					<span id="records-label" class="property-label"><g:message code="product.records.label" default="Records" /></span>
+					<span id="logs-label" class="property-label"><g:message code="product.logs.label" default="Logs" /></span>
 					
-						<g:each in="${productInstance.records}" var="r">
-						<span class="property-value" aria-labelledby="records-label"><g:link controller="record" action="show" id="${r.id}">${r?.encodeAsHTML()}</g:link></span>
+						<g:each in="${productInstance.logs}" var="l">
+						<span class="property-value" aria-labelledby="logs-label"><g:link controller="log" action="show" id="${l.id}">${l?.encodeAsHTML()}</g:link></span>
 						</g:each>
 					
 				</li>

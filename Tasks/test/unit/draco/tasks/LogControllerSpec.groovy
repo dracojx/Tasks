@@ -5,9 +5,9 @@ package draco.tasks
 import grails.test.mixin.*
 import spock.lang.*
 
-@TestFor(AdapterController)
-@Mock(Adapter)
-class AdapterControllerSpec extends Specification {
+@TestFor(LogController)
+@Mock(Log)
+class LogControllerSpec extends Specification {
 
     def populateValidParams(params) {
         assert params != null
@@ -21,8 +21,8 @@ class AdapterControllerSpec extends Specification {
             controller.index()
 
         then:"The model is correct"
-            !model.adapterInstanceList
-            model.adapterInstanceCount == 0
+            !model.logInstanceList
+            model.logInstanceCount == 0
     }
 
     void "Test the create action returns the correct model"() {
@@ -30,7 +30,7 @@ class AdapterControllerSpec extends Specification {
             controller.create()
 
         then:"The model is correctly created"
-            model.adapterInstance!= null
+            model.logInstance!= null
     }
 
     void "Test the save action correctly persists an instance"() {
@@ -38,25 +38,25 @@ class AdapterControllerSpec extends Specification {
         when:"The save action is executed with an invalid instance"
             request.contentType = FORM_CONTENT_TYPE
             request.method = 'POST'
-            def adapter = new Adapter()
-            adapter.validate()
-            controller.save(adapter)
+            def log = new Log()
+            log.validate()
+            controller.save(log)
 
         then:"The create view is rendered again with the correct model"
-            model.adapterInstance!= null
+            model.logInstance!= null
             view == 'create'
 
         when:"The save action is executed with a valid instance"
             response.reset()
             populateValidParams(params)
-            adapter = new Adapter(params)
+            log = new Log(params)
 
-            controller.save(adapter)
+            controller.save(log)
 
         then:"A redirect is issued to the show action"
-            response.redirectedUrl == '/adapter/show/1'
+            response.redirectedUrl == '/log/show/1'
             controller.flash.message != null
-            Adapter.count() == 1
+            Log.count() == 1
     }
 
     void "Test that the show action returns the correct model"() {
@@ -68,11 +68,11 @@ class AdapterControllerSpec extends Specification {
 
         when:"A domain instance is passed to the show action"
             populateValidParams(params)
-            def adapter = new Adapter(params)
-            controller.show(adapter)
+            def log = new Log(params)
+            controller.show(log)
 
         then:"A model is populated containing the domain instance"
-            model.adapterInstance == adapter
+            model.logInstance == log
     }
 
     void "Test that the edit action returns the correct model"() {
@@ -84,11 +84,11 @@ class AdapterControllerSpec extends Specification {
 
         when:"A domain instance is passed to the edit action"
             populateValidParams(params)
-            def adapter = new Adapter(params)
-            controller.edit(adapter)
+            def log = new Log(params)
+            controller.edit(log)
 
         then:"A model is populated containing the domain instance"
-            model.adapterInstance == adapter
+            model.logInstance == log
     }
 
     void "Test the update action performs an update on a valid domain instance"() {
@@ -98,28 +98,28 @@ class AdapterControllerSpec extends Specification {
             controller.update(null)
 
         then:"A 404 error is returned"
-            response.redirectedUrl == '/adapter/index'
+            response.redirectedUrl == '/log/index'
             flash.message != null
 
 
         when:"An invalid domain instance is passed to the update action"
             response.reset()
-            def adapter = new Adapter()
-            adapter.validate()
-            controller.update(adapter)
+            def log = new Log()
+            log.validate()
+            controller.update(log)
 
         then:"The edit view is rendered again with the invalid instance"
             view == 'edit'
-            model.adapterInstance == adapter
+            model.logInstance == log
 
         when:"A valid domain instance is passed to the update action"
             response.reset()
             populateValidParams(params)
-            adapter = new Adapter(params).save(flush: true)
-            controller.update(adapter)
+            log = new Log(params).save(flush: true)
+            controller.update(log)
 
         then:"A redirect is issues to the show action"
-            response.redirectedUrl == "/adapter/show/$adapter.id"
+            response.redirectedUrl == "/log/show/$log.id"
             flash.message != null
     }
 
@@ -130,23 +130,23 @@ class AdapterControllerSpec extends Specification {
             controller.delete(null)
 
         then:"A 404 is returned"
-            response.redirectedUrl == '/adapter/index'
+            response.redirectedUrl == '/log/index'
             flash.message != null
 
         when:"A domain instance is created"
             response.reset()
             populateValidParams(params)
-            def adapter = new Adapter(params).save(flush: true)
+            def log = new Log(params).save(flush: true)
 
         then:"It exists"
-            Adapter.count() == 1
+            Log.count() == 1
 
         when:"The domain instance is passed to the delete action"
-            controller.delete(adapter)
+            controller.delete(log)
 
         then:"The instance is deleted"
-            Adapter.count() == 0
-            response.redirectedUrl == '/adapter/index'
+            Log.count() == 0
+            response.redirectedUrl == '/log/index'
             flash.message != null
     }
 }

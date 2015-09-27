@@ -83,18 +83,27 @@
 
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: productInstance, field: 'records', 'error')} ">
-	<label for="records">
-		<g:message code="product.records.label" default="Records" />
+<div class="fieldcontain">
+	<label for="req">
+		<g:message code="req.label" default="Req" />
+		
+	</label>
+	<g:textField name="req" />
+
+</div>
+
+<div class="fieldcontain ${hasErrors(bean: productInstance, field: 'logs', 'error')} ">
+	<label for="logs">
+		<g:message code="product.logs.label" default="Logs" />
 		
 	</label>
 	
 <ul class="one-to-many">
-<g:each in="${productInstance?.records?}" var="r">
-    <li><g:link controller="record" action="show" id="${r.id}">${r?.encodeAsHTML()}</g:link></li>
+<g:each in="${productInstance?.logs?}" var="l">
+    <li><g:link controller="log" action="show" id="${l.id}">${l?.encodeAsHTML()}</g:link></li>
 </g:each>
 <li class="add">
-<g:link controller="record" action="create" params="['product.id': productInstance?.id]">${message(code: 'default.add.label', args: [message(code: 'record.label', default: 'Record')])}</g:link>
+<g:link controller="log" action="create" params="['product.id': productInstance?.id]">${message(code: 'default.add.label', args: [message(code: 'log.label', default: 'Log')])}</g:link>
 </li>
 </ul>
 
