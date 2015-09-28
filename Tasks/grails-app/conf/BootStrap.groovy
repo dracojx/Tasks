@@ -15,16 +15,37 @@ class BootStrap {
 					}
 				}
 				
-				def service1 = new Service(name:"DIS")
+				def service1 = new Service(name:"DIS", description:"金力调派", vendor:"jlsoft")
 				if(!service1.save()) {
 					service1.errors.each {
 						println it
 					}
 				}
 				
-				def service2 = new Service(name:"TMS")
+				def service2 = new Service(name:"TMS", vendor:"vtradex")
 				if(!service2.save()) {
 					service2.errors.each {
+						println it
+					}
+				}
+				
+				def service3 = new Service(name:"ELC", description:"电商", vendor:"elc")
+				if(!service3.save()) {
+					service3.errors.each {
+						println it
+					}
+				}
+				
+				def service4 = new Service(name:"ECC", description:"SAP ERP系统", vendor:"sap")
+				if(!service4.save()) {
+					service4.errors.each {
+						println it
+					}
+				}
+				
+				def service5 = new Service(name:"HLT", description:"合力中税", vendor:"hlt")
+				if(!service5.save()) {
+					service5.errors.each {
 						println it
 					}
 				}
@@ -39,6 +60,20 @@ class BootStrap {
 				def adapter2 = new Adapter(name:"SOAP")
 				if(!adapter2.save()) {
 					adapter2.errors.each {
+						println it
+					}
+				}
+				
+				def adapter3 = new Adapter(name:"ABAP Proxy")
+				if(!adapter3.save()) {
+					adapter3.errors.each {
+						println it
+					}
+				}
+				
+				def adapter4 = new Adapter(name:"FILE/FTP")
+				if(!adapter4.save()) {
+					adapter4.errors.each {
 						println it
 					}
 				}
