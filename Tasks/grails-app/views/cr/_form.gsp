@@ -30,11 +30,11 @@
 </div>
 
 <div class="fieldcontain">
-	<label for="productItemIds">
-		<g:message code="default.add.label" default="Add" args="${[message(code:'product.label', default:'Product') ]}" />
+	<label for="product">
+		<g:message code="product.label" default="Product" />
 		
 	</label>
-	<g:textField name="productItemIds" placeholder="${message(code: 'default.textField.placeholder.separated') }" />
+	<g:textField name="product" placeholder="${message(code: 'default.textField.placeholder.separated') }" />
 
 </div>
 

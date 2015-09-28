@@ -11,7 +11,7 @@ class CrService {
 		numbers.each {
 			def cr = Cr.findByNumber(it)
 			if(!cr) {
-				cr = new Cr(number:it, status:"1")
+				cr = new Cr(number:it, status:"0")
 				if(!cr.save()) {
 					cr.errors.each {error->
 						println error
@@ -23,9 +23,9 @@ class CrService {
 		return crs
 	}
 	
-	def update(def productItemIds) {
-		def products = [] as SortedSet
-		def itemIds = productItemIds.split(" ")
+	def updateCr(def productNumbers) {
+		def products = []
+		def itemIds = productNumbers.split(" ")
 		itemIds.each {
 			def product = Product.findByItemId(it)
 			if(!product) {
@@ -39,22 +39,5 @@ class CrService {
 			products.add(product)
 		}
 		return products
-	}
-	
-	def delete(def cr) {
-		def tasks = Task.where {
-			crs { id == cr.getId() }
-		}
-		tasks.each {
-			it.getCrs().remove(cr)
-			it.save()
-		}
-	}
-	
-	def next(def cr) {
-		def status = cr.getStatus().toInteger()
-		status++
-		cr.setStatus(status.toString())
-		cr.save flush:true
 	}
 }

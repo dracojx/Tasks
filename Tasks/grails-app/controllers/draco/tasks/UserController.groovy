@@ -91,31 +91,8 @@ class UserController {
             '*'{ render status: NO_CONTENT }
         }
     }
-	
-	def login() {
-		
-	}
 
-    def auth() {
-		User user = User.findByUsernameAndPassword(params.username, params.password)
-	
-	    if (user == null) {
-	        wrongUser()
-	        return
-	    }
-		
-		session.userId = user.getId()
-		
-	    request.withFormat {
-	        form multipartForm {
-	            flash.message = message(code: 'default.login.message', default: 'Welcome {0}', args:[user.getName()])
-	            redirect url: "/index"
-	        }
-	        '*'{ render status: NO_CONTENT }
-	    }
-	}
-
-	protected void notFound() {
+    protected void notFound() {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.not.found.message', args: [message(code: 'user.label', default: 'User'), params.id])
@@ -124,14 +101,4 @@ class UserController {
             '*'{ render status: NOT_FOUND }
         }
     }
-	
-	protected void wrongUser() {
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.wrong.user.message', default:'Username or password is incorrect')
-                redirect action: "login", method: "GET"
-            }
-            '*'{ render status: NOT_FOUND }
-        }
-	}
 }

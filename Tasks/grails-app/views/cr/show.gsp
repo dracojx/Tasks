@@ -64,9 +64,6 @@
 			</ol>
 			<g:form url="[resource:crInstance, action:'delete']" method="DELETE">
 				<fieldset class="buttons">
-					<g:if test="${crInstance?.status.compareTo('4') < 0 }">
-						<g:link action="next" resource="${crInstance}"><g:message code="default.button.next.label" default="Next Stage" /></g:link>
-					</g:if>
 					<g:link class="edit" action="edit" resource="${crInstance}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
 					<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
 				</fieldset>

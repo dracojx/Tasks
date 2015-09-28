@@ -7,8 +7,7 @@ class UrlMappings {
             }
         }
 
-        "/"(view:"/user/login")
-		"/index"(view:"/index")
+        "/"(view:"/index")
         "500"(view:'/error')
 	}
 }

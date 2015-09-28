@@ -39,7 +39,7 @@ class ProductController {
         productInstance.save flush:true
 		
 		if(params.req) {
-			logService.createLogByProduct(params.req, productInstance, session.userId)
+			logService.createLogByProduct(params.req, productInstance)
 		}
 
         request.withFormat {
@@ -70,7 +70,7 @@ class ProductController {
         productInstance.save flush:true
 		
 		if(params.req) {
-			logService.createLogByProduct(params.req, productInstance, session.userId)
+			logService.createLogByProduct(params.req, productInstance)
 		}
 
         request.withFormat {

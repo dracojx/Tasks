@@ -32,24 +32,6 @@
 				</li>
 				</g:if>
 			
-				<g:if test="${serviceInstance?.description}">
-				<li class="fieldcontain">
-					<span id="description-label" class="property-label"><g:message code="service.description.label" default="Description" /></span>
-					
-						<span class="property-value" aria-labelledby="description-label"><g:fieldValue bean="${serviceInstance}" field="description"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${serviceInstance?.vendor}">
-				<li class="fieldcontain">
-					<span id="vendor-label" class="property-label"><g:message code="service.vendor.label" default="Vendor" /></span>
-					
-						<span class="property-value" aria-labelledby="vendor-label"><g:fieldValue bean="${serviceInstance}" field="vendor"/></span>
-					
-				</li>
-				</g:if>
-			
 			</ol>
 			<g:form url="[resource:serviceInstance, action:'delete']" method="DELETE">
 				<fieldset class="buttons">

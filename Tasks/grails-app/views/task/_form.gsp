@@ -37,21 +37,29 @@
 
 </div>
 
-<div class="fieldcontain">
-	<label for=crNumbers>
-		<g:message code="default.add.label" default="Add" args="${[message(code:'cr.label', default:'CR') ]}" />
-		
+<div class="fieldcontain ${hasErrors(bean: taskInstance, field: 'user', 'error')} required">
+	<label for="user">
+		<g:message code="task.user.label" default="User" />
+		<span class="required-indicator">*</span>
 	</label>
-	<g:textField name="crNumbers" placeholder="${message(code: 'default.textField.placeholder.separated') }" />
+	<g:select id="user" name="user.id" from="${draco.tasks.User.list()}" optionKey="id" required="" value="${taskInstance?.user?.id}" class="many-to-one"/>
 
 </div>
 
 <div class="fieldcontain">
-	<label for="productItemIds">
-		<g:message code="default.add.label" default="Add" args="${[message(code:'product.label', default:'Product') ]}" />
+	<label for="cr">
+		<g:message code="cr.label" default="Cr" />
 		
 	</label>
-	<g:textField name="productItemIds" placeholder="${message(code: 'default.textField.placeholder.separated') }" />
+	<g:textField name="cr" placeholder="${message(code: 'default.textField.placeholder.separated') }" />
 
 </div>
-<g:hiddenField name="user.id" value="${session.userId }"/>
+
+<div class="fieldcontain">
+	<label for="product">
+		<g:message code="product.label" default="Product" />
+		
+	</label>
+	<g:textField name="product" placeholder="${message(code: 'default.textField.placeholder.separated') }" />
+
+</div>

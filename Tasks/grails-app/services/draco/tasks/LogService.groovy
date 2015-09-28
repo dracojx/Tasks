@@ -5,27 +5,24 @@ import grails.transaction.Transactional
 @Transactional
 class LogService {
 
-	def createLogByProduct(def req, def product, def userId) {
+	def createLogByProduct(def req, def product) {
 		def task = Task.findByReq(req)
 		if(!task) {
-			task = new Task(req: req, status:"0", user:User.get(userId))
+			task = new Task(req: req, status:"0", user:User.getAll().get(0))
 			if(!task.save()) {
 				task.errors.each { println it }
 			}
 		}
-		def log = Log.findByTaskAndProduct(task, product)
-		if(!log) {
-			def type = product.getLogs()?.size() > 0 ? "u" : "c"
-			log = new Log(type:type, task:task, product:product, updateTime:new Date())
-			if(!log.save()) {
-				log.errors.each { println it }
-			}
+		def type = product.getLogs()?.size() == 0 ? "c" : "u"
+		def log = new Log(type:type, task:task, product:product, updateTime:new Date())
+		if(!log.save()) {
+			log.errors.each { println it }
 		}
 	}
 
-	def createLogByTask(def productItemIds, def task) {
+	def createLogByTask(def productNumbers, def task) {
 		def logs = [] as SortedSet
-		def itemIds = productItemIds.split(" ")
+		def itemIds = productNumbers.split(" ")
 		itemIds.each {
 			def product = Product.findByItemId(it)
 			def type = "u"
@@ -38,14 +35,10 @@ class LogService {
 				}
 				type = "c"
 			}
-			
-			def log = Log.findByTaskAndProduct(task, product)
-			if(!log) {
-				log = new Log(type:type, task:task, product:product, updateTime:new Date())
-				if(!log.save()) {
-					log.errors.each { 
-						println it 
-					}
+			def log = new Log(type:type, task:task, product:product, updateTime:new Date())
+			if(!log.save()) {
+				log.errors.each { 
+					println it 
 				}
 			}
 			logs.add(log)

@@ -35,13 +35,7 @@ class CrController {
             respond crInstance.errors, view:'create'
             return
         }
-		
-		
-		if(params.productItemIds) {
-			def products = crService.update(params.productItemIds)
-			crInstance.setProducts(products)
-		}
-		
+
         crInstance.save flush:true
 
         request.withFormat {
@@ -69,8 +63,8 @@ class CrController {
             return
         }
 		
-		if(params.productItemIds) {
-			def products = crService.update(params.productItemIds)
+		if(params.product) {
+			def products = crService.updateCr(params.product)
 			crInstance.getProducts().addAll(products)
 		}
 
@@ -92,8 +86,6 @@ class CrController {
             notFound()
             return
         }
-		
-		crService.delete(crInstance)
 
         crInstance.delete flush:true
 
@@ -105,14 +97,6 @@ class CrController {
             '*'{ render status: NO_CONTENT }
         }
     }
-
-	
-	@Transactional
-	def next(Cr crInstance) {
-		crService.next(crInstance)
-		
-		redirect action:"show", id:crInstance.getId()
-	}
 
     protected void notFound() {
         request.withFormat {
