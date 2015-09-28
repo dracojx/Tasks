@@ -1,6 +1,6 @@
 package draco.tasks
 
-class Product {
+class Product implements Comparable {
 	String itemId
 	String title
 	String remark
@@ -26,10 +26,15 @@ class Product {
     }
 	
 	static mapping = {
-		sort itemId: "desc"
+		sort "itemId"
 	}
 	
 	public String toString() {
 		return "$itemId"
+	}
+
+	@Override
+	public int compareTo(Object o) {
+		return itemId.compareTo(o.itemId)
 	}
 }

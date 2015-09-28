@@ -109,7 +109,12 @@
 					<span id="logs-label" class="property-label"><g:message code="product.logs.label" default="Logs" /></span>
 					
 						<g:each in="${productInstance.logs}" var="l">
-						<span class="property-value" aria-labelledby="logs-label"><g:link controller="Task" action="show" id="${l.task.id}">${l?.encodeAsHTML()}</g:link></span>
+							<span class="property-value" aria-labelledby="logs-label">
+								<g:link controller="Task" action="show" id="${l.task.id}">
+									<g:message code="product.logs.log" 
+									args="${[l.updateTime.format('yyyy.MM.dd HH:mm:ss'), message(code:'log.type.'+l.type), l.task.req, l.task.user.name]}"/>
+								</g:link>
+							</span>
 						</g:each>
 					
 				</li>

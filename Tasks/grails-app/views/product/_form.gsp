@@ -85,7 +85,7 @@
 
 <div class="fieldcontain">
 	<label for="req">
-		<g:message code="req.label" default="Req" />
+		<g:message code="default.add.label" default="Add" args="${[message(code:'req.label', default:'Req') ]}" />
 		
 	</label>
 	<g:textField name="req" />

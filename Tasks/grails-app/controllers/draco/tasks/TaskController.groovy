@@ -10,6 +10,7 @@ class TaskController {
 	
 	def crService
 	def logService
+	def taskService
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
@@ -32,21 +33,19 @@ class TaskController {
             notFound()
             return
         }
-
         if (taskInstance.hasErrors()) {
             respond taskInstance.errors, view:'create'
             return
         }
 		
-		if(params.cr) {
-			def crs = crService.createCrs(params.cr)
+		if(params.crNumbers) {
+			def crs = crService.createCrs(params.crNumbers)
 			taskInstance.setCrs(crs)
 		}
-
         taskInstance.save flush:true
 		
-		if(params.product) {
-			def logs = logService.createLogByTask(params.product, taskInstance)
+		if(params.productItemIds) {
+			def logs = logService.createLogByTask(params.productItemIds, taskInstance)
 			taskInstance.setLogs(logs)
 		}
 
@@ -75,16 +74,16 @@ class TaskController {
             return
         }
 		
-		if(params.cr) {
-			def crs = crService.createCrs(params.cr)
+		if(params.crNumbers) {
+			def crs = crService.createCrs(params.crNumbers)
 			taskInstance.getCrs().addAll(crs)
 		}
 
         taskInstance.save flush:true
 		
-		if(params.product) {
-			def logs = logService.createLogByTask(params.product, taskInstance)
-			taskInstance.setLogs(logs)
+		if(params.productItemIds) {
+			def logs = logService.createLogByTask(params.productItemIds, taskInstance)
+			taskInstance.getLogs().addAll(logs)
 		}
 		
         request.withFormat {
@@ -114,6 +113,14 @@ class TaskController {
             '*'{ render status: NO_CONTENT }
         }
     }
+	
+	@Transactional
+	def next(Task taskInstance) {
+		taskService.next(taskInstance)
+		
+		taskInstance.save flush:true
+		redirect action:"show", id:taskInstance.getId()
+	}
 
     protected void notFound() {
         request.withFormat {

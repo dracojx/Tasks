@@ -4,13 +4,14 @@ class Cr implements Comparable{
 	String number
 	String description
 	String status
+	SortedSet products
 	
 	static hasMany = [products: Product]
 
     static constraints = {
 		number(unique:true, nullable:false, blank:false)
 		description(nullable:true, blank:true)
-		status(inList:["0", "1", "2", "3"]) //0开发，1单元，2集成，3发布
+		status(inList:["1", "2", "3", "4"]) //0开发，1单元，2集成，3发布
     }
 	
 	static mapping = {
@@ -23,6 +24,6 @@ class Cr implements Comparable{
 
 	@Override
 	public int compareTo(Object o) {
-		0 - number.compareTo(o.number)
+		number.compareTo(o.number)
 	}
 }
