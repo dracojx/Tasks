@@ -3,7 +3,7 @@ package draco.tasks
 class Cr implements Comparable{
 	String number
 	String description
-	String status
+	String status = "1"
 	SortedSet products
 	
 	static hasMany = [products: Product]
@@ -11,7 +11,7 @@ class Cr implements Comparable{
     static constraints = {
 		number(unique:true, nullable:false, blank:false)
 		description(nullable:true, blank:true)
-		status(inList:["1", "2", "3", "4"]) //0开发，1单元，2集成，3发布
+		status(inList:["1", "2", "3", "4"]) //1开发，2单元，3集成，4发布
     }
 	
 	static mapping = {

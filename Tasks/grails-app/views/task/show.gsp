@@ -73,7 +73,10 @@
 					<span id="crs-label" class="property-label"><g:message code="task.crs.label" default="Crs" /></span>
 					
 						<g:each in="${taskInstance.crs}" var="c">
-						<span class="property-value" aria-labelledby="crs-label"><g:link controller="cr" action="show" id="${c.id}">${c?.encodeAsHTML()}</g:link></span>
+							<span class="property-value" aria-labelledby="crs-label">
+								<g:link controller="cr" action="show" id="${c.id}">${c?.encodeAsHTML()}</g:link>
+								<g:link controller="task" action="removeCr" resource="${taskInstance}" params="${[cId:c.id] }">x</g:link>
+							</span>
 						</g:each>
 					
 				</li>
@@ -84,7 +87,10 @@
 					<span id="products-label" class="property-label"><g:message code="task.products.label" default="Products" /></span>
 					
 						<g:each in="${taskInstance.logs}" var="l">
-						<span class="property-value" aria-labelledby="products-label"><g:link controller="product" action="show" id="${l.product.id}">${l?.product?.encodeAsHTML()}</g:link></span>
+							<span class="property-value" aria-labelledby="products-label">
+								<g:link controller="product" action="show" id="${l.product.id}">${l?.product?.encodeAsHTML()}</g:link>
+								<g:link controller="task" action="removeLog" resource="${taskInstance}" params="${[lId:l.id] }">x</g:link>
+							</span>
 						</g:each>
 					
 				</li>

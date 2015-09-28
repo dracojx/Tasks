@@ -36,18 +36,14 @@ class CrController {
             return
         }
 		
-		
-		if(params.productItemIds) {
-			def products = crService.update(params.productItemIds)
-			crInstance.setProducts(products)
-		}
+		def products = crService.save(params, crInstance)
 		
         crInstance.save flush:true
 
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.created.message', args: [message(code: 'cr.label', default: 'Cr'), crInstance.id])
-                redirect crInstance
+                redirect action:"edit", id: crInstance.getId()
             }
             '*' { respond crInstance, [status: CREATED] }
         }
@@ -69,17 +65,12 @@ class CrController {
             return
         }
 		
-		if(params.productItemIds) {
-			def products = crService.update(params.productItemIds)
-			crInstance.getProducts().addAll(products)
-		}
-
-        crInstance.save flush:true
+		def products = crService.save(params, crInstance)
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'Cr.label', default: 'Cr'), crInstance.id])
-                redirect crInstance
+                flash.message = message(code: 'default.updated.message', args: ['', crInstance.number])
+                redirect action:'edit', id: crInstance.getId()
             }
             '*'{ respond crInstance, [status: OK] }
         }
@@ -95,8 +86,6 @@ class CrController {
 		
 		crService.delete(crInstance)
 
-        crInstance.delete flush:true
-
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: 'Cr.label', default: 'Cr'), crInstance.id])
@@ -105,12 +94,22 @@ class CrController {
             '*'{ render status: NO_CONTENT }
         }
     }
-
+	
+	@Transactional
+	def prev(Cr crInstance) {
+		crService.prev(crInstance)
+		redirect action:"edit", id:crInstance.getId()
+	}
 	
 	@Transactional
 	def next(Cr crInstance) {
 		crService.next(crInstance)
-		
+		redirect action:"edit", id:crInstance.getId()
+	}
+	
+	@Transactional
+	def removeProduct(Cr crInstance) {
+		crService.removeProduct(crInstance, params.pId)
 		redirect action:"show", id:crInstance.getId()
 	}
 

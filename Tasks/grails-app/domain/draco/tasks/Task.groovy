@@ -4,7 +4,7 @@ class Task {
 	String req
 	String title
 	String remark
-	String status
+	String status = "0"
 	User user
 	SortedSet crs
 	SortedSet logs

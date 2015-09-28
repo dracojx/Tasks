@@ -4,12 +4,12 @@ class Product implements Comparable {
 	String itemId
 	String title
 	String remark
-	String mode
+	String mode = "a"
 	Service sender
 	Service receiver
 	Adapter source
 	Adapter target
-	boolean activate
+	boolean activate = true
 	SortedSet logs
 	
 	static hasMany = [logs: Log]

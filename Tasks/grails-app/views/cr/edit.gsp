@@ -34,6 +34,12 @@
 				</fieldset>
 				<fieldset class="buttons">
 					<g:actionSubmit class="save" action="update" value="${message(code: 'default.button.update.label', default: 'Update')}" />
+					<g:if test="${crInstance?.status.toInteger() < 4 }">
+						<g:link action="next" resource="${crInstance}"><g:message code="default.button.next.label" default="Next Stage" /></g:link>
+					</g:if>
+					<g:if test="${crInstance?.status.toInteger() > 1 }">
+						<g:link action="prev" resource="${crInstance}"><g:message code="default.button.prev.label" default="Prev Stage" /></g:link>
+					</g:if>
 				</fieldset>
 			</g:form>
 		</div>

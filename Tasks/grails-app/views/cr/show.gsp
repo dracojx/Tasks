@@ -43,9 +43,12 @@
 			
 				<g:if test="${crInstance?.status}">
 				<li class="fieldcontain">
-					<span id="status-label" class="property-label"><g:message code="cr.status.label" default="Status" /></span>
-					
-						<span class="property-value" aria-labelledby="status-label"><g:message code="cr.status.${fieldValue(bean:crInstance, field:'status') }" /></span>
+					<span id="status-label" class="property-label">
+						<g:message code="cr.status.label" default="Status" />
+					</span>
+					<span class="property-value" aria-labelledby="status-label">
+						<g:message code="cr.status.${fieldValue(bean:crInstance, field:'status') }" />
+					</span>
 					
 				</li>
 				</g:if>
@@ -55,7 +58,10 @@
 					<span id="products-label" class="property-label"><g:message code="cr.products.label" default="Products" /></span>
 					
 						<g:each in="${crInstance.products}" var="p">
-						<span class="property-value" aria-labelledby="products-label"><g:link controller="product" action="show" id="${p.id}">${p?.encodeAsHTML()}</g:link></span>
+							<span class="property-value" aria-labelledby="products-label">
+								<g:link controller="product" action="show" id="${p.id}">${p?.encodeAsHTML()}</g:link>
+								<g:link controller="cr" action="removeProduct" resource="${crInstance}" params="${[pId:p.id] }">x</g:link>
+							</span>
 						</g:each>
 					
 				</li>

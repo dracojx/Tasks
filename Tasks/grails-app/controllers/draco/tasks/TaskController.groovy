@@ -38,16 +38,7 @@ class TaskController {
             return
         }
 		
-		if(params.crNumbers) {
-			def crs = crService.createCrs(params.crNumbers)
-			taskInstance.setCrs(crs)
-		}
-        taskInstance.save flush:true
-		
-		if(params.productItemIds) {
-			def logs = logService.createLogByTask(params.productItemIds, taskInstance)
-			taskInstance.setLogs(logs)
-		}
+		def logs = taskService.save(params, taskInstance, session.userId)
 
         request.withFormat {
             form multipartForm {
@@ -74,17 +65,7 @@ class TaskController {
             return
         }
 		
-		if(params.crNumbers) {
-			def crs = crService.createCrs(params.crNumbers)
-			taskInstance.getCrs().addAll(crs)
-		}
-
-        taskInstance.save flush:true
-		
-		if(params.productItemIds) {
-			def logs = logService.createLogByTask(params.productItemIds, taskInstance)
-			taskInstance.getLogs().addAll(logs)
-		}
+		def logs = taskService.save(params, taskInstance, session.userId)
 		
         request.withFormat {
             form multipartForm {
@@ -117,8 +98,18 @@ class TaskController {
 	@Transactional
 	def next(Task taskInstance) {
 		taskService.next(taskInstance)
-		
-		taskInstance.save flush:true
+		redirect action:"show", id:taskInstance.getId()
+	}
+	
+	@Transactional
+	def removeCr(Task taskInstance) {
+		taskService.removeCr(taskInstance, params.cId)
+		redirect action:"show", id:taskInstance.getId()
+	}
+	
+	@Transactional
+	def removeLog(Task taskInstance) {
+		taskService.removeLog(taskInstance, params.lId)
 		redirect action:"show", id:taskInstance.getId()
 	}
 

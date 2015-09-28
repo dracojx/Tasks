@@ -8,6 +8,7 @@ import grails.transaction.Transactional
 @Transactional(readOnly = true)
 class ProductController {
 	def logService
+	def productService
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
@@ -35,12 +36,8 @@ class ProductController {
             respond productInstance.errors, view:'create'
             return
         }
-
-        productInstance.save flush:true
 		
-		if(params.req) {
-			logService.createLogByProduct(params.req, productInstance, session.userId)
-		}
+		productService.save(params, productInstance, session.userId)
 
         request.withFormat {
             form multipartForm {
@@ -66,12 +63,8 @@ class ProductController {
             respond productInstance.errors, view:'edit'
             return
         }
-
-        productInstance.save flush:true
 		
-		if(params.req) {
-			logService.createLogByProduct(params.req, productInstance, session.userId)
-		}
+		productService.save(params, productInstance, session.userId)
 
         request.withFormat {
             form multipartForm {
@@ -110,4 +103,10 @@ class ProductController {
             '*'{ render status: NOT_FOUND }
         }
     }
+	
+	@Transactional
+	def removeLog(Product productInstance) {
+		productService.removeLog(productInstance, params.lId)
+		redirect action:"show", id:productInstance.getId()
+	}
 }

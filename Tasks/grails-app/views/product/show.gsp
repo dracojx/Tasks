@@ -114,6 +114,7 @@
 									<g:message code="product.logs.log" 
 									args="${[l.updateTime.format('yyyy.MM.dd HH:mm:ss'), message(code:'log.type.'+l.type), l.task.req, l.task.user.name]}"/>
 								</g:link>
+								<g:link controller="product" action="removeLog" resource="${productInstance}" params="${[lId:l.id] }">x</g:link>
 							</span>
 						</g:each>
 					
