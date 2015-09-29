@@ -72,6 +72,8 @@
 
 </div>
 			
+
+			
 <g:if test="${productInstance?.logs}">
 	<div class="fieldcontain">
 		<span id="logs-label" class="property-label"><g:message code="product.logs.label" default="Logs" /></span>
@@ -85,7 +87,19 @@
 			</span>
 		</g:each>
 	</div>
+</g:if><g:if test="${productInstance?.tags}">
+	<div class="fieldcontain">
+		<span id="logs-label" class="property-label"><g:message code="product.logs.label" default="Logs" /></span>
+		<g:each in="${productInstance.tags}" var="t">
+			<span class="property-value" aria-labelledby="logs-label">
+				<g:link controller="Tag" action="edit" id="${t.id}"><%t?.encodeAsHTML() %></g:link>
+				<g:link controller="product" action="removeTag" resource="${productInstance}" params="${[tId:t.id] }">x</g:link>
+			</span>
+		</g:each>
+	</div>
 </g:if>
+
+
 
 <div class="fieldcontain">
 	<label for="taskReq">
@@ -93,6 +107,13 @@
 		
 	</label>
 	<g:textField name="taskReq" />
+
+</div><div class="fieldcontain">
+	<label for="tagNames">
+		<g:message code="default.add.label" default="Add" args="${[message(code:'tag.label', default:'Tag') ]}" />
+		
+	</label>
+	<g:textField name="tagNames" placeholder="${message(code: 'default.textField.placeholder.separated') }" />
 
 </div>
 <g:hiddenField name="activate" value="${productInstance?.activate}" />

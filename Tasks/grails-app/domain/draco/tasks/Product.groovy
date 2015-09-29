@@ -11,8 +11,9 @@ class Product implements Comparable {
 	Adapter target
 	boolean activate = true
 	SortedSet logs
+	SortedSet tags
 	
-	static hasMany = [logs: Log]
+	static hasMany = [logs: Log, tags: Tag]
 
     static constraints = {
 		itemId(unique:true, nullable:false, blank:false)

@@ -8,6 +8,21 @@ class ProductService {
 	def save(def params, Product product, def userId) {
         product.save flush:true
 		
+		if(params.tagNames) {
+			if(!product.getTags()) {
+				product.setTags([] as SortedSet)
+			}
+			def names = params.tagNames.split " "
+			names.each {
+				Tag tag = Tag.findByName(it)
+				if(!tag) {
+					tag = new Tag(name: it)
+					tag.save flush:true
+				}
+				product.getTags().add(tag)
+			}
+		}
+		
 		if(params.taskReq) {
 			Task task = Task.findByReq(params.taskReq)
 			if(!task) {
@@ -34,5 +49,11 @@ class ProductService {
 		}
 		product.save flush:true
 		log.delete flush:true
+	}
+
+	def removeTag(Product product, def tId) {
+		Tag tag = Tag.get(tId)
+		product.getTags().remove(tag)
+		product.save flush:true
 	}
 }

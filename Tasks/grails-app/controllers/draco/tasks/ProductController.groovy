@@ -101,6 +101,13 @@ class ProductController {
 		redirect action: 'edit', id: productInstance.getId()
 	}
 
+    @Transactional
+	def removeTag(Product productInstance) {
+		productService.removeTag(productInstance, params.tId)
+        flash.message = message(code: 'default.updated.message', args: ['', productInstance.getItemId()])
+		redirect action: 'edit', id: productInstance.getId()
+	}
+
 	@Transactional
 	def activate(Product productInstance) {
 		productInstance.setActivate(true)
