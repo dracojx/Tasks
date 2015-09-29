@@ -18,6 +18,21 @@ class TaskController {
         params.max = Math.min(max ?: 10, 100)
         respond Task.list(params), model:[taskInstanceCount: Task.count()]
     }
+	
+	def search() {
+		println "Search=============================="
+		if(params.keyword?.trim()) {
+			def keyword = params.keyword.trim()
+			def results = Task.where {
+				logs {product.itemId == keyword} || 
+				req == keyword
+			}
+		println "=============================="
+			render view:'index', model:[taskInstanceList: results, crInstanceCount: results.size(), action: 'search', keyword: keyword]
+		} else {
+			redirect action: 'index'
+		}
+	}
 
     def show(Task taskInstance) {
         respond taskInstance

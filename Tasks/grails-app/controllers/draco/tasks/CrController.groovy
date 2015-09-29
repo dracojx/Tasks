@@ -15,6 +15,37 @@ class CrController {
         params.max = Math.min(max ?: 10, 100)
         respond Cr.list(params), model:[crInstanceCount: Cr.count()]
     }
+	
+	def search() {
+		if(params.keyword?.trim()) {
+			def keyword = params.keyword.trim()
+//			def result1 = Cr.where {
+//				products.size() == 0 && 
+//				(
+//					number =~ "%$keyword%" || 
+//					description =~ "%$keyword%"
+//				)
+//			}
+//			def result2 = Cr.where {
+//				products.size() > 0 && 
+//				(
+//					number =~ "%$keyword%" || 
+//					description =~ "%$keyword%" || 
+//					products {itemId =~ keyword}
+//				)
+//			}
+//			def results = []
+//			results.addAll(result1.toList())
+//			results.addAll(result2.toList())
+			def results = Cr.where {
+				products {itemId == keyword} || 
+				number == keyword
+			}
+			render view:'index', model:[crInstanceList: results, crInstanceCount: results.size(), action: 'search', keyword: keyword]
+		} else {
+			redirect action: 'index'
+		}
+	}
 
     def show(Cr crInstance) {
         respond crInstance

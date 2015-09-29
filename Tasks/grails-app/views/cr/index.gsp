@@ -13,6 +13,12 @@
 			<ul>
 				<li><a class="home" href="${createLink(uri: '/index')}"><g:message code="default.home.label"/></a></li>
 				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
+				<li>
+					<g:form action="search" >
+						<g:textField name="keyword"  placeholder="${message(code: 'default.textField.placeholder.keyword') }"/>
+						<g:actionSubmit class="search" action="search" value="${message(code: 'default.button.search.label', default: 'Search')}" />
+					</g:form>
+				</li>
 			</ul>
 		</div>
 		<div id="list-cr" class="content scaffold-list" role="main">
@@ -24,11 +30,14 @@
 			<thead>
 					<tr>
 					
-						<g:sortableColumn property="number" title="${message(code: 'cr.number.label', default: 'Number')}" />
+						<g:sortableColumn property="number" title="${message(code: 'cr.number.label', default: 'Number')}" 
+							action="${action?:'index' }" params="${['keyword':keyword] }" />
 					
-						<g:sortableColumn property="description" title="${message(code: 'cr.description.label', default: 'Description')}" />
+						<g:sortableColumn property="description" title="${message(code: 'cr.description.label', default: 'Description')}"
+							action="${action?:'index' }" params="${['keyword':keyword] }" />
 					
-						<g:sortableColumn property="status" title="${message(code: 'cr.status.label', default: 'Status')}" />
+						<g:sortableColumn property="status" title="${message(code: 'cr.status.label', default: 'Status')}"
+							action="${action?:'index' }" params="${['keyword':keyword] }" />
 					
 					</tr>
 				</thead>
@@ -40,7 +49,7 @@
 					
 						<td>${fieldValue(bean: crInstance, field: "description")}</td>
 					
-						<td>${fieldValue(bean: crInstance, field: "status")}</td>
+						<td><g:message code="cr.status.${fieldValue(bean: crInstance, field: "status")}"/></td>
 					
 					</tr>
 				</g:each>

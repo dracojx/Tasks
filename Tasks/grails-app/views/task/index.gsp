@@ -13,6 +13,12 @@
 			<ul>
 				<li><a class="home" href="${createLink(uri: '/index')}"><g:message code="default.home.label"/></a></li>
 				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
+				<li>
+					<g:form action="search" >
+						<g:textField name="keyword"  placeholder="${message(code: 'default.textField.placeholder.keyword') }"/>
+						<g:actionSubmit class="search" action="search" value="${message(code: 'default.button.search.label', default: 'Search')}" />
+					</g:form>
+				</li>
 			</ul>
 		</div>
 		<div id="list-task" class="content scaffold-list" role="main">
