@@ -47,6 +47,18 @@ class TaskService {
 		}
 	}
 
+	def prev(Task task) {
+		def status = task.getStatus().toInteger()
+		status--
+		task.setStatus(status.toString())
+		task.getCrs().each {
+			if(status > it.getStatus().toInteger()) {
+				it.setStatus(status.toString())
+			}
+		}
+		task.save flush:true
+    }
+
 	def next(Task task) {
 		def status = task.getStatus().toInteger()
 		status++
@@ -67,7 +79,17 @@ class TaskService {
 	
 	def removeLog(Task task, def lId) {
 		Log log = Log.get(lId)
+		Product product = log.getProduct()
+		product.getLogs().remove(log)
 		task.getLogs().remove(log)
+		
+		if(log.getType().equals("c")) {
+			if(!product.getLogs().isEmpty()) {
+				product.getLogs().first()?.setType("c")
+			}
+		}
+		
+		product.save flush:true
 		task.save flush:true
 		log.delete flush:true
 	}

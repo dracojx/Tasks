@@ -53,12 +53,24 @@ p {
 					${flash.message}
 				</div>
 			</g:if>
-			<g:form url="[resource:userInstance, controller:'user',	action:'auth']" >
-				<g:textField name="username" required="" />
-				<g:field type="password" name="password" required="" />
+			<g:form url="[resource:userInstance, controller:'user', action:'auth']" >
+				<fieldset class="form">
+					<div class="fieldcontain ${hasErrors(bean: userInstance, field: 'username', 'error')} required">
+						<label for="username">
+							<g:message code="user.username.label" default="Username" />
+						</label>
+						<g:textField name="username" required="" value="${userInstance?.username}"/>
+					</div>
+					
+					<div class="fieldcontain ${hasErrors(bean: userInstance, field: 'password', 'error')} required">
+						<label for="password">
+							<g:message code="user.password.label" default="Password" />
+						</label>
+						<g:field type="password" name="password" required="" value="${userInstance?.password}"/>
+					</div>
+				</fieldset>
 				<fieldset class="buttons">
-					<g:submitButton name="login" class="save"
-						value="${message(code: 'default.button.login.label', default: 'Login')}" />
+					<g:actionSubmit class="save" action="auth" value="${message(code: 'default.button.login.label', default: 'Login')}" />
 				</fieldset>
 			</g:form>
 		</div>

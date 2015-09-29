@@ -8,7 +8,7 @@ import grails.transaction.Transactional
 @Transactional(readOnly = true)
 class AdapterController {
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+    static allowedMethods = [save: "POST", update: "PUT", delete: "PUT"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -39,8 +39,8 @@ class AdapterController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'adapter.label', default: 'Adapter'), adapterInstance.id])
-                redirect adapterInstance
+                flash.message = message(code: 'default.created.message', args: ['', adapterInstance.getName()])
+                redirect action:"edit", id: adapterInstance.getId()
             }
             '*' { respond adapterInstance, [status: CREATED] }
         }
@@ -66,8 +66,8 @@ class AdapterController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'Adapter.label', default: 'Adapter'), adapterInstance.id])
-                redirect adapterInstance
+                flash.message = message(code: 'default.updated.message', args: ['', adapterInstance.getName()])
+                redirect action:"edit", id: adapterInstance.getId()
             }
             '*'{ respond adapterInstance, [status: OK] }
         }

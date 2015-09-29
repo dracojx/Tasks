@@ -6,6 +6,7 @@ class Task {
 	String remark
 	String status = "0"
 	User user
+	boolean activate = true
 	SortedSet crs
 	SortedSet logs
 
@@ -19,6 +20,18 @@ class Task {
 		user(nullable:false, blank:false)
     }
 	
+	public void setReq(String req) {
+		this.req = req?.trim()
+	}
+
+	public void setTitle(String title) {
+		this.title = title?.trim()
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark?.trim()
+	}
+
 	public String toString() {
 		return req
 	}

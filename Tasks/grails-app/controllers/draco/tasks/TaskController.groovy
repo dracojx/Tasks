@@ -42,8 +42,8 @@ class TaskController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'task.label', default: 'Task'), taskInstance.id])
-                redirect taskInstance
+                flash.message = message(code: 'default.created.message', args: ['', taskInstance.getReq()])
+	            redirect action: 'edit', id: taskInstance.getId()
             }
             '*' { respond taskInstance, [status: CREATED] }
         }
@@ -69,8 +69,8 @@ class TaskController {
 		
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'Task.label', default: 'Task'), taskInstance.id])
-                redirect taskInstance
+                flash.message = message(code: 'default.updated.message', args: ['', taskInstance.getReq()])
+                redirect action: 'edit', id: taskInstance.getId()
             }
             '*'{ respond taskInstance, [status: OK] }
         }
@@ -96,21 +96,47 @@ class TaskController {
     }
 	
 	@Transactional
+	def prev(Task taskInstance) {
+		taskService.prev(taskInstance)
+		flash.message = message(code: 'default.updated.message', args: ['', taskInstance.getReq()])
+        redirect action: 'edit', id: taskInstance.getId()
+	}
+	
+	@Transactional
 	def next(Task taskInstance) {
 		taskService.next(taskInstance)
-		redirect action:"show", id:taskInstance.getId()
+		flash.message = message(code: 'default.updated.message', args: ['', taskInstance.getReq()])
+        redirect action: 'edit', id: taskInstance.getId()
 	}
 	
 	@Transactional
 	def removeCr(Task taskInstance) {
 		taskService.removeCr(taskInstance, params.cId)
-		redirect action:"show", id:taskInstance.getId()
+		flash.message = message(code: 'default.updated.message', args: ['', taskInstance.getReq()])
+        redirect action: 'edit', id: taskInstance.getId()
 	}
 	
 	@Transactional
 	def removeLog(Task taskInstance) {
 		taskService.removeLog(taskInstance, params.lId)
-		redirect action:"show", id:taskInstance.getId()
+		flash.message = message(code: 'default.updated.message', args: ['', taskInstance.getReq()])
+        redirect action: 'edit', id: taskInstance.getId()
+	}
+
+	@Transactional
+	def activate(Task taskInstance) {
+		taskInstance.setActivate(true)
+		taskInstance.save flush:true
+	    flash.message = message(code: 'default.updated.message', args: ['', taskInstance.getReq()])
+		redirect action: 'edit', id: taskInstance.getId()
+	}
+
+	@Transactional
+	def deactivate(Task taskInstance) {
+		taskInstance.setActivate(false)
+		taskInstance.save flush:true
+        flash.message = message(code: 'default.updated.message', args: ['', taskInstance.getReq()])
+		redirect action: 'edit', id: taskInstance.getId()
 	}
 
     protected void notFound() {

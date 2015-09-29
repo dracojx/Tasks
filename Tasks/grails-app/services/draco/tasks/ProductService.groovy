@@ -8,10 +8,10 @@ class ProductService {
 	def save(def params, Product product, def userId) {
         product.save flush:true
 		
-		if(params.req) {
-			Task task = Task.findByReq(params.req)
+		if(params.taskReq) {
+			Task task = Task.findByReq(params.taskReq)
 			if(!task) {
-				task = new Task(req: params.req, status:"0", user:User.get(userId))
+				task = new Task(req: params.taskReq, status:"0", user:User.get(userId))
 				task.save flush:true
 			}
 			
@@ -27,6 +27,11 @@ class ProductService {
 	def removeLog(Product product, def lId) {
 		Log log = Log.get(lId)
 		product.getLogs().remove(log)
+		if(log.getType().equals("c")) {
+			if(!product.getLogs().isEmpty()) {
+				product.getLogs().first().setType("c")
+			}
+		}
 		product.save flush:true
 		log.delete flush:true
 	}

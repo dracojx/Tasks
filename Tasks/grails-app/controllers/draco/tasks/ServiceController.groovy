@@ -8,7 +8,7 @@ import grails.transaction.Transactional
 @Transactional(readOnly = true)
 class ServiceController {
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+    static allowedMethods = [save: "POST", update: "PUT", delete: "PUT"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -39,8 +39,8 @@ class ServiceController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'service.label', default: 'Service'), serviceInstance.id])
-                redirect serviceInstance
+                flash.message = message(code: 'default.created.message', args: ['', serviceInstance.getName()])
+                redirect action:"edit", id: serviceInstance.getId()
             }
             '*' { respond serviceInstance, [status: CREATED] }
         }
@@ -66,8 +66,8 @@ class ServiceController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'Service.label', default: 'Service'), serviceInstance.id])
-                redirect serviceInstance
+                flash.message = message(code: 'default.updated.message', args: ['', serviceInstance.getName()])
+                redirect action:"edit", id: serviceInstance.getId()
             }
             '*'{ respond serviceInstance, [status: OK] }
         }

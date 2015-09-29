@@ -18,6 +18,14 @@ class Cr implements Comparable{
 		sort number: "desc"
 	}
 	
+	public void setNumber(String number) {
+		this.number = number?.trim()
+	}
+
+	public void setDescription(String description) {
+		this.description = description?.trim()
+	}
+
 	public String toString() {
 		return number
 	}

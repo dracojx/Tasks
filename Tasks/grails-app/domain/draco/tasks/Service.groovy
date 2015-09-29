@@ -11,6 +11,18 @@ class Service {
 		vendor(nullable:true, blank:true)
     }
 	
+	public void setName(String name) {
+		this.name = name?.trim()
+	}
+
+	public void setDescription(String description) {
+		this.description = description?.trim()
+	}
+
+	public void setVendor(String vendor) {
+		this.vendor = vendor?.trim()
+	}
+
 	public String toString() {
 		return name
 	}

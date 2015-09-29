@@ -53,8 +53,7 @@
 				<g:if test="${taskInstance?.status}">
 				<li class="fieldcontain">
 					<span id="status-label" class="property-label"><g:message code="task.status.label" default="Status" /></span>
-					
-						<span class="property-value" aria-labelledby="status-label"><g:message code="task.status.${fieldValue(bean:taskInstance, field:'status') }" /></span>
+					<span class="property-value" aria-labelledby="status-label"><g:message code="task.status.${fieldValue(bean:taskInstance, field:'status') }" /></span>
 					
 				</li>
 				</g:if>
@@ -71,14 +70,12 @@
 				<g:if test="${taskInstance?.crs}">
 				<li class="fieldcontain">
 					<span id="crs-label" class="property-label"><g:message code="task.crs.label" default="Crs" /></span>
-					
 						<g:each in="${taskInstance.crs}" var="c">
 							<span class="property-value" aria-labelledby="crs-label">
-								<g:link controller="cr" action="show" id="${c.id}">${c?.encodeAsHTML()}</g:link>
+								<g:link controller="cr" action="edit" id="${c.id}">${c?.encodeAsHTML()}</g:link>
 								<g:link controller="task" action="removeCr" resource="${taskInstance}" params="${[cId:c.id] }">x</g:link>
 							</span>
 						</g:each>
-					
 				</li>
 				</g:if>
 			

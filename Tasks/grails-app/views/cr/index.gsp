@@ -36,7 +36,7 @@
 				<g:each in="${crInstanceList}" status="i" var="crInstance">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 					
-						<td><g:link action="show" id="${crInstance.id}">${fieldValue(bean: crInstance, field: "number")}</g:link></td>
+						<td><g:link action="edit" id="${crInstance.id}">${fieldValue(bean: crInstance, field: "number")}</g:link></td>
 					
 						<td>${fieldValue(bean: crInstance, field: "description")}</td>
 					

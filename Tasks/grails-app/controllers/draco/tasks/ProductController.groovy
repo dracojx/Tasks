@@ -41,8 +41,8 @@ class ProductController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'product.label', default: 'Product'), productInstance.id])
-                redirect productInstance
+                flash.message = message(code: 'default.created.message', args: ['', productInstance.getItemId()])
+                redirect action: 'edit', id: productInstance.getId()
             }
             '*' { respond productInstance, [status: CREATED] }
         }
@@ -68,8 +68,8 @@ class ProductController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'Product.label', default: 'Product'), productInstance.id])
-                redirect productInstance
+                flash.message = message(code: 'default.updated.message', args: ['', productInstance.getItemId()])
+                redirect action: 'edit', id: productInstance.getId()
             }
             '*'{ respond productInstance, [status: OK] }
         }
@@ -94,7 +94,30 @@ class ProductController {
         }
     }
 
-    protected void notFound() {
+    @Transactional
+	def removeLog(Product productInstance) {
+		productService.removeLog(productInstance, params.lId)
+        flash.message = message(code: 'default.updated.message', args: ['', productInstance.getItemId()])
+		redirect action: 'edit', id: productInstance.getId()
+	}
+
+	@Transactional
+	def activate(Product productInstance) {
+		productInstance.setActivate(true)
+		productInstance.save flush:true
+	    flash.message = message(code: 'default.updated.message', args: ['', productInstance.getItemId()])
+		redirect action: 'edit', id: productInstance.getId()
+	}
+
+	@Transactional
+	def deactivate(Product productInstance) {
+		productInstance.setActivate(false)
+		productInstance.save flush:true
+        flash.message = message(code: 'default.updated.message', args: ['', productInstance.getItemId()])
+		redirect action: 'edit', id: productInstance.getId()
+	}
+
+	protected void notFound() {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.not.found.message', args: [message(code: 'product.label', default: 'Product'), params.id])
@@ -103,10 +126,4 @@ class ProductController {
             '*'{ render status: NOT_FOUND }
         }
     }
-	
-	@Transactional
-	def removeLog(Product productInstance) {
-		productService.removeLog(productInstance, params.lId)
-		redirect action:"show", id:productInstance.getId()
-	}
 }

@@ -5,7 +5,6 @@
 <div class="fieldcontain ${hasErrors(bean: crInstance, field: 'number', 'error')} required">
 	<label for="number">
 		<g:message code="cr.number.label" default="Number" />
-		<span class="required-indicator">*</span>
 	</label>
 	<g:textField name="number" required="" value="${crInstance?.number}"/>
 
@@ -27,24 +26,19 @@
 	<span class="property-value" aria-labelledby="status-label">
 		<g:message code="cr.status.${crInstance?.status}" />
 	</span>
-<!--
-	<label for="status">
-		<g:message code="cr.status.label" default="Status" />
-		<span class="required-indicator">*</span>
-	</label>
-	<g:select name="status" from="${crInstance.constraints.status.inList}" required="" value="${crInstance?.status}" valueMessagePrefix="cr.status"/>
- -->
 </div>
  
 <g:if test="${crInstance?.products}">
 	<div class="fieldcontain">
-		<span id="products-label" class="property-label"><g:message code="cr.products.label" default="Products" /></span>
-			<g:each in="${crInstance.products}" var="p">
-				<span class="property-value" aria-labelledby="products-label">
-					<g:link controller="product" action="show" id="${p.id}">${p?.encodeAsHTML()}</g:link>
-					<g:link controller="cr" action="removeProduct" resource="${crInstance}" params="${[pId:p.id] }">x</g:link>
-				</span>
-			</g:each>
+		<span id="products-label" class="property-label">
+			<g:message code="cr.products.label" default="Products" />
+		</span>
+		<g:each in="${crInstance.products}" var="p">
+			<span class="property-value" aria-labelledby="products-label">
+				<g:link controller="product" action="show" id="${p.id}">${p?.encodeAsHTML()}</g:link>
+				<g:link controller="cr" action="removeProduct" resource="${crInstance}" params="${[pId:p.id] }">x</g:link>
+			</span>
+		</g:each>
 	</div>
 </g:if>
 				

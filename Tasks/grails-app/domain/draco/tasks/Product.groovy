@@ -29,6 +29,18 @@ class Product implements Comparable {
 		sort "itemId"
 	}
 	
+	public void setItemId(String itemId) {
+		this.itemId = itemId?.trim()
+	}
+
+	public void setTitle(String title) {
+		this.title = title?.trim()
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark?.trim()
+	}
+
 	public String toString() {
 		return "$itemId"
 	}

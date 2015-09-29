@@ -50,7 +50,7 @@ class CrService {
 		}
 		tasks.each {
 			it.getCrs().remove(cr)
-			it.save()
+			it.save flush:true
 		}
 		cr.delete flush:true
 	}

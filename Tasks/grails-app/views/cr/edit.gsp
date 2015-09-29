@@ -34,6 +34,8 @@
 				</fieldset>
 				<fieldset class="buttons">
 					<g:actionSubmit class="save" action="update" value="${message(code: 'default.button.update.label', default: 'Update')}" />
+					<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}"
+						 onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
 					<g:if test="${crInstance?.status.toInteger() < 4 }">
 						<g:link action="next" resource="${crInstance}"><g:message code="default.button.next.label" default="Next Stage" /></g:link>
 					</g:if>

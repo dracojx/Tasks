@@ -34,6 +34,12 @@
 				</fieldset>
 				<fieldset class="buttons">
 					<g:actionSubmit class="save" action="update" value="${message(code: 'default.button.update.label', default: 'Update')}" />
+					<g:if test="${productInstance?.activate}">
+						<g:link action="deactivate" resource="${productInstance}"><g:message code="default.button.deactivate.label" default="Deactivate" /></g:link>
+					</g:if>
+					<g:if test="${!productInstance?.activate}">
+						<g:link action="activate" resource="${productInstance}"><g:message code="default.button.Activate.label" default="Activate" /></g:link>
+					</g:if>
 				</fieldset>
 			</g:form>
 		</div>

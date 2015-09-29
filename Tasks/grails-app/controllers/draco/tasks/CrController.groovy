@@ -9,7 +9,7 @@ import grails.transaction.Transactional
 class CrController {
 	def crService
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+    static allowedMethods = [save: "POST", update: "PUT", delete: "PUT"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -42,7 +42,7 @@ class CrController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'cr.label', default: 'Cr'), crInstance.id])
+                flash.message = message(code: 'default.created.message', args: ['', crInstance.getNumber()])
                 redirect action:"edit", id: crInstance.getId()
             }
             '*' { respond crInstance, [status: CREATED] }
@@ -69,7 +69,7 @@ class CrController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: ['', crInstance.number])
+                flash.message = message(code: 'default.updated.message', args: ['', crInstance.getNumber()])
                 redirect action:'edit', id: crInstance.getId()
             }
             '*'{ respond crInstance, [status: OK] }
@@ -78,7 +78,6 @@ class CrController {
 
     @Transactional
     def delete(Cr crInstance) {
-
         if (crInstance == null) {
             notFound()
             return
@@ -98,19 +97,22 @@ class CrController {
 	@Transactional
 	def prev(Cr crInstance) {
 		crService.prev(crInstance)
+        flash.message = message(code: 'default.updated.message', args: ['', crInstance.getNumber()])
 		redirect action:"edit", id:crInstance.getId()
 	}
 	
 	@Transactional
 	def next(Cr crInstance) {
 		crService.next(crInstance)
+        flash.message = message(code: 'default.updated.message', args: ['', crInstance.getNumber()])
 		redirect action:"edit", id:crInstance.getId()
 	}
 	
 	@Transactional
 	def removeProduct(Cr crInstance) {
 		crService.removeProduct(crInstance, params.pId)
-		redirect action:"show", id:crInstance.getId()
+        flash.message = message(code: 'default.updated.message', args: ['', crInstance.getNumber()])
+		redirect action:"edit", id:crInstance.getId()
 	}
 
     protected void notFound() {
