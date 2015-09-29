@@ -3,6 +3,9 @@ package draco.tasks
 
 
 import static org.springframework.http.HttpStatus.*
+
+import java.util.SortedSet;
+
 import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
@@ -22,6 +25,10 @@ class ProductController {
     }
 
     def create() {
+		println "================="
+		params.entrySet().each {
+			println it
+		}
         respond new Product(params)
     }
 
@@ -48,10 +55,29 @@ class ProductController {
         }
     }
 
-    def edit(Product productInstance) {
+    @Transactional
+	def copy(Product productInstance) {
+		def fields = [
+			'itemId':		productInstance.getItemId(),
+			'title':		productInstance.getTitle(),
+			'remark':		productInstance.getRemark(),
+			'mode':			productInstance.getMode(),
+			'sender.id':	productInstance.getSender().getId(),
+			'receiver.id':	productInstance.getReceiver().getId(),
+			'source.id':	productInstance.getSource().getId(),
+			'target.id':	productInstance.getTarget().getId(),
+			'tags':			[] as SortedSet
+			]
+		productInstance.getTags().each {
+			fields.tags.add(it.getId())
+		}
+		redirect action: 'create', params: fields
+	}
+
+	def edit(Product productInstance) {
         respond productInstance
     }
-
+	
     @Transactional
     def update(Product productInstance) {
         if (productInstance == null) {

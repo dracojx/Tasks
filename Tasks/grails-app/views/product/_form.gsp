@@ -87,19 +87,18 @@
 			</span>
 		</g:each>
 	</div>
-</g:if><g:if test="${productInstance?.tags}">
+</g:if>
+<g:if test="${productInstance?.tags}">
 	<div class="fieldcontain">
-		<span id="logs-label" class="property-label"><g:message code="product.logs.label" default="Logs" /></span>
+		<span id="tags-label" class="property-label"><g:message code="product.tags.label" default="Tags" /></span>
 		<g:each in="${productInstance.tags}" var="t">
-			<span class="property-value" aria-labelledby="logs-label">
+			<span class="property-value" aria-labelledby="tags-label">
 				<g:link controller="Tag" action="edit" id="${t.id}"><%t?.encodeAsHTML() %></g:link>
 				<g:link controller="product" action="removeTag" resource="${productInstance}" params="${[tId:t.id] }">x</g:link>
 			</span>
 		</g:each>
 	</div>
 </g:if>
-
-
 
 <div class="fieldcontain">
 	<label for="taskReq">
@@ -117,3 +116,6 @@
 
 </div>
 <g:hiddenField name="activate" value="${productInstance?.activate}" />
+<g:each in="${productInstance?.tags }" var="t">
+	<g:hiddenField name="tags" value="${t.id }"/>
+</g:each>
