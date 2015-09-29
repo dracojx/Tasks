@@ -13,6 +13,15 @@ class TagService {
 			it.getTags().remove(tag)
 			it.save flush:true
 		}
+		
+		def tasks = Task.where {
+			tags { id == tag.getId() }
+		}
+		tasks.each {
+			it.getTags().remove(tag)
+			it.save flush:true
+		}
+		
 		tag.delete flush:true
 	}
 }

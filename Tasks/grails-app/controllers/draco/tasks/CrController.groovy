@@ -87,7 +87,7 @@ class CrController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'Cr.label', default: 'Cr'), crInstance.id])
+                flash.message = message(code: 'default.deleted.message', args: ['', crInstance.getNumber()])
                 redirect action:"index", method:"GET"
             }
             '*'{ render status: NO_CONTENT }

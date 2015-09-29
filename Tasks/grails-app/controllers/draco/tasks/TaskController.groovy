@@ -88,7 +88,7 @@ class TaskController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'Task.label', default: 'Task'), taskInstance.id])
+                flash.message = message(code: 'default.deleted.message', args: ['', taskInstance.getReq()])
                 redirect action:"index", method:"GET"
             }
             '*'{ render status: NO_CONTENT }
@@ -119,6 +119,13 @@ class TaskController {
 	@Transactional
 	def removeLog(Task taskInstance) {
 		taskService.removeLog(taskInstance, params.lId)
+		flash.message = message(code: 'default.updated.message', args: ['', taskInstance.getReq()])
+        redirect action: 'edit', id: taskInstance.getId()
+	}
+	
+	@Transactional
+	def removeTag(Task taskInstance) {
+		taskService.removeTag(taskInstance, params.tId)
 		flash.message = message(code: 'default.updated.message', args: ['', taskInstance.getReq()])
         redirect action: 'edit', id: taskInstance.getId()
 	}

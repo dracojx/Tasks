@@ -9,8 +9,9 @@ class Task {
 	boolean activate = true
 	SortedSet crs
 	SortedSet logs
+	SortedSet tags
 
-	static hasMany = [crs: Cr, logs: Log]
+	static hasMany = [crs: Cr, logs: Log, tags: Tag]
 	
     static constraints = {
 		req(unique:true, nullable:false, blank:false)

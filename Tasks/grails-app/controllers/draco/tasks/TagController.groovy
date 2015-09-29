@@ -87,7 +87,7 @@ class TagController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'Tag.label', default: 'Tag'), tagInstance.id])
+                flash.message = message(code: 'default.deleted.message', args: ['', tagInstance.getName()])
                 redirect action:"index", method:"GET"
             }
             '*'{ render status: NO_CONTENT }

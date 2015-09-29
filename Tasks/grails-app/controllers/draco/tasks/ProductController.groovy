@@ -87,7 +87,7 @@ class ProductController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'Product.label', default: 'Product'), productInstance.id])
+                flash.message = message(code: 'default.deleted.message', args: ['', productInstance.getItemId()])
                 redirect action:"index", method:"GET"
             }
             '*'{ render status: NO_CONTENT }

@@ -85,7 +85,7 @@ class ServiceController {
 
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'Service.label', default: 'Service'), serviceInstance.id])
+                flash.message = message(code: 'default.deleted.message', args: ['', serviceInstance.getName()])
                 redirect action:"index", method:"GET"
             }
             '*'{ render status: NO_CONTENT }

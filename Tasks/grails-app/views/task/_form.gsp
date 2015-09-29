@@ -64,26 +64,46 @@
 	</div>
 </g:if>
 
+<g:if test="${taskInstance?.tags}">
+	<div class="fieldcontain">
+		<span id="tags-label" class="property-label">
+			<g:message code="task.tags.label" default="Tags" />
+		</span>
+		<g:each in="${taskInstance.tags}" var="t">
+			<span class="property-value" aria-labelledby="tags-label"> 
+				<g:link controller="tag" action="edit" id="${t.id}">${t?.encodeAsHTML()}</g:link>
+				<g:link controller="task" action="removeTag" resource="${taskInstance}" params="${[tId:t.id] }">x</g:link>
+			</span>
+		</g:each>
+	</div>
+</g:if>
+
 <div class="fieldcontain">
 	<label for=crNumbers> <g:message code="default.add.label"
 			default="Add" args="${[message(code:'cr.label', default:'CR') ]}" />
-
 	</label>
 	<g:textField name="crNumbers"
 		placeholder="${message(code: 'default.textField.placeholder.separated') }" />
-
 </div>
 
 <div class="fieldcontain">
 	<label for="productItemIds"> <g:message
 			code="default.add.label" default="Add"
 			args="${[message(code:'product.label', default:'Product') ]}" />
-
 	</label>
 	<g:textField name="productItemIds"
 		placeholder="${message(code: 'default.textField.placeholder.separated') }" />
-
 </div>
+
+<div class="fieldcontain">
+	<label for="tagNames"> <g:message
+			code="default.add.label" default="Add"
+			args="${[message(code:'tag.label', default:'Tag') ]}" />
+	</label>
+	<g:textField name="tagNames"
+		placeholder="${message(code: 'default.textField.placeholder.separated') }" />
+</div>
+
 <g:hiddenField name="user.id" value="${session.userId }" />
 <g:hiddenField name="status" value="${taskInstance?.status }"/>
 <g:hiddenField name="activate" value="${taskInstance?.activate}" />

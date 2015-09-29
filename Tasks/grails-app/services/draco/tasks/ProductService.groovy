@@ -12,7 +12,7 @@ class ProductService {
 			if(!product.getTags()) {
 				product.setTags([] as SortedSet)
 			}
-			def names = params.tagNames.split " "
+			def names = params.tagNames.split(" ")
 			names.each {
 				Tag tag = Tag.findByName(it)
 				if(!tag) {

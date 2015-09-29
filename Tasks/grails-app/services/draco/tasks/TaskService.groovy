@@ -45,6 +45,21 @@ class TaskService {
 				task.getLogs().add(log)
 			}
 		}
+		
+		if(params.tagNames) {
+			if(!task.getTags()) {
+				task.setTags([] as SortedSet)
+			}
+			def names = params.tagNames.split(" ")
+			names.each {
+				Tag tag = Tag.findByName(it)
+				if(!tag) {
+					tag = new Tag(name: it)
+					tag.save flush:true
+				}
+				task.getTags().add(tag)
+			}
+		}
 	}
 
 	def prev(Task task) {
@@ -92,5 +107,11 @@ class TaskService {
 		product.save flush:true
 		task.save flush:true
 		log.delete flush:true
+	}
+	
+	def removeTag(Task task, def tId) {
+		Tag tag = Tag.get(tId)
+		task.getTags().remove(tag)
+		task.save flush:true
 	}
 }
