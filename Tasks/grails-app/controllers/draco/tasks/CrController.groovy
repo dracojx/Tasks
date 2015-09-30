@@ -5,6 +5,7 @@ package draco.tasks
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
+import org.hibernate.Criteria
 import org.hibernate.criterion.CriteriaSpecification
 
 @Transactional(readOnly = true)
@@ -13,9 +14,10 @@ class CrController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "PUT"]
 
-    def index(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
-        respond Cr.list(params), model:[crInstanceCount: Cr.count()]
+    def index() {
+		params.sort = params.sort ?: 'number'
+		params.order = params.order ?: 'desc'
+        respond Cr.list(params)
     }
 	
 	def search() {
@@ -31,7 +33,7 @@ class CrController {
 					ilike('p.itemId', keyword)
 				}
 			}
-			render view:'index', model:[crInstanceList: results, crInstanceCount: results.size(), action: 'search', keyword: keyword]
+			render view:'index', model:[crInstanceList: results, action: 'search', keyword: keyword]
 		} else {
 			redirect action: 'index'
 		}

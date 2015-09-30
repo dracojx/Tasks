@@ -10,11 +10,10 @@ class AdapterController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "PUT"]
 
-    def index(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
+    def index() {
 		params.sort = params.sort ?: 'name'
 		params.order = params.order ?: 'asc'
-        respond Adapter.list(params), model:[adapterInstanceCount: Adapter.count()]
+        respond Adapter.list(params)
     }
 	
 	def search() {
@@ -24,7 +23,7 @@ class AdapterController {
 				order(params.sort?:'name', params.order?:'asc')
 				ilike('name', "%$keyword%")
 			}
-			render view:'index', model:[adapterInstanceList: results, adapterInstanceCount: results.size(), action: 'search', keyword: keyword]
+			render view:'index', model:[adapterInstanceList: results, action: 'search', keyword: keyword]
 		} else {
 			redirect action: 'index'
 		}

@@ -10,9 +10,10 @@ class ServiceController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "PUT"]
 
-    def index(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
-        respond Service.list(params), model:[serviceInstanceCount: Service.count()]
+    def index() {
+		params.sort = params.sort ?: 'name'
+		params.order = params.order ?: 'asc'
+        respond Service.list(params)
     }
 	
 	def search() {
@@ -26,7 +27,7 @@ class ServiceController {
 					ilike('vendor', "%$keyword%")
 				}
 			}
-			render view:'index', model:[serviceInstanceList: results, serviceInstanceCount: results.size(), action: 'search', keyword: keyword]
+			render view:'index', model:[serviceInstanceList: results, action: 'search', keyword: keyword]
 		} else {
 			redirect action: 'index'
 		}

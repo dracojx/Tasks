@@ -17,11 +17,10 @@ class TaskController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
-    def index(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
+    def index() {
 		params.sort = params.sort ?: 'req'
 		params.order = params.order ?: 'desc'
-        respond Task.list(params), model:[taskInstanceCount: Task.count()]
+        respond Task.list(params)
     }
 	
 	def search() {
@@ -42,7 +41,7 @@ class TaskController {
 					eq('l.product', Product.findByItemIdIlike(keyword))
 				}
 			}
-			render view:'index', model:[taskInstanceList: results, taskInstanceCount: results.size(), action: 'search', keyword: keyword]
+			render view:'index', model:[taskInstanceList: results, action: 'search', keyword: keyword]
 		} else {
 			redirect action: 'index'
 		}

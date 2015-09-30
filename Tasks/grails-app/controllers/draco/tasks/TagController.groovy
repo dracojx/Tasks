@@ -12,9 +12,10 @@ class TagController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "PUT"]
 
-    def index(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
-        respond Tag.list(params), model:[tagInstanceCount: Tag.count()]
+    def index() {
+		params.sort = params.sort ?: 'name'
+		params.order = params.order ?: 'asc'
+        respond Tag.list(params)
     }
 	
 	def search() {
@@ -24,7 +25,7 @@ class TagController {
 				order(params.sort?:'name', params.order?:'asc')
 				ilike('name', "%$keyword%")
 			}
-			render view:'index', model:[tagInstanceList: results, tagInstanceCount: results.size(), action: 'search', keyword: keyword]
+			render view:'index', model:[tagInstanceList: results, action: 'search', keyword: keyword]
 		} else {
 			redirect action: 'index'
 		}
