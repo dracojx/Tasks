@@ -33,18 +33,18 @@
 					<g:render template="form"/>
 				</fieldset>
 				<fieldset class="buttons">
+					<g:if test="${taskInstance?.status.toInteger() < 4 }">
+						<g:link action="next" resource="${taskInstance}"><g:message code="default.button.next.label" default="Next Stage" /></g:link>
+					</g:if>
+					<g:if test="${taskInstance?.status.toInteger() > 0 }">
+						<g:link action="prev" resource="${taskInstance}"><g:message code="default.button.prev.label" default="Prev Stage" /></g:link>
+					</g:if>
 					<g:actionSubmit class="save" action="update" value="${message(code: 'default.button.update.label', default: 'Update')}" />
 					<g:if test="${taskInstance?.activate}">
 						<g:link action="deactivate" resource="${taskInstance}"><g:message code="task.button.deactivate.label" default="Close" /></g:link>
 					</g:if>
 					<g:if test="${!taskInstance?.activate}">
 						<g:link action="activate" resource="${taskInstance}"><g:message code="task.button.Activate.label" default="Open" /></g:link>
-					</g:if>
-					<g:if test="${taskInstance?.status.toInteger() < 4 }">
-						<g:link action="next" resource="${taskInstance}"><g:message code="default.button.next.label" default="Next Stage" /></g:link>
-					</g:if>
-					<g:if test="${taskInstance?.status.toInteger() > 0 }">
-						<g:link action="prev" resource="${taskInstance}"><g:message code="default.button.prev.label" default="Prev Stage" /></g:link>
 					</g:if>
 				</fieldset>
 			</g:form>
