@@ -28,6 +28,7 @@ class ProductController {
 				order(params.sort?:'itemId', params.order?:'asc')
 				createAlias('tags', 't', CriteriaSpecification.LEFT_JOIN)
 				createAlias('logs', 'l', CriteriaSpecification.LEFT_JOIN)
+				setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
 				or {
 					ilike('itemId', "%$keyword%")
 					ilike('title', "%$keyword%")

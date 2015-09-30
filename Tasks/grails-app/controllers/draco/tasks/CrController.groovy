@@ -24,6 +24,7 @@ class CrController {
 			def results = Cr.withCriteria {
 				order(params.sort?:'number', params.order?:'desc')
 				createAlias('products', 'p', CriteriaSpecification.LEFT_JOIN)
+				setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
 				or {
 					ilike('number', "%$keyword%")
 					ilike('description', "%$keyword%")

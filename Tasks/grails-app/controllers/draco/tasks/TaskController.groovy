@@ -5,6 +5,7 @@ package draco.tasks
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
+import org.hibernate.Criteria
 import org.hibernate.criterion.CriteriaSpecification
 
 @Transactional(readOnly = true)
@@ -31,6 +32,7 @@ class TaskController {
 				createAlias('crs', 'c', CriteriaSpecification.LEFT_JOIN)
 				createAlias('tags', 't', CriteriaSpecification.LEFT_JOIN)
 				createAlias('logs', 'l', CriteriaSpecification.LEFT_JOIN)
+				setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
 				or {
 					ilike('req', "%$keyword%")
 					ilike('title', "%$keyword%")

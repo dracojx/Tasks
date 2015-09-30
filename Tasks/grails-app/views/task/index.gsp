@@ -56,7 +56,7 @@
 					
 						<td>${fieldValue(bean: taskInstance, field: "remark")}</td>
 					
-						<td>${fieldValue(bean: taskInstance, field: "status")}</td>
+						<td><g:message code="task.status.${fieldValue(bean: taskInstance, field: "status")}"/></td>
 					
 						<td>${fieldValue(bean: taskInstance, field: "user")}</td>
 					
