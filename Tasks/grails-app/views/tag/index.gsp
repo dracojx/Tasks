@@ -22,7 +22,7 @@
 			</ul>
 		</div>
 		<div id="list-tag" class="content scaffold-list" role="main">
-			<h1><g:message code="default.list.label" args="[entityName]" />(${tagInstanceList.size() })</h1>
+			<h1><g:message code="default.list.label" args="[entityName]" />(${tagInstanceList?.size() ?: 0  })</h1>
 			<g:if test="${flash.message}">
 				<div class="message" role="status">${flash.message}</div>
 			</g:if>

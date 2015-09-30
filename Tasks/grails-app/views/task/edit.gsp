@@ -41,7 +41,7 @@
 					</g:if>
 					<g:actionSubmit class="save" action="update" value="${message(code: 'default.button.update.label', default: 'Update')}" />
 					<g:if test="${taskInstance?.activate}">
-						<g:link action="deactivate" resource="${taskInstance}"><g:message code="task.button.deactivate.label" default="Close" /></g:link>
+						<g:link action="delete" resource="${taskInstance}"><g:message code="task.button.deactivate.label" default="Close" /></g:link>
 					</g:if>
 					<g:if test="${!taskInstance?.activate}">
 						<g:link action="activate" resource="${taskInstance}"><g:message code="task.button.Activate.label" default="Open" /></g:link>

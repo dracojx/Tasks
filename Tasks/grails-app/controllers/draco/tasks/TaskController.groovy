@@ -15,7 +15,15 @@ class TaskController {
 	def logService
 	def taskService
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+    static allowedMethods = [save: "POST", update: "PUT"]
+	
+	def beforeInterceptor = {
+		println "====================================="
+		params.entrySet().each {
+			println it
+		}
+		println "====================================="
+	}
 
     def index() {
 		params.sort = params.sort ?: 'req'
@@ -43,7 +51,8 @@ class TaskController {
 			}
 			render view:'index', model:[taskInstanceList: results, action: 'search', keyword: keyword]
 		} else {
-			redirect action: 'index'
+			flash.message = flash.message
+			redirect action: 'index', params: [sort: params.sort, order: params.order]
 		}
 	}
 
@@ -105,24 +114,21 @@ class TaskController {
     }
 
     @Transactional
-    def delete(Task taskInstance) {
+	def delete(Task taskInstance) {
+		taskInstance.setActivate(false)
+		taskInstance.save flush:true
+	    flash.message = message(code: 'default.updated.message', args: ['', taskInstance.getReq()])
+		redirect action: 'edit', id: taskInstance.getId()
+	}
 
-        if (taskInstance == null) {
-            notFound()
-            return
-        }
+	@Transactional
+	def activate(Task taskInstance) {
+		taskInstance.setActivate(true)
+		taskInstance.save flush:true
+	    flash.message = message(code: 'default.updated.message', args: ['', taskInstance.getReq()])
+		redirect action: 'edit', id: taskInstance.getId()
+	}
 
-        taskInstance.delete flush:true
-
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: ['', taskInstance.getReq()])
-                redirect action:"index", method:"GET"
-            }
-            '*'{ render status: NO_CONTENT }
-        }
-    }
-	
 	@Transactional
 	def prev(Task taskInstance) {
 		taskService.prev(taskInstance)
@@ -152,29 +158,35 @@ class TaskController {
 	}
 	
 	@Transactional
+	def deleteMulti() {
+		def ids = []
+		params.id?.each {
+			ids.add(it as long)
+		}
+		def tasks = Task.getAll(ids)
+		tasks.each {
+			it.setActivate(false)
+		}
+		Task.saveAll(tasks)
+	    flash.message = message(code: 'default.deleted.multi.message', args: [tasks.size(), message(code:'task.label', default:'Task')])
+		redirect action: 'search', params: [keyword:params.keyword, sort:params.sort, order:params.order]
+	}
+
+	@Transactional
+	def addTagMulti() {
+		def size = taskService.addTagMulti(params.id, params.tagNames)
+	    flash.message = message(code: 'default.updated.multi.message', args: [size, message(code:'task.label', default:'Task')])
+		redirect action: 'search', params: [keyword:params.keyword, sort:params.sort, order:params.order]
+	}
+	
+	@Transactional
 	def removeTag(Task taskInstance) {
 		taskService.removeTag(taskInstance, params.tId)
 		flash.message = message(code: 'default.updated.message', args: ['', taskInstance.getReq()])
         redirect action: 'edit', id: taskInstance.getId()
 	}
 
-	@Transactional
-	def activate(Task taskInstance) {
-		taskInstance.setActivate(true)
-		taskInstance.save flush:true
-	    flash.message = message(code: 'default.updated.message', args: ['', taskInstance.getReq()])
-		redirect action: 'edit', id: taskInstance.getId()
-	}
-
-	@Transactional
-	def deactivate(Task taskInstance) {
-		taskInstance.setActivate(false)
-		taskInstance.save flush:true
-        flash.message = message(code: 'default.updated.message', args: ['', taskInstance.getReq()])
-		redirect action: 'edit', id: taskInstance.getId()
-	}
-
-    protected void notFound() {
+	protected void notFound() {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.not.found.message', args: [message(code: 'task.label', default: 'Task'), params.id])

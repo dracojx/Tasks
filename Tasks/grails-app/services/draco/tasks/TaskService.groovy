@@ -109,6 +109,32 @@ class TaskService {
 		log.delete flush:true
 	}
 	
+	def addTagMulti(def id, def tagNames) {
+		if(id && tagNames) {
+			def ids = []
+			id?.each {
+				ids.add(it as long)
+			}
+			def names = tagNames.split(" ")
+			def tags = [] as SortedSet
+			names.each {
+				def tag = Tag.findByName(it)
+				if(!tag) {
+					tag = new Tag(name: it)
+					tag.save flush:true
+					tags.add(tag)
+				}
+			}
+			def tasks = Task.getAll(ids)
+			tasks.each {
+				it.getTags().addAll(tags)
+			}
+			Task.saveAll(tasks)
+			return tasks.size()
+		}
+		return 0
+	}
+	
 	def removeTag(Task task, def tId) {
 		Tag tag = Tag.get(tId)
 		task.getTags().remove(tag)
