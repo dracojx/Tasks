@@ -22,7 +22,7 @@
 			</ul>
 		</div>
 		<div id="list-product" class="content scaffold-list" role="main">
-			<h1><g:message code="default.list.label" args="[entityName]" /></h1>
+			<h1><g:message code="default.list.label" args="[entityName]" />(${productInstanceList.size() })</h1>
 			<g:if test="${flash.message}">
 				<div class="message" role="status">${flash.message}</div>
 			</g:if>
@@ -36,15 +36,16 @@
 						<g:sortableColumn property="title" title="${message(code: 'product.title.label', default: 'Title')}" 
 							action="${action?:'index' }" params="${['keyword':keyword] }" />
 					
-						<g:sortableColumn property="remark" title="${message(code: 'product.remark.label', default: 'Remark')}" 
-							action="${action?:'index' }" params="${['keyword':keyword] }" />
-					
 						<g:sortableColumn property="mode" title="${message(code: 'product.mode.label', default: 'Mode')}" 
 							action="${action?:'index' }" params="${['keyword':keyword] }" />
 					
 						<th><g:message code="product.sender.label" default="Sender" /></th>
 					
 						<th><g:message code="product.receiver.label" default="Receiver" /></th>
+						
+						<th><g:message code="task.logs.label" default="Logs" /></th>
+						
+						<th><g:message code="task.tags.label" default="Tags" /></th>
 					
 					</tr>
 				</thead>
@@ -56,13 +57,27 @@
 					
 						<td>${fieldValue(bean: productInstance, field: "title")}</td>
 					
-						<td>${fieldValue(bean: productInstance, field: "remark")}</td>
-					
 						<td><g:message code="product.mode.${fieldValue(bean: productInstance, field: "mode")}"/></td>
 					
 						<td>${fieldValue(bean: productInstance, field: "sender")}</td>
 					
 						<td>${fieldValue(bean: productInstance, field: "receiver")}</td>
+						
+						<td>
+							<g:each in="${productInstance.logs }" var="l">
+								<g:link controller="Task" action="edit" id="${l.task.id}">
+									<g:message code="product.logs.log" args="${[message(code:'log.type.'+l.type), l.task.req, l.task.user.name]}"/>
+								</g:link>
+								<br/>
+							</g:each>
+						</td>
+						
+						<td>
+							<g:each in="${productInstance.tags }" var="t">
+								<g:link controller="tag" action="edit" id="${t.id}">${t?.encodeAsHTML()}</g:link>
+								<br/>
+							</g:each>
+						</td>
 					
 					</tr>
 				</g:each>

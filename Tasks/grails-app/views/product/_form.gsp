@@ -80,8 +80,7 @@
 		<g:each in="${productInstance.logs}" var="l">
 			<span class="property-value" aria-labelledby="logs-label">
 				<g:link controller="Task" action="edit" id="${l.task.id}">
-					<g:message code="product.logs.log" 
-						args="${[l.updateTime.format('yyyy.MM.dd HH:mm:ss'), message(code:'log.type.'+l.type), l.task.req, l.task.user.name]}"/>
+					<g:message code="product.logs.log" args="${[message(code:'log.type.'+l.type), l.task.req, l.task.user.name]}"/>
 				</g:link>
 				<g:link controller="product" action="removeLog" resource="${productInstance}" params="${[lId:l.id] }">x</g:link>
 			</span>

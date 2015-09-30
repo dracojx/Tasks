@@ -22,7 +22,7 @@
 			</ul>
 		</div>
 		<div id="list-task" class="content scaffold-list" role="main">
-			<h1><g:message code="default.list.label" args="[entityName]" /></h1>
+			<h1><g:message code="default.list.label" args="[entityName]" />(${taskInstanceList.size() })</h1>
 			<g:if test="${flash.message}">
 				<div class="message" role="status">${flash.message}</div>
 			</g:if>
@@ -36,13 +36,16 @@
 						<g:sortableColumn property="title" title="${message(code: 'task.title.label', default: 'Title')}" 
 							action="${action?:'index' }" params="${['keyword':keyword] }" />
 					
-						<g:sortableColumn property="remark" title="${message(code: 'task.remark.label', default: 'Remark')}" 
-							action="${action?:'index' }" params="${['keyword':keyword] }" />
-					
 						<g:sortableColumn property="status" title="${message(code: 'task.status.label', default: 'Status')}" 
 							action="${action?:'index' }" params="${['keyword':keyword] }" />
 					
 						<th><g:message code="task.user.label" default="User" /></th>
+						
+						<th><g:message code="task.logs.label" default="Products" /></th>
+						
+						<th><g:message code="task.crs.label" default="Crs" /></th>
+						
+						<th><g:message code="task.tags.label" default="Tags" /></th>
 					
 					</tr>
 				</thead>
@@ -54,11 +57,30 @@
 					
 						<td>${fieldValue(bean: taskInstance, field: "title")}</td>
 					
-						<td>${fieldValue(bean: taskInstance, field: "remark")}</td>
-					
 						<td><g:message code="task.status.${fieldValue(bean: taskInstance, field: "status")}"/></td>
 					
 						<td>${fieldValue(bean: taskInstance, field: "user")}</td>
+						
+						<td>
+							<g:each in="${taskInstance.logs }" var="l">
+								<g:link controller="product" action="edit" id="${l.product.id}"><%l?.product?.encodeAsHTML()%></g:link>
+								<br/>
+							</g:each>
+						</td>
+						
+						<td>
+							<g:each in="${taskInstance.crs }" var="c">
+								<g:link controller="cr" action="edit" id="${c.id}">${c?.encodeAsHTML()}</g:link>
+								<br/>
+							</g:each>
+						</td>
+						
+						<td>
+							<g:each in="${taskInstance.tags }" var="t">
+								<g:link controller="tag" action="edit" id="${t.id}">${t?.encodeAsHTML()}</g:link>
+								<br/>
+							</g:each>
+						</td>
 					
 					</tr>
 				</g:each>
