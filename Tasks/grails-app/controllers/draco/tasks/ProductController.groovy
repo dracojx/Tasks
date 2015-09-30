@@ -3,10 +3,9 @@ package draco.tasks
 
 
 import static org.springframework.http.HttpStatus.*
-
-import java.util.SortedSet;
-
 import grails.transaction.Transactional
+
+import org.hibernate.criterion.CriteriaSpecification
 
 @Transactional(readOnly = true)
 class ProductController {
@@ -17,15 +16,41 @@ class ProductController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
+		params.sort = params.sort ?: 'itemId'
+		params.order = params.order ?: 'asc'
         respond Product.list(params), model:[productInstanceCount: Product.count()]
     }
+	
+	def search() {
+		if(params.keyword?.trim()) {
+			def keyword = params.keyword.trim()
+			def results = Product.withCriteria {
+				order(params.sort?:'itemId', params.order?:'asc')
+				createAlias('tags', 't', CriteriaSpecification.LEFT_JOIN)
+				createAlias('logs', 'l', CriteriaSpecification.LEFT_JOIN)
+				or {
+					ilike('itemId', "%$keyword%")
+					ilike('title', "%$keyword%")
+					ilike('remark', "%$keyword%")
+					ilike('t.name', keyword)
+					eq('sender', Service.findByNameIlike(keyword))
+					eq('receiver', Service.findByNameIlike(keyword))
+					eq('source', Adapter.findByNameIlike(keyword))
+					eq('target', Adapter.findByNameIlike(keyword))
+					eq('l.task', Task.findByReqIlike(keyword))
+				}
+			}
+			render view:'index', model:[productInstanceList: results, productInstanceCount: results.size(), action: 'search', keyword: keyword]
+		} else {
+			redirect action: 'index'
+		}
+	}
 
     def show(Product productInstance) {
         respond productInstance
     }
 
     def create() {
-		println "================="
 		params.entrySet().each {
 			println it
 		}

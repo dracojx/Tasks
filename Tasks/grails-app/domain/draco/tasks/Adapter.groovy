@@ -7,7 +7,9 @@ class Adapter {
 		name(unique:true, nullable:false, blank:false)
     }
 	
-	
+	static mapping = {
+		sort "name"
+	}
 	
 	public void setName(String name) {
 		this.name = name?.trim()

@@ -6,7 +6,7 @@
 	<label for="number">
 		<g:message code="cr.number.label" default="Number" />
 	</label>
-	<g:textField name="number" required="" value="${crInstance?.number}"/>
+	<g:textField name="number" required="" value="${crInstance?.number}" autofocus="" />
 
 </div>
 

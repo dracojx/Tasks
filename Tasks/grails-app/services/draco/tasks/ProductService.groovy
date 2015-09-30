@@ -24,7 +24,7 @@ class ProductService {
 		}
 		
 		if(params.taskReq) {
-			Task task = Task.findByReq(params.taskReq)
+			Task task = Task.findByReq(params.taskReq.toUpperCase())
 			if(!task) {
 				task = new Task(req: params.taskReq, status:"0", user:User.get(userId))
 				task.save flush:true

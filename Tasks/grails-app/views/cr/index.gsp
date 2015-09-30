@@ -15,7 +15,7 @@
 				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
 				<li>
 					<g:form action="search" >
-						<g:textField name="keyword"  placeholder="${message(code: 'default.textField.placeholder.keyword') }"/>
+						<g:textField name="keyword"  placeholder="${message(code: 'default.textField.placeholder.keyword') }" autofocus="" />
 						<g:actionSubmit class="search" action="search" value="${message(code: 'default.button.search.label', default: 'Search')}" />
 					</g:form>
 				</li>

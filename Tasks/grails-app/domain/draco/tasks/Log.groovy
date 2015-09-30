@@ -11,6 +11,10 @@ class Log implements Comparable{
 		type(inList: ["c", "u", "d"]) //新增，修改，删除
     }
 	
+	static mapping = {
+		sort "updateTime"
+	}
+	
 	public String toString() {
 		def time = updateTime.format("yyyy-MM-dd HH:mm:ss")
 		return "[$time]-$task, $user"
@@ -18,6 +22,6 @@ class Log implements Comparable{
 
 	@Override
 	public int compareTo(Object o) {
-		0 - updateTime.compareTo(o.updateTime)
+		updateTime.compareTo(o.updateTime)
 	}
 }

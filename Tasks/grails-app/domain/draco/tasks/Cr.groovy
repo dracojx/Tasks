@@ -15,11 +15,11 @@ class Cr implements Comparable{
     }
 	
 	static mapping = {
-		sort number: "desc"
+		sort "number"
 	}
 	
 	public void setNumber(String number) {
-		this.number = number?.trim()
+		this.number = number?.trim().toUpperCase()
 	}
 
 	public void setDescription(String description) {
@@ -32,6 +32,6 @@ class Cr implements Comparable{
 
 	@Override
 	public int compareTo(Object o) {
-		number.compareTo(o.number)
+		number.compareToIgnoreCase(o.number)
 	}
 }

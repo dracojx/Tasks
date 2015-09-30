@@ -14,6 +14,23 @@ class ServiceController {
         params.max = Math.min(max ?: 10, 100)
         respond Service.list(params), model:[serviceInstanceCount: Service.count()]
     }
+	
+	def search() {
+		if(params.keyword?.trim()) {
+			def keyword = params.keyword.trim()
+			def results = Service.withCriteria {
+				order(params.sort?:'name', params.order?:'asc')
+				or {
+					ilike('name', "%$keyword%")
+					ilike('description', "%$keyword%")
+					ilike('vendor', "%$keyword%")
+				}
+			}
+			render view:'index', model:[serviceInstanceList: results, serviceInstanceCount: results.size(), action: 'search', keyword: keyword]
+		} else {
+			redirect action: 'index'
+		}
+	}
 
     def show(Service serviceInstance) {
         respond serviceInstance

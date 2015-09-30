@@ -97,7 +97,7 @@ class UserController {
 	}
 
     def auth() {
-		User user = User.findByUsernameAndPassword(params.username, params.password)
+		User user = User.findByUsernameAndPassword(params.username?.trim().toUpperCase(), params.password)
 	
 	    if (user == null) {
 	        wrongUser()

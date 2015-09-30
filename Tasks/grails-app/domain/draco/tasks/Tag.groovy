@@ -5,10 +5,14 @@ class Tag implements Comparable{
 
     static constraints = {
 		name(unique:true, nullable:false, blank:false)
-    }
+    }
+	
+	static mapping = {
+		sort "name"
+	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.name = name?.trim()
 	}
 	
 	public String toString() {

@@ -7,7 +7,7 @@
 	<label for="req"> <g:message code="task.req.label"
 			default="Req" />
 	</label>
-	<g:textField name="req" required="" value="${taskInstance?.req}" />
+	<g:textField name="req" required="" value="${taskInstance?.req}" autofocus="" />
 
 </div>
 

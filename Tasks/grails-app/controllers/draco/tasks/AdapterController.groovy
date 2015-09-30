@@ -12,8 +12,23 @@ class AdapterController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
+		params.sort = params.sort ?: 'name'
+		params.order = params.order ?: 'asc'
         respond Adapter.list(params), model:[adapterInstanceCount: Adapter.count()]
     }
+	
+	def search() {
+		if(params.keyword?.trim()) {
+			def keyword = params.keyword.trim()
+			def results = Adapter.withCriteria {
+				order(params.sort?:'name', params.order?:'asc')
+				ilike('name', "%$keyword%")
+			}
+			render view:'index', model:[adapterInstanceList: results, adapterInstanceCount: results.size(), action: 'search', keyword: keyword]
+		} else {
+			redirect action: 'index'
+		}
+	}
 
     def show(Adapter adapterInstance) {
         respond adapterInstance

@@ -13,6 +13,12 @@
 			<ul>
 				<li><a class="home" href="${createLink(uri: '/index')}"><g:message code="default.home.label"/></a></li>
 				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
+				<li>
+					<g:form action="search" >
+						<g:textField name="keyword"  placeholder="${message(code: 'default.textField.placeholder.keyword') }" autofocus="" />
+						<g:actionSubmit class="search" action="search" value="${message(code: 'default.button.search.label', default: 'Search')}" />
+					</g:form>
+				</li>
 			</ul>
 		</div>
 		<div id="list-product" class="content scaffold-list" role="main">
@@ -24,13 +30,17 @@
 			<thead>
 					<tr>
 					
-						<g:sortableColumn property="itemId" title="${message(code: 'product.itemId.label', default: 'Item Id')}" />
+						<g:sortableColumn property="itemId" title="${message(code: 'product.itemId.label', default: 'Item Id')}" 
+							action="${action?:'index' }" params="${['keyword':keyword] }" />
 					
-						<g:sortableColumn property="title" title="${message(code: 'product.title.label', default: 'Title')}" />
+						<g:sortableColumn property="title" title="${message(code: 'product.title.label', default: 'Title')}" 
+							action="${action?:'index' }" params="${['keyword':keyword] }" />
 					
-						<g:sortableColumn property="remark" title="${message(code: 'product.remark.label', default: 'Remark')}" />
+						<g:sortableColumn property="remark" title="${message(code: 'product.remark.label', default: 'Remark')}" 
+							action="${action?:'index' }" params="${['keyword':keyword] }" />
 					
-						<g:sortableColumn property="mode" title="${message(code: 'product.mode.label', default: 'Mode')}" />
+						<g:sortableColumn property="mode" title="${message(code: 'product.mode.label', default: 'Mode')}" 
+							action="${action?:'index' }" params="${['keyword':keyword] }" />
 					
 						<th><g:message code="product.sender.label" default="Sender" /></th>
 					
@@ -48,7 +58,7 @@
 					
 						<td>${fieldValue(bean: productInstance, field: "remark")}</td>
 					
-						<td>${fieldValue(bean: productInstance, field: "mode")}</td>
+						<td><g:message code="product.mode.${fieldValue(bean: productInstance, field: "mode")}"/></td>
 					
 						<td>${fieldValue(bean: productInstance, field: "sender")}</td>
 					

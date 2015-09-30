@@ -6,7 +6,7 @@
 	<label for="itemId">
 		<g:message code="product.itemId.label" default="Item Id" />
 	</label>
-	<g:textField name="itemId" required="" value="${productInstance?.itemId}"/>
+	<g:textField name="itemId" required="" value="${productInstance?.itemId}" autofocus="" />
 
 </div>
 

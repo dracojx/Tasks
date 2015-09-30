@@ -59,7 +59,7 @@ p {
 						<label for="username">
 							<g:message code="user.username.label" default="Username" />
 						</label>
-						<g:textField name="username" required="" value="${userInstance?.username}"/>
+						<g:textField name="username" required="" value="${userInstance?.username}" autofocus=""/>
 					</div>
 					
 					<div class="fieldcontain ${hasErrors(bean: userInstance, field: 'password', 'error')} required">

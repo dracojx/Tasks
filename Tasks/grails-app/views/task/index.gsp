@@ -15,7 +15,7 @@
 				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
 				<li>
 					<g:form action="search" >
-						<g:textField name="keyword"  placeholder="${message(code: 'default.textField.placeholder.keyword') }"/>
+						<g:textField name="keyword"  placeholder="${message(code: 'default.textField.placeholder.keyword') }" autofocus=""/>
 						<g:actionSubmit class="search" action="search" value="${message(code: 'default.button.search.label', default: 'Search')}" />
 					</g:form>
 				</li>
@@ -30,13 +30,17 @@
 			<thead>
 					<tr>
 					
-						<g:sortableColumn property="req" title="${message(code: 'task.req.label', default: 'Req')}" />
+						<g:sortableColumn property="req" title="${message(code: 'task.req.label', default: 'Req')}" 
+							action="${action?:'index' }" params="${['keyword':keyword] }" />
 					
-						<g:sortableColumn property="title" title="${message(code: 'task.title.label', default: 'Title')}" />
+						<g:sortableColumn property="title" title="${message(code: 'task.title.label', default: 'Title')}" 
+							action="${action?:'index' }" params="${['keyword':keyword] }" />
 					
-						<g:sortableColumn property="remark" title="${message(code: 'task.remark.label', default: 'Remark')}" />
+						<g:sortableColumn property="remark" title="${message(code: 'task.remark.label', default: 'Remark')}" 
+							action="${action?:'index' }" params="${['keyword':keyword] }" />
 					
-						<g:sortableColumn property="status" title="${message(code: 'task.status.label', default: 'Status')}" />
+						<g:sortableColumn property="status" title="${message(code: 'task.status.label', default: 'Status')}" 
+							action="${action?:'index' }" params="${['keyword':keyword] }" />
 					
 						<th><g:message code="task.user.label" default="User" /></th>
 					

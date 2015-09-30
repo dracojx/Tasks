@@ -12,7 +12,7 @@ class TaskService {
 			}
 			def numbers = params.crNumbers.split(" ")
 			numbers.each {
-				Cr cr = Cr.findByNumber(it)
+				Cr cr = Cr.findByNumber(it.toUpperCase())
 				if(!cr) {
 					cr = new Cr(number:it, status:"1")
 					cr.save flush:true
@@ -29,7 +29,7 @@ class TaskService {
 			}
 			def itemIds = params.productItemIds.split(" ")
 			itemIds.each {
-				Product product = Product.findByItemId(it)
+				Product product = Product.findByItemId(it.toUpperCase())
 				def type = "u"
 				if(!product) {
 					type = "c"

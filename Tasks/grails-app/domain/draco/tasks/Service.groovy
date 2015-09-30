@@ -11,6 +11,10 @@ class Service {
 		vendor(nullable:true, blank:true)
     }
 	
+	static mapping = {
+		sort "name"
+	}
+	
 	public void setName(String name) {
 		this.name = name?.trim()
 	}

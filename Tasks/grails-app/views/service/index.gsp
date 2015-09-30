@@ -13,6 +13,12 @@
 			<ul>
 				<li><a class="home" href="${createLink(uri: '/index')}"><g:message code="default.home.label"/></a></li>
 				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
+				<li>
+					<g:form action="search" >
+						<g:textField name="keyword"  placeholder="${message(code: 'default.textField.placeholder.keyword') }" autofocus="" />
+						<g:actionSubmit class="search" action="search" value="${message(code: 'default.button.search.label', default: 'Search')}" />
+					</g:form>
+				</li>
 			</ul>
 		</div>
 		<div id="list-service" class="content scaffold-list" role="main">
@@ -24,11 +30,14 @@
 			<thead>
 					<tr>
 					
-						<g:sortableColumn property="name" title="${message(code: 'service.name.label', default: 'Name')}" />
+						<g:sortableColumn property="name" title="${message(code: 'service.name.label', default: 'Name')}" 
+							action="${action?:'index' }" params="${['keyword':keyword] }" />
 					
-						<g:sortableColumn property="description" title="${message(code: 'service.description.label', default: 'Description')}" />
+						<g:sortableColumn property="description" title="${message(code: 'service.description.label', default: 'Description')}" 
+							action="${action?:'index' }" params="${['keyword':keyword] }" />
 					
-						<g:sortableColumn property="vendor" title="${message(code: 'service.vendor.label', default: 'Vendor')}" />
+						<g:sortableColumn property="vendor" title="${message(code: 'service.vendor.label', default: 'Vendor')}" 
+							action="${action?:'index' }" params="${['keyword':keyword] }" />
 					
 					</tr>
 				</thead>

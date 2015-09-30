@@ -11,9 +11,21 @@ class User {
     static constraints = {
 		username(unique:true, nullable:false, blank:false)
 		password(password:true, nullable:false, blank:false)
-		name(nullable:true, blank:true)
+		name(nullable:false, blank:false)
     }
 	
+	static mapping = {
+		sort "username"
+	}
+	
+	public void setUsername(String username) {
+		this.username = username?.trim().toUpperCase()
+	}
+
+	public void setName(String name) {
+		this.name = name?.trim()
+	}
+
 	public String toString() {
 		return name
 	}

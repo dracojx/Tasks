@@ -5,6 +5,8 @@ package draco.tasks
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
+import org.hibernate.criterion.CriteriaSpecification
+
 @Transactional(readOnly = true)
 class CrController {
 	def crService
@@ -19,27 +21,14 @@ class CrController {
 	def search() {
 		if(params.keyword?.trim()) {
 			def keyword = params.keyword.trim()
-//			def result1 = Cr.where {
-//				products.size() == 0 && 
-//				(
-//					number =~ "%$keyword%" || 
-//					description =~ "%$keyword%"
-//				)
-//			}
-//			def result2 = Cr.where {
-//				products.size() > 0 && 
-//				(
-//					number =~ "%$keyword%" || 
-//					description =~ "%$keyword%" || 
-//					products {itemId =~ keyword}
-//				)
-//			}
-//			def results = []
-//			results.addAll(result1.toList())
-//			results.addAll(result2.toList())
-			def results = Cr.where {
-				products {itemId == keyword} || 
-				number == keyword
+			def results = Cr.withCriteria {
+				order(params.sort?:'number', params.order?:'desc')
+				createAlias('products', 'p', CriteriaSpecification.LEFT_JOIN)
+				or {
+					ilike('number', "%$keyword%")
+					ilike('description', "%$keyword%")
+					ilike('p.itemId', keyword)
+				}
 			}
 			render view:'index', model:[crInstanceList: results, crInstanceCount: results.size(), action: 'search', keyword: keyword]
 		} else {

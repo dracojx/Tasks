@@ -5,6 +5,8 @@ package draco.tasks
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
+import org.hibernate.criterion.CriteriaSpecification
+
 @Transactional(readOnly = true)
 class TaskController {
 	
@@ -16,19 +18,29 @@ class TaskController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
+		params.sort = params.sort ?: 'req'
+		params.order = params.order ?: 'desc'
         respond Task.list(params), model:[taskInstanceCount: Task.count()]
     }
 	
 	def search() {
-		println "Search=============================="
 		if(params.keyword?.trim()) {
 			def keyword = params.keyword.trim()
-			def results = Task.where {
-				logs {product.itemId == keyword} || 
-				req == keyword
+			def results = Task.withCriteria {
+				order(params.sort?:'req', params.order?:'desc')
+				createAlias('crs', 'c', CriteriaSpecification.LEFT_JOIN)
+				createAlias('tags', 't', CriteriaSpecification.LEFT_JOIN)
+				createAlias('logs', 'l', CriteriaSpecification.LEFT_JOIN)
+				or {
+					ilike('req', "%$keyword%")
+					ilike('title', "%$keyword%")
+					ilike('remark', "%$keyword%")
+					ilike('c.number', keyword)
+					ilike('t.name', keyword)
+					eq('l.product', Product.findByItemIdIlike(keyword))
+				}
 			}
-		println "=============================="
-			render view:'index', model:[taskInstanceList: results, crInstanceCount: results.size(), action: 'search', keyword: keyword]
+			render view:'index', model:[taskInstanceList: results, taskInstanceCount: results.size(), action: 'search', keyword: keyword]
 		} else {
 			redirect action: 'index'
 		}

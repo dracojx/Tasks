@@ -31,7 +31,7 @@ class Product implements Comparable {
 	}
 	
 	public void setItemId(String itemId) {
-		this.itemId = itemId?.trim()
+		this.itemId = itemId?.trim().toUpperCase()
 	}
 
 	public void setTitle(String title) {

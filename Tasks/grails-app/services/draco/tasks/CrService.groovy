@@ -12,7 +12,7 @@ class CrService {
 			}
 			def itemIds = params.productItemIds.split(" ")
 			itemIds.each {
-				Product product = Product.findByItemId(it)
+				Product product = Product.findByItemId(it.toUpperCase())
 				if(!product) {
 					product = new Product(itemId:it, mode:"a", activate:true)
 					product.save flush:true

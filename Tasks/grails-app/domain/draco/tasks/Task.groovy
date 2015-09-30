@@ -21,8 +21,12 @@ class Task {
 		user(nullable:false, blank:false)
     }
 	
+	static mapping = {
+		sort "req"
+	}
+	
 	public void setReq(String req) {
-		this.req = req?.trim()
+		this.req = req?.trim().toUpperCase()
 	}
 
 	public void setTitle(String title) {

@@ -16,6 +16,19 @@ class TagController {
         params.max = Math.min(max ?: 10, 100)
         respond Tag.list(params), model:[tagInstanceCount: Tag.count()]
     }
+	
+	def search() {
+		if(params.keyword?.trim()) {
+			def keyword = params.keyword.trim()
+			def results = Tag.withCriteria {
+				order(params.sort?:'name', params.order?:'asc')
+				ilike('name', "%$keyword%")
+			}
+			render view:'index', model:[tagInstanceList: results, tagInstanceCount: results.size(), action: 'search', keyword: keyword]
+		} else {
+			redirect action: 'index'
+		}
+	}
 
     def show(Tag tagInstance) {
         respond tagInstance

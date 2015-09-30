@@ -6,7 +6,7 @@
 	<label for="name">
 		<g:message code="service.name.label" default="Name" />
 	</label>
-	<g:textField name="name" required="" value="${serviceInstance?.name}"/>
+	<g:textField name="name" required="" value="${serviceInstance?.name}" autofocus="" />
 
 </div>
 
