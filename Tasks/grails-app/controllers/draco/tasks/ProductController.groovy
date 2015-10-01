@@ -88,10 +88,10 @@ class ProductController {
 			'title':		productInstance.getTitle(),
 			'remark':		productInstance.getRemark(),
 			'mode':			productInstance.getMode(),
-			'sender.id':	productInstance.getSender().getId(),
-			'receiver.id':	productInstance.getReceiver().getId(),
-			'source.id':	productInstance.getSource().getId(),
-			'target.id':	productInstance.getTarget().getId(),
+			'sender.id':	productInstance.getSender()?.getId(),
+			'receiver.id':	productInstance.getReceiver()?.getId(),
+			'source.id':	productInstance.getSource()?.getId(),
+			'target.id':	productInstance.getTarget()?.getId(),
 			'tags':			[] as SortedSet
 			]
 		productInstance.getTags().each {

@@ -1,11 +1,15 @@
 package draco.tasks
 
+import java.util.Date;
+
 class Task {
 	String req
 	String title
 	String remark
 	String status = "0"
 	User user
+	Date createTime = new Date()
+	Date updateTime = new Date()
 	boolean activate = true
 	SortedSet crs
 	SortedSet logs

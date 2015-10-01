@@ -17,6 +17,8 @@
 					<g:form action="search" >
 						<g:textField name="keyword"  placeholder="${message(code: 'default.textField.placeholder.keyword') }" autofocus=""/>
 						<g:actionSubmit class="search" action="search" value="${message(code: 'default.button.search.label', default: 'Search')}" />
+						<g:hiddenField name="sort" value="${params.sort }"/>
+						<g:hiddenField name="order" value="${params.order }"/>
 					</g:form>
 				</li>
 			</ul>
@@ -26,21 +28,9 @@
 			<g:if test="${flash.message}">
 				<div class="message" role="status">${flash.message}</div>
 			</g:if>
-			<g:form controller="task" >
-				<fieldset class="buttons">
-					<g:textField name="tagNames"  placeholder="${message(code: 'default.textField.placeholder.tags') }"/>
-					<g:actionSubmit action="addTagMulti" name="addTagMulti" class="create"
-						 value="${message(code: 'default.button.add.label', default: 'Add')} ${message(code: 'tags.label', default: 'Tags') }" />
-					<g:actionSubmit action="deleteMulti" name="deleteMulti" class="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" />
-					<g:hiddenField name="keyword" value="${params.keyword }"/>
-					<g:hiddenField name="sort" value="${params.sort }"/>
-					<g:hiddenField name="order" value="${params.order }"/>
-				</fieldset>
 			<table>
 				<thead>
 					<tr>
-						<th><input type="checkbox"> </th>
-						
 						<g:sortableColumn property="req" title="${message(code: 'task.req.label', default: 'Req')}" 
 							action="${action?:'index' }" params="${['keyword':keyword] }" />
 					
@@ -63,8 +53,6 @@
 				<tbody>
 				<g:each in="${taskInstanceList}" status="i" var="taskInstance">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-						<td><g:checkBox name="id" value="${taskInstance.id}" checked="false" /></td>
-						
 						<td><g:link action="edit" id="${taskInstance.id}">${fieldValue(bean: taskInstance, field: "req")}</g:link></td>
 					
 						<td>${fieldValue(bean: taskInstance, field: "title")}</td>
@@ -98,7 +86,6 @@
 				</g:each>
 				</tbody>
 			</table>
-			</g:form>
 		</div>
 	</body>
 </html>

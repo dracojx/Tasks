@@ -98,7 +98,34 @@
 
 <div class="fieldcontain ${hasErrors(bean: taskInstance, field: 'status', 'error')}">
 	<span id="status-label" class="property-label"><g:message code="task.status.label" default="Status" /></span>
-	<span class="property-value" aria-labelledby="status-label"><g:message code="task.status.${taskInstance?.status}" /></span>
-</div><g:hiddenField name="user.id" value="${session.userId }" />
+	<span class="property-value" aria-labelledby="status-label">
+		<g:if test="${taskInstance?.activate }">
+			<g:message code="task.status.${taskInstance?.status}" />
+		</g:if>
+		<g:else>
+			<g:message code="task.activate.${taskInstance?.activate}" />
+		</g:else>
+	</span>
+</div>
+
+<g:if test="${taskInstance?.createTime }">
+	<div class="fieldcontain">
+		<span id="createTime-label" class="property-label"><g:message code="task.createTime.label" default="Created Time" /></span>
+		<span class="property-value" aria-labelledby="createTime-label">
+			${taskInstance?.createTime?.format('yyyy/MM/dd HH:mm:ss')}
+		</span>
+	</div>
+</g:if>
+
+<g:if test="${taskInstance?.updateTime }">
+	<div class="fieldcontain">
+		<span id="updateTime-label" class="property-label"><g:message code="task.updateTime.label" default="Updated Time" /></span>
+		<span class="property-value" aria-labelledby="updateTime-label">
+			${taskInstance?.updateTime?.format('yyyy/MM/dd HH:mm:ss')}
+		</span>
+	</div>
+</g:if>
+
+<g:hiddenField name="user.id" value="${session.userId }" />
 <g:hiddenField name="status" value="${taskInstance?.status }"/>
 <g:hiddenField name="activate" value="${taskInstance?.activate}" />
