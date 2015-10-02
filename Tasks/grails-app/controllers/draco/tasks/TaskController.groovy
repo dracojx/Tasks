@@ -16,14 +16,6 @@ class TaskController {
 	def taskService
 
     static allowedMethods = [save: "POST", update: "PUT"]
-	
-	def beforeInterceptor = {
-		println "====================================="
-		params.entrySet().each {
-			println it
-		}
-		println "====================================="
-	}
 
     def index() {
 		params.sort = params.sort ?: 'req'
@@ -70,11 +62,17 @@ class TaskController {
             notFound()
             return
         }
+		
+		taskInstance.setUser(User.get(session.userId))
+		taskInstance.setCreateDate(new Date())
+		taskInstance.setUpdateDate(taskInstance.getCreateDate())
+		taskInstance.validate()
+		
         if (taskInstance.hasErrors()) {
             respond taskInstance.errors, view:'create'
             return
         }
-		def logs = taskService.save(params, taskInstance, session.userId)
+		def logs = taskService.save(params, taskInstance)
 
         request.withFormat {
             form multipartForm {
@@ -95,14 +93,20 @@ class TaskController {
             notFound()
             return
         }
-
+		
+		taskInstance.setUpdateDate(new Date())
+		taskInstance.validate()
+			println "=================="
+		taskInstance.properties.each {
+			println it
+		}
+			println "=================="
         if (taskInstance.hasErrors()) {
             respond taskInstance.errors, view:'edit'
             return
         }
 		
-		taskInstance.setUpdateTime(new Date())
-		def logs = taskService.save(params, taskInstance, session.userId)
+		def logs = taskService.save(params, taskInstance)
 		
         request.withFormat {
             form multipartForm {
@@ -116,7 +120,7 @@ class TaskController {
     @Transactional
 	def delete(Task taskInstance) {
 		taskInstance.setActivate(false)
-		taskInstance.setUpdateTime(new Date())
+		taskInstance.setUpdateDate(new Date())
 		taskInstance.save flush:true
 	    flash.message = message(code: 'task.closed.message', args: [taskInstance.getReq()])
 		redirect action: 'edit', id: taskInstance.getId()
@@ -125,7 +129,7 @@ class TaskController {
 	@Transactional
 	def activate(Task taskInstance) {
 		taskInstance.setActivate(true)
-		taskInstance.setUpdateTime(new Date())
+		taskInstance.setUpdateDate(new Date())
 		taskInstance.save flush:true
 	    flash.message = message(code: 'task.activated.message', args: [taskInstance.getReq()])
 		redirect action: 'edit', id: taskInstance.getId()
@@ -134,7 +138,7 @@ class TaskController {
 	@Transactional
 	def prev(Task taskInstance) {
 		if(taskInstance.isActivate()) {
-			taskInstance.setUpdateTime(new Date())
+			taskInstance.setUpdateDate(new Date())
 			taskService.prev(taskInstance)
 			flash.message = message(code: 'default.stage.changed.message')
 	        redirect action: 'edit', id: taskInstance.getId()
@@ -149,7 +153,7 @@ class TaskController {
 	@Transactional
 	def next(Task taskInstance) {
 		if(taskInstance.isActivate()) {
-			taskInstance.setUpdateTime(new Date())
+			taskInstance.setUpdateDate(new Date())
 			taskService.next(taskInstance)
 			flash.message = message(code: 'default.stage.changed.message')
 	        redirect action: 'edit', id: taskInstance.getId()
@@ -162,7 +166,7 @@ class TaskController {
 	
 	@Transactional
 	def removeCr(Task taskInstance) {
-		taskInstance.setUpdateTime(new Date())
+		taskInstance.setUpdateDate(new Date())
 		taskService.removeCr(taskInstance, params.cId)
 		flash.message = message(code: 'default.updated.message', args: ['', taskInstance.getReq()])
         redirect action: 'edit', id: taskInstance.getId()
@@ -170,7 +174,7 @@ class TaskController {
 	
 	@Transactional
 	def removeLog(Task taskInstance) {
-		taskInstance.setUpdateTime(new Date())
+		taskInstance.setUpdateDate(new Date())
 		taskService.removeLog(taskInstance, params.lId)
 		flash.message = message(code: 'default.updated.message', args: ['', taskInstance.getReq()])
         redirect action: 'edit', id: taskInstance.getId()
@@ -178,7 +182,7 @@ class TaskController {
 	
 	@Transactional
 	def removeTag(Task taskInstance) {
-		taskInstance.setUpdateTime(new Date())
+		taskInstance.setUpdateDate(new Date())
 		taskService.removeTag(taskInstance, params.tId)
 		flash.message = message(code: 'default.updated.message', args: ['', taskInstance.getReq()])
         redirect action: 'edit', id: taskInstance.getId()

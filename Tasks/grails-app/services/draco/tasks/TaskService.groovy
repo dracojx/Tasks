@@ -5,7 +5,7 @@ import grails.transaction.Transactional
 @Transactional
 class TaskService {
 
-    def save(def params, Task task, def userId) {
+    def save(def params, Task task) {
 		if(params.crNumbers) {
 			if(!task.getCrs()) {
 				task.setCrs([] as SortedSet)
@@ -39,7 +39,7 @@ class TaskService {
 				
 				Log log = Log.findByTaskAndProduct(task, product)
 				if(!log) {
-					log = new Log(type:type, user:User.get(userId), task:task, product:product)
+					log = new Log(type:type, user:task.getUser(), task:task, product:product)
 					log.save flush:true
 				}
 				task.getLogs().add(log)

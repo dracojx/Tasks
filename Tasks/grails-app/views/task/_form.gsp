@@ -108,24 +108,20 @@
 	</span>
 </div>
 
-<g:if test="${taskInstance?.createTime }">
+<g:if test="${taskInstance?.createDate }">
 	<div class="fieldcontain">
-		<span id="createTime-label" class="property-label"><g:message code="task.createTime.label" default="Created Time" /></span>
-		<span class="property-value" aria-labelledby="createTime-label">
-			${taskInstance?.createTime?.format('yyyy/MM/dd HH:mm:ss')}
+		<span id="createDate-label" class="property-label"><g:message code="task.createDate.label" default="Created Date" /></span>
+		<span class="property-value" aria-labelledby="createDate-label">
+			${taskInstance?.createDate?.format('yyyy/MM/dd')}
 		</span>
 	</div>
 </g:if>
 
-<g:if test="${taskInstance?.updateTime }">
+<g:if test="${taskInstance?.updateDate }">
 	<div class="fieldcontain">
-		<span id="updateTime-label" class="property-label"><g:message code="task.updateTime.label" default="Updated Time" /></span>
-		<span class="property-value" aria-labelledby="updateTime-label">
-			${taskInstance?.updateTime?.format('yyyy/MM/dd HH:mm:ss')}
+		<span id="updateDate-label" class="property-label"><g:message code="task.updateDate.label" default="Updated Date" /></span>
+		<span class="property-value" aria-labelledby="updateDate-label">
+			${taskInstance?.updateDate?.format('yyyy/MM/dd')}
 		</span>
 	</div>
 </g:if>
-
-<g:hiddenField name="user.id" value="${session.userId }" />
-<g:hiddenField name="status" value="${taskInstance?.status }"/>
-<g:hiddenField name="activate" value="${taskInstance?.activate}" />
