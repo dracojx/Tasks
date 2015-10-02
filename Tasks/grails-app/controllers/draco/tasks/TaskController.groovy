@@ -5,6 +5,8 @@ package draco.tasks
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
+import java.text.SimpleDateFormat
+
 import org.hibernate.Criteria
 import org.hibernate.criterion.CriteriaSpecification
 
@@ -18,30 +20,68 @@ class TaskController {
     static allowedMethods = [save: "POST", update: "PUT"]
 
     def index() {
-		params.sort = params.sort ?: 'req'
+		params.sort = params.sort ?: 'updateDate'
 		params.order = params.order ?: 'desc'
         respond Task.list(params)
     }
 	
 	def search() {
-		if(params.keyword?.trim()) {
-			def keyword = params.keyword.trim()
+		def keyword = params.keyword?.trim()
+		def beginDate = null
+		def endDate = null
+		def status = null
+		def df = new SimpleDateFormat('yyyy-MM-dd')
+		
+		if(params.keyword) {
+			for(i in 0..4) {
+				def message = message(code:"task.status.$i")
+				if(message.equalsIgnoreCase(keyword)) {
+					status = i.toString()
+					break
+				}
+			}
+		}
+		
+		if(params.begin ==~ /\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-3][0-9])/) {
+			beginDate = df.parse(params.begin)
+		}
+		
+		if(params.end ==~ /\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-3][0-9])/) {
+			endDate = df.parse(params.end)
+		}
+		
+		if(keyword || beginDate || endDate) {
 			def results = Task.withCriteria {
-				order(params.sort?:'req', params.order?:'desc')
+				order(params.sort?:'updateDate', params.order?:'desc')
 				createAlias('crs', 'c', CriteriaSpecification.LEFT_JOIN)
 				createAlias('tags', 't', CriteriaSpecification.LEFT_JOIN)
 				createAlias('logs', 'l', CriteriaSpecification.LEFT_JOIN)
 				setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
-				or {
-					ilike('req', "%$keyword%")
-					ilike('title', "%$keyword%")
-					ilike('remark', "%$keyword%")
-					ilike('c.number', keyword)
-					ilike('t.name', keyword)
-					eq('l.product', Product.findByItemIdIlike(keyword))
+				and {
+					if(keyword) {
+						or {
+							ilike('req', "%$keyword%")
+							ilike('title', "%$keyword%")
+							ilike('remark', "%$keyword%")
+							ilike('c.number', keyword)
+							ilike('t.name', keyword)
+							eq('l.product', Product.findByItemIdIlike(keyword))
+							eq('user', User.findByNameIlike(keyword))
+							if(status) {
+								eq('status', status)
+							}
+						}
+					}
+					if(beginDate && !endDate) {
+						ge('createDate', beginDate)
+					} else if(beginDate && endDate) {
+						between('createDate', beginDate, endDate + 1)
+					} else if(!beginDate && endDate) {
+						lt('createDate', endDate + 1)
+					}
 				}
 			}
-			render view:'index', model:[taskInstanceList: results, action: 'search', keyword: keyword]
+			render view:'index', model:[taskInstanceList: results, action: 'search', keyword: keyword, begin: params.begin, end: params.end]
 		} else {
 			flash.message = flash.message
 			redirect action: 'index', params: [sort: params.sort, order: params.order]
@@ -96,11 +136,6 @@ class TaskController {
 		
 		taskInstance.setUpdateDate(new Date())
 		taskInstance.validate()
-			println "=================="
-		taskInstance.properties.each {
-			println it
-		}
-			println "=================="
         if (taskInstance.hasErrors()) {
             respond taskInstance.errors, view:'edit'
             return

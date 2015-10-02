@@ -14,8 +14,12 @@
 				<li><a class="home" href="${createLink(uri: '/index')}"><g:message code="default.home.label"/></a></li>
 				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
 				<li>
-					<g:form action="search" >
+					<g:form>
 						<g:textField name="keyword"  placeholder="${message(code: 'default.textField.placeholder.keyword') }" autofocus=""/>
+						<input type="date" name="begin" placeholder="${message(code: 'default.input.date.placeholder.begin') }"
+							value="${begin }"/>-
+						<input type="date" name="end" placeholder="${message(code: 'default.input.date.placeholder.end') }"
+							value="${end }"/>
 						<g:actionSubmit class="search" action="search" value="${message(code: 'default.button.search.label', default: 'Search')}" />
 						<g:hiddenField name="sort" value="${params.sort }"/>
 						<g:hiddenField name="order" value="${params.order }"/>
@@ -32,13 +36,13 @@
 				<thead>
 					<tr>
 						<g:sortableColumn property="req" title="${message(code: 'task.req.label', default: 'Req')}" 
-							action="${action?:'index' }" params="${['keyword':keyword] }" />
+							action="${action?:'index' }" params="${['keyword':keyword, 'begin':begin, 'end':end] }" />
 					
 						<g:sortableColumn property="title" title="${message(code: 'task.title.label', default: 'Title')}" 
-							action="${action?:'index' }" params="${['keyword':keyword] }" />
+							action="${action?:'index' }" params="${['keyword':keyword, 'begin':begin, 'end':end] }" />
 					
 						<g:sortableColumn property="status" title="${message(code: 'task.status.label', default: 'Status')}" 
-							action="${action?:'index' }" params="${['keyword':keyword] }" />
+							action="${action?:'index' }" params="${['keyword':keyword, 'begin':begin, 'end':end] }" />
 					
 						<th><g:message code="task.user.label" default="User" /></th>
 						
@@ -48,6 +52,12 @@
 						
 						<th><g:message code="task.tags.label" default="Tags" /></th>
 					
+						<g:sortableColumn property="createDate" title="${message(code: 'task.createDate.label', default: 'Create Date')}" 
+							action="${action?:'index' }" params="${['keyword':keyword, 'begin':begin, 'end':end] }" />
+					
+						<g:sortableColumn property="updateDate" title="${message(code: 'task.updateDate.label', default: 'Update Date')}" 
+							action="${action?:'index' }" params="${['keyword':keyword, 'begin':begin, 'end':end] }" />
+						
 					</tr>
 				</thead>
 				<tbody>
@@ -81,6 +91,10 @@
 								<br/>
 							</g:each>
 						</td>
+						
+						<td>${taskInstance.createDate?.format("yyyy/MM/dd") }</td>
+						
+						<td>${taskInstance.updateDate?.format("yyyy/MM/dd") }</td>
 					
 					</tr>
 				</g:each>
