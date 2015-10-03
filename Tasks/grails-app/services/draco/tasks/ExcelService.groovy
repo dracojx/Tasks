@@ -1,5 +1,8 @@
 package draco.tasks
 
+import java.io.InputStream;
+import java.util.Locale;
+
 import grails.transaction.Transactional
 
 import org.apache.poi.ss.usermodel.Cell
@@ -16,7 +19,15 @@ class ExcelService {
 	
 	def messageSource
 	
-	def writeExcel(OutputStream out, Locale locale) {
+	//Upload Excel
+	def readExcel(InputStream is, Locale locale) {
+		Workbook wb = new XSSFWorkbook(is)
+		readServices(wb, locale)
+		//TODO
+	}
+	
+	//Download Excel
+	def writeExcel(OutputStream os, Locale locale) {
 		Workbook wb = new XSSFWorkbook()
 		
 		Font defaultFont = this.defaultFont(wb, locale)
@@ -38,8 +49,39 @@ class ExcelService {
 		this.writeCrs(wb, cellStyles, locale)
 		this.writeServices(wb, cellStyles, locale)
 		
-		wb.write(out)
-		out.close()
+		wb.write(os)
+		os.close()
+	}
+	
+	private readProducts(Workbook wb, Locale locale) {
+		Sheet sheet = wb.getSheet(messageSource.getMessage('product.label', null, locale))
+		if(sheet) {
+			//TODO
+		}
+	}
+	
+	private readServices(Workbook wb, Locale locale) {
+		Sheet sheet = wb.getSheet(messageSource.getMessage('service.label', null, locale))
+		if(sheet) {
+			def services = []
+			def size = sheet.getPhysicalNumberOfRows() - 1
+			for(i in 1..size) {
+				Row row = sheet.getRow(i)
+				def name = row.getCell(0)?.getStringCellValue()
+				def description = row.getCell(1)?.getStringCellValue()
+				def vendor = row.getCell(2)?.getStringCellValue()
+				
+				def service = Service.findByName(name.toUpperCase())
+				if(!service) {
+					service = new Service()
+				}
+				service.setName(name)
+				service.setDescription(description)
+				service.setVendor(vendor)
+				services.add(service)
+			}
+			Service.saveAll(services)
+		}
 	}
 		
 	private writeProducts(Workbook wb, Map<String, CellStyle> cellStyles, Locale locale) {

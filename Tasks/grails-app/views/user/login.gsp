@@ -66,7 +66,7 @@ p {
 						<label for="password">
 							<g:message code="user.password.label" default="Password" />
 						</label>
-						<g:field type="password" name="password" required="" value="${userInstance?.password}"/>
+						<g:passwordField name="password" required="" value="${userInstance?.password}"/>
 					</div>
 				</fieldset>
 				<fieldset class="buttons">
