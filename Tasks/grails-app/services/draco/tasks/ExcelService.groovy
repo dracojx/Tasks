@@ -35,6 +35,8 @@ class ExcelService {
 		
 		this.writeProducts(wb, cellStyles, locale)
 		this.writeTasks(wb, cellStyles, locale)
+		this.writeCrs(wb, cellStyles, locale)
+		this.writeServices(wb, cellStyles, locale)
 		
 		wb.write(out)
 		out.close()
@@ -53,11 +55,8 @@ class ExcelService {
 			messageSource.getMessage('product.source.label', null, locale),
 			messageSource.getMessage('product.target.label', null, locale),
 			messageSource.getMessage('product.logs.label', null, locale),
-			messageSource.getMessage('product.tags.label', null, locale),
+			messageSource.getMessage('product.tags.label', null, locale)
 			]
-		
-		//Products
-		List<Product> products = Product.list()
 		
 		//Create Sheet
 		Sheet sheet = wb.createSheet(messageSource.getMessage('product.label', null, locale))
@@ -70,7 +69,9 @@ class ExcelService {
 			cell.setCellStyle(cellStyles.get('title'))
 		}
 		
-		//Write Products
+		
+		//Products
+		List<Product> products = Product.list()
 		def rowNumber = 1
 		products.each {
 			//Write Data
@@ -168,11 +169,8 @@ class ExcelService {
 			messageSource.getMessage('task.tags.label', null, locale),
 			messageSource.getMessage('task.createDate.label', null, locale),
 			messageSource.getMessage('task.updateDate.label', null, locale),
-			messageSource.getMessage('task.remark.label', null, locale),
+			messageSource.getMessage('task.remark.label', null, locale)
 			]
-		
-		//Products
-		List<Task> tasks = Task.list()
 		
 		//Create Sheet
 		Sheet sheet = wb.createSheet(messageSource.getMessage('task.label', null, locale))
@@ -185,6 +183,9 @@ class ExcelService {
 			cell.setCellStyle(cellStyles.get('title'))
 		}
 		
+		
+		//Tasks
+		List<Task> tasks = Task.list()
 		def rowNumber = 1
 		tasks.each {
 			//Write Data
@@ -270,6 +271,127 @@ class ExcelService {
 		for(i in 0..9) {
 			sheet.autoSizeColumn(i)
 		}
+	}
+	
+	private writeCrs(Workbook wb, Map<String, CellStyle> cellStyles, Locale locale) {
+		
+		//Header
+		List<String> header = [
+			messageSource.getMessage('cr.number.label', null, locale),
+			messageSource.getMessage('cr.description.label', null, locale),
+			messageSource.getMessage('cr.status.label', null, locale),
+			messageSource.getMessage('cr.products.label', null, locale)
+			]
+		
+		//Create Sheet
+		Sheet sheet = wb.createSheet(messageSource.getMessage('cr.label', null, locale))
+		
+		//Write Header
+		Row headerRow = sheet.createRow(0)
+		header.eachWithIndex {it, i ->
+			Cell cell = headerRow.createCell(i)
+			cell.setCellValue(it)
+			cell.setCellStyle(cellStyles.get('title'))
+		}
+		
+		//Crs
+		List<Cr> crs = Cr.list()
+		def rowNumber = 1
+		crs.each {
+			//Write Data
+			Row row = sheet.createRow(rowNumber)
+			if(it.getNumber()) {
+				row.createCell(0).setCellValue(it.getNumber())
+			}
+			if(it.getDescription()) {
+				row.createCell(1).setCellValue(it.getDescription())
+			}
+			if(it.getStatus()) {
+				row.createCell(2).setCellValue(messageSource.getMessage('cr.status.'+it.getStatus(), null, locale))
+			}
+			if(it.getProducts()) {
+				StringBuffer sb = new StringBuffer()
+				it.getProducts().each {Product product ->
+					sb.append(product.toString()).append("\n")
+				}
+				row.createCell(3).setCellValue(sb.toString().trim())
+			}
+			
+			//Set CellStyle
+			for(i in 0..3) {
+				Cell cell = row.getCell(i)
+				if(!cell) {
+					cell = row.createCell(i)
+				}
+				cell.setCellStyle(cellStyles.get('default'))
+			}
+			
+			//List Wrap
+			row.getCell(3).getCellStyle().setWrapText(true)
+			
+			rowNumber++
+		}
+		
+		//Auto Size
+		for(i in 0..3) {
+			sheet.autoSizeColumn(i)
+		}
+		
+	}
+	
+	private writeServices(Workbook wb, Map<String, CellStyle> cellStyles, Locale locale) {
+		
+		//Header
+		List<String> header = [
+			messageSource.getMessage('service.name.label', null, locale),
+			messageSource.getMessage('service.description.label', null, locale),
+			messageSource.getMessage('service.vendor.label', null, locale)
+			]
+		
+		//Create Sheet
+		Sheet sheet = wb.createSheet(messageSource.getMessage('service.label', null, locale))
+		
+		//Write Header
+		Row headerRow = sheet.createRow(0)
+		header.eachWithIndex {it, i ->
+			Cell cell = headerRow.createCell(i)
+			cell.setCellValue(it)
+			cell.setCellStyle(cellStyles.get('title'))
+		}
+		
+		//Services
+		List<Service> services = Service.list()
+		def rowNumber = 1
+		services.each {
+			//Write Data
+			Row row = sheet.createRow(rowNumber)
+			if(it.getName()) {
+				row.createCell(0).setCellValue(it.getName())
+			}
+			if(it.getDescription()) {
+				row.createCell(1).setCellValue(it.getDescription())
+			}
+			if(it.getVendor()) {
+				row.createCell(2).setCellValue(it.getVendor())
+			}
+			
+			//Set CellStyle
+			for(i in 0..2) {
+				Cell cell = row.getCell(i)
+				if(!cell) {
+					cell = row.createCell(i)
+				}
+				cell.setCellStyle(cellStyles.get('default'))
+			}
+			
+			rowNumber++
+		}
+		
+		//Auto Size
+		for(i in 0..2) {
+			sheet.autoSizeColumn(i)
+		}
+		
 	}
 	
 	private CellStyle defaultCellStyle(Workbook wb, Font font) {

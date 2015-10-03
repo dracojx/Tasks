@@ -40,6 +40,8 @@
 					
 						<g:sortableColumn property="status" title="${message(code: 'cr.status.label', default: 'Status')}"
 							action="${action?:'index' }" params="${['keyword':keyword] }" />
+							
+						<th><g:message code="cr.products.label" default="Products" /></th>
 					
 					</tr>
 				</thead>
@@ -52,7 +54,13 @@
 						<td>${fieldValue(bean: crInstance, field: "description")}</td>
 					
 						<td><g:message code="cr.status.${fieldValue(bean: crInstance, field: "status")}"/></td>
-					
+						
+						<td>
+							<g:each in="${crInstance.products }" var="p">
+								<g:link controller="product" action="edit" id="${p.id}">${p?.encodeAsHTML()}</g:link>
+								<br/>
+							</g:each>
+						</td>
 					</tr>
 				</g:each>
 				</tbody>
