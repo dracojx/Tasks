@@ -29,7 +29,9 @@
 		</span>
 		<g:each in="${taskInstance.logs}" var="l">
 			<span class="property-value" aria-labelledby="products-label"> 
-				<g:link controller="product" action="edit" id="${l.product.id}"><%l?.product?.encodeAsHTML()%></g:link>
+				<g:link controller="product" action="edit" id="${l.product.id}">
+					<g:message code="task.logs.log" args="${[message(code:'log.type.'+l.type), l.product.itemId, l.user.name]}"/>
+				</g:link>
 				<g:link controller="task" action="removeLog" resource="${taskInstance}" params="${[lId:l.id] }">x</g:link>
 			</span>
 		</g:each>

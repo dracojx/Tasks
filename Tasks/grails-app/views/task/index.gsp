@@ -58,6 +58,7 @@
 						<g:sortableColumn property="updateDate" title="${message(code: 'task.updateDate.label', default: 'Update Date')}" 
 							action="${action?:'index' }" params="${['keyword':keyword, 'begin':begin, 'end':end] }" />
 						
+						<th><g:message code="task.remark.label" default="Remark" /></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -73,7 +74,9 @@
 						
 						<td>
 							<g:each in="${taskInstance.logs }" var="l">
-								<g:link controller="product" action="edit" id="${l.product.id}"><%l?.product?.encodeAsHTML()%></g:link>
+								<g:link controller="product" action="edit" id="${l.product.id}">
+									<g:message code="task.logs.log" args="${[message(code:'log.type.'+l.type), l.product.itemId]}"/>
+								</g:link>
 								<br/>
 							</g:each>
 						</td>
@@ -95,7 +98,8 @@
 						<td>${taskInstance.createDate?.format("yyyy/MM/dd") }</td>
 						
 						<td>${taskInstance.updateDate?.format("yyyy/MM/dd") }</td>
-					
+						
+						<td>${fieldValue(bean: taskInstance, field: "remark")}</td>
 					</tr>
 				</g:each>
 				</tbody>

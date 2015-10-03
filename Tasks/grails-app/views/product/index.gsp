@@ -70,7 +70,7 @@
 						<td>
 							<g:each in="${productInstance.logs }" var="l">
 								<g:link controller="Task" action="edit" id="${l.task.id}">
-									<g:message code="product.logs.log" args="${[message(code:'log.type.'+l.type), l.task.req, l.task.user.name]}"/>
+									<g:message code="product.logs.log" args="${[message(code:'log.type.'+l.type), l.task.req, l.user.name]}"/>
 								</g:link>
 								<br/>
 							</g:each>
