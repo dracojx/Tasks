@@ -83,8 +83,7 @@ class TaskController {
 			}
 			render view:'index', model:[taskInstanceList: results, action: 'search', keyword: keyword, begin: params.begin, end: params.end]
 		} else {
-			flash.message = flash.message
-			redirect action: 'index', params: [sort: params.sort, order: params.order]
+			respond Task.list(params), [view:'index']
 		}
 	}
 
@@ -103,6 +102,7 @@ class TaskController {
             return
         }
 		
+		taskInstance.setStatus('0')
 		taskInstance.setUser(User.get(session.userId))
 		taskInstance.setCreateDate(new Date())
 		taskInstance.setUpdateDate(taskInstance.getCreateDate())

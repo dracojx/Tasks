@@ -35,7 +35,7 @@ class CrController {
 			}
 			render view:'index', model:[crInstanceList: results, action: 'search', keyword: keyword]
 		} else {
-			redirect action: 'index'
+			respond Cr.list(params), [view:'index']
 		}
 	}
 

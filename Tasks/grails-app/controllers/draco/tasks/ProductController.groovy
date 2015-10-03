@@ -14,6 +14,15 @@ class ProductController {
 	def productService
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+	
+	def beforeInterceptor = {
+		println "=================="
+		params.entrySet().each { 
+			println it
+		}
+		println "=================="
+	}
+
 
     def index() {
 		params.sort = params.sort ?: 'itemId'
@@ -43,7 +52,7 @@ class ProductController {
 			}
 			render view:'index', model:[productInstanceList: results, action: 'search', keyword: keyword]
 		} else {
-			redirect action: 'index'
+			respond Product.list(params), [view:'index']
 		}
 	}
 
@@ -52,9 +61,6 @@ class ProductController {
     }
 
     def create() {
-		params.entrySet().each {
-			println it
-		}
         respond new Product(params)
     }
 

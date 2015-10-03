@@ -25,7 +25,7 @@ class AdapterController {
 			}
 			render view:'index', model:[adapterInstanceList: results, action: 'search', keyword: keyword]
 		} else {
-			redirect action: 'index'
+			respond Adapter.list(params), [view:'index']
 		}
 	}
 

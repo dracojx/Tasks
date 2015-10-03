@@ -96,17 +96,19 @@
 		placeholder="${message(code: 'default.textField.placeholder.separated') }" />
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: taskInstance, field: 'status', 'error')}">
-	<span id="status-label" class="property-label"><g:message code="task.status.label" default="Status" /></span>
-	<span class="property-value" aria-labelledby="status-label">
-		<g:if test="${taskInstance?.activate }">
-			<g:message code="task.status.${taskInstance?.status}" />
-		</g:if>
-		<g:else>
-			<g:message code="task.activate.${taskInstance?.activate}" />
-		</g:else>
-	</span>
-</div>
+<g:if test="${taskInstance.status }">
+	<div class="fieldcontain ${hasErrors(bean: taskInstance, field: 'status', 'error')}">
+		<span id="status-label" class="property-label"><g:message code="task.status.label" default="Status" /></span>
+		<span class="property-value" aria-labelledby="status-label">
+			<g:if test="${taskInstance?.activate }">
+				<g:message code="task.status.${taskInstance?.status}" />
+			</g:if>
+			<g:else>
+				<g:message code="task.activate.${taskInstance?.activate}" />
+			</g:else>
+		</span>
+	</div>
+</g:if>
 
 <g:if test="${taskInstance?.createDate }">
 	<div class="fieldcontain">

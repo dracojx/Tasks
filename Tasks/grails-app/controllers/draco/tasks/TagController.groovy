@@ -27,7 +27,7 @@ class TagController {
 			}
 			render view:'index', model:[tagInstanceList: results, action: 'search', keyword: keyword]
 		} else {
-			redirect action: 'index'
+			respond Tag.list(params), [view:'index']
 		}
 	}
 

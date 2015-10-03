@@ -17,6 +17,8 @@
 					<g:form action="search" >
 						<g:textField name="keyword"  placeholder="${message(code: 'default.textField.placeholder.keyword') }" autofocus="" />
 						<g:actionSubmit class="search" action="search" value="${message(code: 'default.button.search.label', default: 'Search')}" />
+						<g:hiddenField name="sort" value="${params.sort }"/>
+						<g:hiddenField name="order" value="${params.order }"/>
 					</g:form>
 				</li>
 			</ul>

@@ -6,7 +6,7 @@ class Task {
 	String req
 	String title
 	String remark
-	String status = "0"
+	String status
 	User user
 	Date createDate
 	Date updateDate

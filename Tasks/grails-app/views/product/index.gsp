@@ -17,6 +17,8 @@
 					<g:form action="search" >
 						<g:textField name="keyword"  placeholder="${message(code: 'default.textField.placeholder.keyword') }" autofocus="" />
 						<g:actionSubmit class="search" action="search" value="${message(code: 'default.button.search.label', default: 'Search')}" />
+						<g:hiddenField name="sort" value="${params.sort }"/>
+						<g:hiddenField name="order" value="${params.order }"/>
 					</g:form>
 				</li>
 			</ul>
@@ -39,9 +41,11 @@
 						<g:sortableColumn property="mode" title="${message(code: 'product.mode.label', default: 'Mode')}" 
 							action="${action?:'index' }" params="${['keyword':keyword] }" />
 					
-						<th><g:message code="product.sender.label" default="Sender" /></th>
+						<g:sortableColumn property="sender" title="${message(code: 'product.sender.label', default: 'Sender')}" 
+							action="${action?:'index' }" params="${['keyword':keyword] }" />
 					
-						<th><g:message code="product.receiver.label" default="Receiver" /></th>
+						<g:sortableColumn property="receiver" title="${message(code: 'product.receiver.label', default: 'Receiver')}" 
+							action="${action?:'index' }" params="${['keyword':keyword] }" />
 						
 						<th><g:message code="task.logs.label" default="Logs" /></th>
 						

@@ -9,7 +9,7 @@ import grails.transaction.Transactional
 class ServiceController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "PUT"]
-
+	
     def index() {
 		params.sort = params.sort ?: 'name'
 		params.order = params.order ?: 'asc'
@@ -29,7 +29,7 @@ class ServiceController {
 			}
 			render view:'index', model:[serviceInstanceList: results, action: 'search', keyword: keyword]
 		} else {
-			redirect action: 'index'
+			redirect action: 'index', params: [sort: params.sort, order: params.order]
 		}
 	}
 
