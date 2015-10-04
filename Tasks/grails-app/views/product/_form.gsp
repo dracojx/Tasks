@@ -114,6 +114,14 @@
 	<g:textField name="tagNames" placeholder="${message(code: 'default.textField.placeholder.separated') }" />
 
 </div>
+<g:if test="${!productInstance.activate }">
+	<div class="fieldcontain">
+		<span id="activate-label" class="property-label"><g:message code="product.activate.label" default="Status" /></span>
+		<span class="property-value" aria-labelledby="activate-label">
+			<g:message code="product.activate.${productInstance.activate }"/>
+		</span>
+	</div>
+</g:if>
 <g:hiddenField name="activate" value="${productInstance?.activate}" />
 <g:each in="${productInstance?.tags }" var="t">
 	<g:hiddenField name="tags" value="${t.id }"/>

@@ -1,10 +1,8 @@
 package draco.tasks
 
-import java.io.InputStream;
-import java.util.Locale;
-
 import grails.transaction.Transactional
 
+import org.apache.poi.POIXMLException
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.CellStyle
 import org.apache.poi.ss.usermodel.Font
@@ -21,9 +19,14 @@ class ExcelService {
 	
 	//Upload Excel
 	def List<String> readExcel(InputStream is, Locale locale, def userId) {
-		Workbook wb = new XSSFWorkbook(is)
-		
 		def errors = []
+		Workbook wb = null
+		try {
+			wb =  new XSSFWorkbook(is)
+		} catch(POIXMLException e) {
+			errors.add(messageSource.getMessage('default.import.failed.message', null, locale))
+			return errors
+		}
 		errors.addAll(this.readProducts(wb, locale, userId))
 //		errors.addAll(this.readCrs(wb, locale))
 		errors.addAll(this.readServices(wb, locale))
@@ -151,6 +154,7 @@ class ExcelService {
 				product.setTitle(title)
 				product.setRemark(remark)
 				product.setMode(mode)
+				product.setActivate(activate)
 				product.setSender(sender)
 				product.setReceiver(receiver)
 				product.setSource(source)

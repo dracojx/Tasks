@@ -6,6 +6,11 @@
 		<meta name="layout" content="main">
 		<g:set var="entityName" value="${message(code: 'product.label', default: 'Product')}" />
 		<title><g:message code="default.list.label" args="[entityName]" /></title>
+		<style type="text/css">
+			table tr.inactivate {
+				text-decoration:line-through;
+			}
+		</style>
 	</head>
 	<body>
 		<a href="#list-product" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
@@ -55,7 +60,7 @@
 				</thead>
 				<tbody>
 				<g:each in="${productInstanceList}" status="i" var="productInstance">
-					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
+					<tr class="${(i % 2) == 0 ? 'even' : 'odd'} ${productInstance.activate? '':'inactivate'}">
 					
 						<td><g:link action="edit" id="${productInstance.id}">${fieldValue(bean: productInstance, field: "itemId")}</g:link></td>
 					

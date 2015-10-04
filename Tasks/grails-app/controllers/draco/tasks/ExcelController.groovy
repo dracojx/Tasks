@@ -12,7 +12,7 @@ class ExcelController {
 	
 	def upload() {
 		def file = request.getFile('excelFile')
-		if(file) {
+		if(!file.isEmpty()) {
 			InputStream is = file.getInputStream()
 			Locale locale = RequestContextUtils.getLocale(request)
 			def errors = excelService.readExcel(is, locale, session.userId)

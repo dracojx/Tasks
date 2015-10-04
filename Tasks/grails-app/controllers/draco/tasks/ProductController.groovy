@@ -125,25 +125,6 @@ class ProductController {
     }
 
     @Transactional
-    def delete(Product productInstance) {
-
-        if (productInstance == null) {
-            notFound()
-            return
-        }
-
-        productInstance.delete flush:true
-
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: ['', productInstance.getItemId()])
-                redirect action:"index", method:"GET"
-            }
-            '*'{ render status: NO_CONTENT }
-        }
-    }
-
-    @Transactional
 	def removeLog(Product productInstance) {
 		productService.removeLog(productInstance, params.lId)
         flash.message = message(code: 'default.updated.message', args: ['', productInstance.getItemId()])
