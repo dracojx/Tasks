@@ -12,6 +12,9 @@
 		<div class="nav" role="navigation">
 			<ul>
 				<li><a class="home" href="${createLink(uri: '/index')}"><g:message code="default.home.label"/></a></li>
+				<li><g:link action="download">
+					<g:message code="default.download.label" default="Download"/>
+				</g:link></li>
 				<li>
 					<g:form action="upload" enctype="multipart/form-data">
 						<input type="file" name="excelFile" />
@@ -24,9 +27,11 @@
 			<g:if test="${flash.message}">
 				<div class="message" role="status">${flash.message}</div>
 			</g:if>
-			<g:if test="${flash.error}">
+			<g:if test="${flash.errors}">
 				<ul class="errors" role="alert">
-					<li>${flash.error }</li>
+					<g:each in="${flash.errors }" var="it">
+						<li>${it }</li>
+					</g:each>
 				</ul>
 			</g:if>
 		</div>

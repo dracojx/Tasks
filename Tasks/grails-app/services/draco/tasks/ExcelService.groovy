@@ -20,10 +20,14 @@ class ExcelService {
 	def messageSource
 	
 	//Upload Excel
-	def readExcel(InputStream is, Locale locale) {
+	def List<String> readExcel(InputStream is, Locale locale, def userId) {
 		Workbook wb = new XSSFWorkbook(is)
-		readServices(wb, locale)
-		//TODO
+		
+		def errors = []
+		errors.addAll(this.readProducts(wb, locale, userId))
+//		errors.addAll(this.readCrs(wb, locale))
+		errors.addAll(this.readServices(wb, locale))
+		return errors
 	}
 	
 	//Download Excel
@@ -53,14 +57,185 @@ class ExcelService {
 		os.close()
 	}
 	
-	private readProducts(Workbook wb, Locale locale) {
+	private List<String> readProducts(Workbook wb, Locale locale, def userId) {
+		def errors = []
 		Sheet sheet = wb.getSheet(messageSource.getMessage('product.label', null, locale))
 		if(sheet) {
-			//TODO
+			def size = sheet.getPhysicalNumberOfRows() - 1
+			for(i in 1..size) {
+				Row row = sheet.getRow(i)
+				def itemId = row.getCell(0).getStringCellValue()
+				def title = row.getCell(1).getStringCellValue()
+				def remark = row.getCell(2).getStringCellValue()
+				def mode = 'a'
+				def activate = true
+				def sender = null
+				def receiver = null
+				def source = null
+				def target = null
+				def logs = [] as SortedSet
+				def tags = [] as SortedSet
+				def tasks = []
+				
+				
+				def modeName = row.getCell(3).getStringCellValue()
+				if(modeName?.equalsIgnoreCase(messageSource.getMessage('product.mode.s', null, locale))) {
+					mode = 's'
+				}
+				Cell cell = row.getCell(0)
+				if(cell) {
+					def font = wb.getFontAt(cell.getCellStyle().getFontIndex())
+					activate = !font.getStrikeout()
+				}
+				def senderName = row.getCell(4).getStringCellValue()
+				if(senderName) {
+					sender = Service.findByName(senderName.toUpperCase())
+					if(!sender) {
+						sender = new Service(name:senderName.toUpperCase())
+						sender.save flush:true
+					}
+				}
+				def receiverName = row.getCell(5).getStringCellValue()
+				if(receiverName) {
+					receiver = Service.findByName(receiverName.toUpperCase())
+					if(!receiver) {
+						receiver = new Service(name:receiverName.toUpperCase())
+						receiver.save flush:true
+					}
+				}
+				def sourceName = row.getCell(6).getStringCellValue()
+				if(sourceName) {
+					source = Adapter.findByName(sourceName.toUpperCase())
+					if(!source) {
+						source = new Adapter(name:sourceName.toUpperCase())
+						source.save flush:true
+					}
+				}
+				def targetName = row.getCell(7).getStringCellValue()
+				if(targetName) {
+					target = Adapter.findByName(targetName.toUpperCase())
+					if(!target) {
+						target = new Adapter(name:targetName.toUpperCase())
+						target.save flush:true
+					}
+				}
+				def taskReqs = row.getCell(8).getStringCellValue()?.split('\n')
+				taskReqs.each {
+					if(it) {
+						def task = Task.findByReq(it.toUpperCase())
+						if(!task) {
+							def date = new Date()
+							task = new Task(req:it.toUpperCase(), status:'0', createDate:date, updateDate:date, user:User.get(userId))
+						}
+						tasks.add(task)
+					}
+				}
+				Task.saveAll(tasks)
+				
+				def tagNames = row.getCell(9).getStringCellValue()?.split('\n')
+				tagNames.each {
+					if(it) {
+						def tag = Tag.findByName(it)
+						if(!tag) {
+							tag = new Tag(name:it)
+						}
+						tags.add(tag)
+					}
+				}
+				
+				def product = Product.findByItemId(itemId.toUpperCase())
+				if(!product) {
+					product = new Product()
+				}
+				product.setItemId(itemId.toUpperCase())
+				product.setTitle(title)
+				product.setRemark(remark)
+				product.setMode(mode)
+				product.setSender(sender)
+				product.setReceiver(receiver)
+				product.setSource(source)
+				product.setTarget(target)
+				product.setTags(tags)
+				
+				if(product.validate()) {
+					product.save flush:true
+				} else {
+					errors.add(messageSource.getMessage('default.import.error.message', 
+						[messageSource.getMessage('product.label', null, locale), i + 1] as Object[], locale))
+				}
+				
+				tasks.each {
+					def log = Log.findByTaskAndProduct(it, product)
+					if(!log) {
+						def type = 'u'
+						if(!product.getLogs() || product.getLogs().isEmpty()) {
+							type = 'c'
+						}
+						log =  new Log(type:type, task:it, product:product, user:User.get(userId))
+					}
+					logs.add(log)
+				}
+				Log.saveAll(logs)
+			}
 		}
+		
+		return errors
 	}
 	
-	private readServices(Workbook wb, Locale locale) {
+	private List<String> readCrs(Workbook wb, Locale locale) {
+		def errors = []
+		Sheet sheet = wb.getSheet(messageSource.getMessage('cr.label', null, locale))
+		if(sheet) {
+			def crs = []
+			def size = sheet.getPhysicalNumberOfRows() - 1
+			for(i in 1..size) {
+				Row row = sheet.getRow(i)
+				def number = row.getCell(0).getStringCellValue()
+				def descripion = row.getCell(1).getStringCellValue()
+				def status = '1'
+				def products = [] as SortedSet
+				
+				
+				for(x in 1..4) {
+					def statusName = row.getCell(2).getStringCellValue()
+					if(statusName?.equalsIgnoreCase(messageSource.getMessage('cr.status.'+x, null, locale))) {
+						status = x.toString()
+						break
+					}
+				}
+				def productItemIds = row.getCell(3).getStringCellValue()?.split('\n')
+				productItemIds.each {
+					if(it) {
+						def product = Product.findByItemId(it.toUpperCase())
+						if(!product) {
+							product = new Product(itemId:it.toUpperCase())
+						}
+						products.add(product)
+					}
+				}
+				
+				def cr = Cr.findByNumber(number.toUpperCase())
+				if(!cr) {
+					cr = new Cr()
+				}
+				cr.setNumber(number.toUpperCase())
+				cr.setDescription(descripion)
+				cr.setStatus(status)
+				cr.setProducts(products)
+				if(cr.validate()) {
+					crs.add(cr)
+				} else {
+					errors.add(messageSource.getMessage('default.import.error.message', 
+						[messageSource.getMessage('cr.label', null, locale), i + 1] as Object[], locale))
+				}
+			}
+			Cr.saveAll(crs)
+		}
+		return errors
+	}
+	
+	private List<String> readServices(Workbook wb, Locale locale) {
+		def errors = []
 		Sheet sheet = wb.getSheet(messageSource.getMessage('service.label', null, locale))
 		if(sheet) {
 			def services = []
@@ -78,10 +253,16 @@ class ExcelService {
 				service.setName(name)
 				service.setDescription(description)
 				service.setVendor(vendor)
-				services.add(service)
+				if(service.validate()) {
+					services.add(service)
+				} else {
+					errors.add(messageSource.getMessage('default.import.error.message', 
+						[messageSource.getMessage('service.label', null, locale), i + 1] as Object[], locale))
+				}
 			}
 			Service.saveAll(services)
 		}
+		return errors
 	}
 		
 	private writeProducts(Workbook wb, Map<String, CellStyle> cellStyles, Locale locale) {

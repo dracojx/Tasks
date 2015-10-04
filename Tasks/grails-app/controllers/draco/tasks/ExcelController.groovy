@@ -15,12 +15,15 @@ class ExcelController {
 		if(file) {
 			InputStream is = file.getInputStream()
 			Locale locale = RequestContextUtils.getLocale(request)
-			excelService.readExcel(is, locale)
-			flash.message = "success"
+			def errors = excelService.readExcel(is, locale, session.userId)
+			if(errors.isEmpty()) {
+				flash.message = message(code:'default.import.successed.message')
+			} else {
+				flash.errors = errors
+			}
 		} else {
-			flash.error = "error"
+			flash.errors = [message(code:'default.import.failed.message')]
 		}
-		
 		
 		redirect action:'index'
 	}
