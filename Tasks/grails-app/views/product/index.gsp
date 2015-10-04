@@ -6,11 +6,6 @@
 		<meta name="layout" content="main">
 		<g:set var="entityName" value="${message(code: 'product.label', default: 'Product')}" />
 		<title><g:message code="default.list.label" args="[entityName]" /></title>
-		<style type="text/css">
-			table tr.inactivate {
-				text-decoration:line-through;
-			}
-		</style>
 	</head>
 	<body>
 		<a href="#list-product" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>

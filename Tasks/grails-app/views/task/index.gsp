@@ -49,21 +49,17 @@
 						<th><g:message code="task.logs.label" default="Products" /></th>
 						
 						<th><g:message code="task.crs.label" default="Crs" /></th>
-						
-						<th><g:message code="task.tags.label" default="Tags" /></th>
 					
 						<g:sortableColumn property="createDate" title="${message(code: 'task.createDate.label', default: 'Create Date')}" 
 							action="${action?:'index' }" params="${['keyword':keyword, 'begin':begin, 'end':end] }" />
 					
 						<g:sortableColumn property="updateDate" title="${message(code: 'task.updateDate.label', default: 'Update Date')}" 
 							action="${action?:'index' }" params="${['keyword':keyword, 'begin':begin, 'end':end] }" />
-						
-						<th><g:message code="task.remark.label" default="Remark" /></th>
 					</tr>
 				</thead>
 				<tbody>
 				<g:each in="${taskInstanceList}" status="i" var="taskInstance">
-					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
+					<tr class="${(i % 2) == 0 ? 'even' : 'odd'} ${taskInstance.activate? '':'inactivate'}">
 						<td><g:link action="edit" id="${taskInstance.id}">${fieldValue(bean: taskInstance, field: "req")}</g:link></td>
 					
 						<td>${fieldValue(bean: taskInstance, field: "title")}</td>
@@ -88,18 +84,9 @@
 							</g:each>
 						</td>
 						
-						<td>
-							<g:each in="${taskInstance.tags }" var="t">
-								<g:link controller="tag" action="edit" id="${t.id}">${t?.encodeAsHTML()}</g:link>
-								<br/>
-							</g:each>
-						</td>
-						
 						<td>${taskInstance.createDate?.format("yyyy/MM/dd") }</td>
 						
 						<td>${taskInstance.updateDate?.format("yyyy/MM/dd") }</td>
-						
-						<td>${fieldValue(bean: taskInstance, field: "remark")}</td>
 					</tr>
 				</g:each>
 				</tbody>

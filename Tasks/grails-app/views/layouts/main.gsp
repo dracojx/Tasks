@@ -15,6 +15,11 @@
   		<asset:stylesheet src="application.css"/>
 		<asset:javascript src="application.js"/>
 		<g:layoutHead/>
+		<style type="text/css">
+			table tr.inactivate {
+				text-decoration:line-through;
+			}
+		</style>
 	</head>
 	<body>
 		<!-- <div id="grailsLogo" role="banner"><a href="http://grails.org"><asset:image src="grails_logo.png" alt="Grails"/></a></div> -->
