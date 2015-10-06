@@ -96,6 +96,11 @@ class UserController {
 	def login() {
 		
 	}
+	
+	def logout() {
+		session.invalidate()
+		redirect action:'login'
+	}
 
     def auth() {
 		User user = User.findByUsernameAndPassword(params.username?.trim().toUpperCase(), params.password)
@@ -106,7 +111,10 @@ class UserController {
 	    }
 		
 		session.userId = user.getId()
-		
+		def task = Task.findByUser(user,[sort:'createDate', order:'desc'])
+		if(task==null) {
+			task = new Task()
+		}
 	    request.withFormat {
 	        form multipartForm {
 	            flash.message = message(code: 'default.login.message', default: 'Welcome {0}', args:[user.getName()])
@@ -129,7 +137,7 @@ class UserController {
 	protected void wrongUser() {
         request.withFormat {
             form multipartForm {
-                flash.message = message(code: 'default.wrong.user.message', default:'Username or password is incorrect')
+                flash.errors = [message(code: 'default.wrong.user.message', default:'Username or password is incorrect')]
                 redirect action: "login", method: "GET"
             }
             '*'{ render status: NOT_FOUND }

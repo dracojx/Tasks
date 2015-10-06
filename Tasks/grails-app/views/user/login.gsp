@@ -1,43 +1,64 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="layout" content="main" />
-<asset:stylesheet src="login.css"/>
-<title><g:message code="login.label"/></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title><g:message code="project.label" default="Task Management" /></title>
+<!-- The Fonts -->
+<link href="http://fonts.useso.com/css?family=Oswald|Droid+Sans:400,700"
+	rel="stylesheet">
+<!-- The Main CSS File -->
+<asset:stylesheet src="style.css" />
+<!-- jQuery -->
+<asset:javascript src="jQuery/jquery-1.7.2.min.js" />
+<!-- The Main JS File -->
+<asset:javascript src="main.js" />
 </head>
 <body>
-	<div id="page-body" role="main">
-		<div id="header">
-			<h1><g:message code="login.label"/></h1>
-		</div>
-		<div>
-			<g:if test="${flash.errors}">
-				<ul class="errors" role="alert">
-					<g:each in="${flash.errors }" var="it">
-						<li>${it }</li>
-					</g:each>
-				</ul>
-			</g:if>
-			<g:form url="[resource:userInstance, controller:'user', action:'auth']" >
-				<fieldset class="form">
-					<div class="fieldcontain ${hasErrors(bean: userInstance, field: 'username', 'error')} required">
-						<label for="username">
-							<g:message code="user.username.label" default="Username" />
-						</label>
-						<g:textField name="username" required="" value="${userInstance?.username}" autofocus=""/>
+	<div class="top_panel"></div>
+	<div class="wrapper contents_wrapper">
+		<g:each in="${flash.errors }" var="it">
+			<div class="g_12">
+				<div class="error iDialog">
+					${it }
+				</div>
+			</div>
+		</g:each>
+		<div class="login">
+			<div class="widget_header">
+				<h4 class="widget_header_title wwIcon i_16_login">
+					<g:message code="login.label" default="Login" />
+				</h4>
+			</div>
+			<div class="widget_contents lgNoPadding">
+				<g:form
+					url="[resource:userInstance, controller:'user', action:'auth']">
+					<div class="line_grid">
+						<div class="g_10">
+							<g:textField class="simple_field" name="username"
+								placeholder="${message(code:'user.username.label') }"
+								required="" autofocus="" />
+						</div>
+						<div class="clear"></div>
 					</div>
-					
-					<div class="fieldcontain ${hasErrors(bean: userInstance, field: 'password', 'error')} required">
-						<label for="password">
-							<g:message code="user.password.label" default="Password" />
-						</label>
-						<g:passwordField name="password" required="" value="${userInstance?.password}"/>
+					<div class="line_grid">
+						<div class="g_10">
+							<g:passwordField class="simple_field" name="password"
+								name="password"
+								placeholder="${message(code:'user.password.label') }"
+								required="" />
+						</div>
+						<div class="clear"></div>
 					</div>
-				</fieldset>
-				<fieldset class="buttons">
-						<g:actionSubmit class="save" action="auth" id="loginButton" value="${message(code: 'default.button.login.label', default: 'Login')}" />
-				</fieldset>
-			</g:form>
+					<div class="line_grid">
+						<div class="g_6">
+							<g:actionSubmit class="submitIt simple_buttons" action="auth"
+								value="${message(code:'login.label') }" />
+						</div>
+						<div class="clear"></div>
+					</div>
+				</g:form>
+			</div>
 		</div>
 	</div>
 </body>
