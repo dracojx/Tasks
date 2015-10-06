@@ -1,34 +1,5 @@
 <%@ page import="draco.tasks.Task"%>
 
-<g:if test="${!params.controller }">
-	<div class="line_grid">
-		<div class="g_3">
-			<span class="label"><g:message code="task.req.label"/></span>
-		</div>
-		<div class="g_9">
-			<g:link controller="task" action="edit" id="${taskInstance.id }" title="${message(code:'default.button.edit.label') }">
-				<span class="label">${taskInstance.req }</span>
-			</g:link>
-		</div>
-	</div>
-	<div class="line_grid">
-		<div class="g_3">
-			<span class="label"><g:message code="task.title.label"/></span>
-		</div>
-		<div class="g_9">
-			<span class="label">${taskInstance.title }</span>
-		</div>
-	</div>
-	<div class="line_grid">
-		<div class="g_3">
-			<span class="label"><g:message code="task.remark.label"/></span>
-		</div>
-		<div class="g_9">
-			<span class="label">${taskInstance.remark }</span>
-		</div>
-	</div>
-</g:if>
-<g:else>
 	<div class="line_grid">
 		<div class="g_3">
 			<span class="label"><g:message code="task.req.label"/></span>
@@ -53,7 +24,6 @@
 			<g:textField name="remark" value="${taskInstance.remark }"/>
 		</div>
 	</div>
-</g:else>
 <g:if test="${taskInstance.user }">
 	<div class="line_grid">
 		<div class="g_3">
@@ -101,20 +71,23 @@
 		</div>
 	</div>
 </g:if>
-<g:if test="${params.controller }">
 <div class="line_grid">
 	<div class="g_3">
 		<span class="label"><g:message code="task.logs.label"/></span>
 	</div>
 	<div class="g_9">
 		<g:each in="${taskInstance.logs}" var="l">
-			<g:link controller="product" action="edit" id="${l.product.id }" 
-				title="${message(code:'default.button.edit.label') }">
+			<g:link controller="task" action="changeLogType" resource="${taskInstance}" params="${[lId:l.id] }"
+				title="${message(code:'default.button.change.label') }">
 				<span class="label">
-					<g:message code="task.logs.log" args="${[message(code:'log.type.'+l.type), l.product.itemId]}"/>
+					[<g:message code="log.type.${l.type}"/>]
 				</span>
 			</g:link>
-			<g:link controller="task" action="removeLog" resource="${taskInstance}" params="${[lId:l.id] }"
+			<g:link controller="product" action="edit" id="${l.product.id }"
+				title="${message(code:'default.button.edit.label') }">
+				<span class="label">${l.product?.encodeAsHTML() }</span>
+			</g:link>
+			<g:link controller="task" action="removeLog" resource="${taskInstance}" params="${[lId:l.id] }" class="delete"
 				title="${message(code:'default.button.delete.label') }">
 				<asset:image src="Icons/16/i_16_close.png"/>
 			</g:link>
@@ -136,7 +109,7 @@
 					${c?.encodeAsHTML()}
 				</span>
 			</g:link>
-			<g:link controller="task" action="removeCr" resource="${taskInstance}" params="${[cId:c.id] }"
+			<g:link controller="task" action="removeCr" resource="${taskInstance}" params="${[cId:c.id] }" class="delete"
 				title="${message(code:'default.button.delete.label') }">
 				<asset:image src="Icons/16/i_16_close.png"/>
 			</g:link>
@@ -158,7 +131,7 @@
 					${t?.encodeAsHTML()}
 				</span>
 			</g:link>
-			<g:link controller="task" action="removeTag" resource="${taskInstance}" params="${[tId:t.id] }"
+			<g:link controller="task" action="removeTag" resource="${taskInstance}" params="${[tId:t.id] }" class="delete"
 				title="${message(code:'default.button.delete.label') }">
 				<asset:image src="Icons/16/i_16_close.png"/>
 			</g:link>
@@ -168,4 +141,3 @@
 			placeholder="${message(code: 'default.placeholder.add.separated', args:[message(code:'tag.label')]) }" />
 	</div>
 </div>
-</g:if>

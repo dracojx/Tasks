@@ -1142,6 +1142,10 @@
 		background: url("../Images/Icons/22/i_22_logout.png") no-repeat scroll transparent;
 	}
 
+	.i_22_tasks {
+		background: url("../Images/Icons/22/i_22_tasks.png") no-repeat scroll transparent;
+	}
+
 /* Footer */
 
 	footer {

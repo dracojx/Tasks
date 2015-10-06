@@ -30,7 +30,7 @@ class TaskController {
 		def beginDate = null
 		def endDate = null
 		def status = null
-		def df = new SimpleDateFormat('yyyy-MM-dd')
+		def df = new SimpleDateFormat('yyyy/MM/dd')
 		
 		if(params.keyword) {
 			for(i in 0..4) {
@@ -42,11 +42,11 @@ class TaskController {
 			}
 		}
 		
-		if(params.begin ==~ /\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-3][0-9])/) {
+		if(params.begin ==~ /\d{4}\/(0[1-9]|1[0-2])\/(0[1-9]|[1-3][0-9])/) {
 			beginDate = df.parse(params.begin)
 		}
 		
-		if(params.end ==~ /\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-3][0-9])/) {
+		if(params.end ==~ /\d{4}\/(0[1-9]|1[0-2])\/(0[1-9]|[1-3][0-9])/) {
 			endDate = df.parse(params.end)
 		}
 		
@@ -73,11 +73,11 @@ class TaskController {
 						}
 					}
 					if(beginDate && !endDate) {
-						ge('createDate', beginDate)
+						ge('updateDate', beginDate)
 					} else if(beginDate && endDate) {
-						between('createDate', beginDate, endDate + 1)
+						between('updateDate', beginDate, endDate + 1)
 					} else if(!beginDate && endDate) {
-						lt('createDate', endDate + 1)
+						lt('updateDate', endDate + 1)
 					}
 				}
 			}
@@ -109,6 +109,10 @@ class TaskController {
 		taskInstance.validate()
 		
         if (taskInstance.hasErrors()) {
+			taskInstance.setStatus(null)
+			taskInstance.setUser(null)
+			taskInstance.setCreateDate(null)
+			taskInstance.setUpdateDate(null)
             respond taskInstance.errors, view:'create'
             return
         }
@@ -157,7 +161,7 @@ class TaskController {
 		taskInstance.setActivate(false)
 		taskInstance.setUpdateDate(new Date())
 		taskInstance.save flush:true
-	    flash.message = message(code: 'task.closed.message', args: [taskInstance.getReq()])
+	    flash.message = message(code: 'task.deactivated.message', args: [taskInstance.getReq()])
 		redirect action: 'edit', id: taskInstance.getId()
 	}
 
@@ -193,10 +197,19 @@ class TaskController {
 			flash.message = message(code: 'default.stage.changed.message')
 	        redirect action: 'edit', id: taskInstance.getId()
 		} else {
-			flash.error = message(code:'default.update.failed.message', 
-				args:[message(code:'task.closed.message', args:[taskInstance.getReq()])])
+			flash.errors = [message(code:'default.update.failed.message', 
+				args:[message(code:'task.deactivated.message', args:[taskInstance.getReq()])])]
 	        redirect action: 'edit', id: taskInstance.getId()
 		}
+	}
+	
+	@Transactional
+	def changeLogType(Task taskInstance) {
+		taskInstance.setUpdateDate(new Date())
+		logService.changeLogType(params.lId)
+		taskInstance.save flush:true
+		flash.message = message(code: 'default.updated.message', args: ['', taskInstance.getReq()])
+        redirect action: 'edit', id: taskInstance.getId()
 	}
 	
 	@Transactional
