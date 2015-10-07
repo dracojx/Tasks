@@ -6,7 +6,7 @@ class User {
 	String name
 	boolean admin = false
 	boolean system = false
-	boolean reset = false
+	boolean reset = true
 	boolean activate = true
 
     static constraints = {

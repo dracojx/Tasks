@@ -1,30 +1,30 @@
 <%@ page import="draco.tasks.Service" %>
 
 
-
-<div class="fieldcontain ${hasErrors(bean: serviceInstance, field: 'name', 'error')} required">
-	<label for="name">
-		<g:message code="service.name.label" default="Name" />
-	</label>
-	<g:textField name="name" required="" value="${serviceInstance?.name}" autofocus="" />
-
+<div class="line_grid">
+	<div class="g_3">
+		<span class="label"><g:message code="service.name.label" /></span>
+	</div>
+	<div class="g_9">
+		<g:textField name="name" value="${serviceInstance?.name }" required="" autofocus="" />
+	</div>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: serviceInstance, field: 'description', 'error')} ">
-	<label for="description">
-		<g:message code="service.description.label" default="Description" />
-		
-	</label>
-	<g:textField name="description" value="${serviceInstance?.description}"/>
-
+<div class="line_grid">
+	<div class="g_3">
+		<span class="label"><g:message code="service.description.label" /></span>
+	</div>
+	<div class="g_9">
+		<g:textField name="description" value="${serviceInstance?.description }" required="" autofocus="" />
+	</div>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: serviceInstance, field: 'vendor', 'error')} ">
-	<label for="vendor">
-		<g:message code="service.vendor.label" default="Vendor" />
-		
-	</label>
-	<g:textField name="vendor" value="${serviceInstance?.vendor}"/>
-
+<div class="line_grid">
+	<div class="g_3">
+		<span class="label"><g:message code="service.vendor.label" /></span>
+	</div>
+	<div class="g_9">
+		<g:textField name="vendor" value="${serviceInstance?.vendor }" required="" autofocus="" />
+	</div>
 </div>
 

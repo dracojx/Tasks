@@ -1,53 +1,52 @@
 <%@ page import="draco.tasks.Cr" %>
 
 
-
-<div class="fieldcontain ${hasErrors(bean: crInstance, field: 'number', 'error')} required">
-	<label for="number">
-		<g:message code="cr.number.label" default="Number" />
-	</label>
-	<g:textField name="number" required="" value="${crInstance?.number}" autofocus="" />
-
+<div class="line_grid">
+	<div class="g_3">
+		<span class="label"><g:message code="cr.number.label" /></span>
+	</div>
+	<div class="g_9">
+		<g:textField name="number" value="${crInstance?.number }" required="" autofocus="" />
+	</div>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: crInstance, field: 'description', 'error')} ">
-	<label for="description">
-		<g:message code="cr.description.label" default="Description" />
-		
-	</label>
-	<g:textField name="description" value="${crInstance?.description}"/>
-
+<div class="line_grid">
+	<div class="g_3">
+		<span class="label"><g:message code="cr.description.label" /></span>
+	</div>
+	<div class="g_9">
+		<g:textField name="description" value="${crInstance?.description }" required="" autofocus="" />
+	</div>
 </div>
 
-<div class="fieldcontain ${hasErrors(bean: crInstance, field: 'status', 'error')} required">
-	<span id="status-label" class="property-label">
-		<g:message code="cr.status.label" default="Status" />
-	</span>
-	<span class="property-value" aria-labelledby="status-label">
-		<g:message code="cr.status.${crInstance?.status}" />
-	</span>
-</div>
- 
-<g:if test="${crInstance?.products}">
-	<div class="fieldcontain">
-		<span id="products-label" class="property-label">
-			<g:message code="cr.products.label" default="Products" />
-		</span>
+<div class="line_grid">
+	<div class="g_3">
+		<span class="label"><g:message code="cr.products.label"/></span>
+	</div>
+	<div class="g_9">
 		<g:each in="${crInstance.products}" var="p">
-			<span class="property-value" aria-labelledby="products-label">
-				<g:link controller="product" action="show" id="${p.id}">${p?.encodeAsHTML()}</g:link>
-				<g:link controller="cr" action="removeProduct" resource="${crInstance}" params="${[pId:p.id] }">x</g:link>
-			</span>
+			<g:link controller="product" action="edit" id="${p.id }"
+				title="${message(code:'default.button.edit.label') }">
+				<span class="label">${p.encodeAsHTML() }</span>
+			</g:link>
+			<g:link controller="product" action="removeProduct" resource="${crInstance}" params="${[pId:p.id] }" class="delete"
+				title="${message(code:'default.button.delete.label') }">
+				<asset:image src="Icons/16/i_16_close.png"/>
+			</g:link>
+			<br />
 		</g:each>
+		<g:textField name="productItemIds" class="add"
+			placeholder="${message(code: 'default.placeholder.add.separated', args:[message(code:'product.label')]) }" />
+	</div>
+</div>
+
+<g:if test="${params.action in ['edit', 'update'] }">
+	<div class="line_grid">
+		<div class="g_3">
+			<span class="label"><g:message code="cr.status.label" /></span>
+		</div>
+		<div class="g_9">
+			<g:message code="cr.status.${crInstance?.status}" />
+		</div>
 	</div>
 </g:if>
-				
-<div class="fieldcontain">
-	<label for="productItemIds">
-		<g:message code="default.add.label" default="Add" args="${[message(code:'product.label', default:'Product') ]}" />
-		
-	</label>
-	<g:textField name="productItemIds" placeholder="${message(code: 'default.textField.placeholder.separated') }" />
-
-</div>
-<g:hiddenField name="status" value="${crInstance?.status }"/>

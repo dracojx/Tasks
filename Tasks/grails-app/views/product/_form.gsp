@@ -1,128 +1,154 @@
 <%@ page import="draco.tasks.Product" %>
+<%@ page import="draco.tasks.Service" %>
+<%@ page import="draco.tasks.Adapter" %>
 
-
-
-<div class="fieldcontain ${hasErrors(bean: productInstance, field: 'itemId', 'error')} required">
-	<label for="itemId">
-		<g:message code="product.itemId.label" default="Item Id" />
-	</label>
-	<g:textField name="itemId" required="" value="${productInstance?.itemId}" autofocus="" />
-
-</div>
-
-<div class="fieldcontain ${hasErrors(bean: productInstance, field: 'title', 'error')} ">
-	<label for="title">
-		<g:message code="product.title.label" default="Title" />
-		
-	</label>
-	<g:textField name="title" value="${productInstance?.title}"/>
-
-</div>
-
-<div class="fieldcontain ${hasErrors(bean: productInstance, field: 'remark', 'error')} ">
-	<label for="remark">
-		<g:message code="product.remark.label" default="Remark" />
-		
-	</label>
-	<g:textField name="remark" value="${productInstance?.remark}"/>
-
-</div>
-
-<div class="fieldcontain ${hasErrors(bean: productInstance, field: 'mode', 'error')} required">
-	<label for="mode">
-		<g:message code="product.mode.label" default="Mode" />
-	</label>
-	<g:select name="mode" from="${productInstance.constraints.mode.inList}" required="" value="${productInstance?.mode}" valueMessagePrefix="product.mode"/>
-
-</div>
-
-<div class="fieldcontain ${hasErrors(bean: productInstance, field: 'sender', 'error')} ">
-	<label for="sender">
-		<g:message code="product.sender.label" default="Sender" />
-		
-	</label>
-	<g:select id="sender" name="sender.id" from="${draco.tasks.Service.list()}" optionKey="id" value="${productInstance?.sender?.id}" class="many-to-one" noSelection="['null': '']"/>
-
-</div>
-
-<div class="fieldcontain ${hasErrors(bean: productInstance, field: 'receiver', 'error')} ">
-	<label for="receiver">
-		<g:message code="product.receiver.label" default="Receiver" />
-		
-	</label>
-	<g:select id="receiver" name="receiver.id" from="${draco.tasks.Service.list()}" optionKey="id" value="${productInstance?.receiver?.id}" class="many-to-one" noSelection="['null': '']"/>
-
-</div>
-
-<div class="fieldcontain ${hasErrors(bean: productInstance, field: 'source', 'error')} ">
-	<label for="source">
-		<g:message code="product.source.label" default="Source" />
-		
-	</label>
-	<g:select id="source" name="source.id" from="${draco.tasks.Adapter.list()}" optionKey="id" value="${productInstance?.source?.id}" class="many-to-one" noSelection="['null': '']"/>
-
-</div>
-
-<div class="fieldcontain ${hasErrors(bean: productInstance, field: 'target', 'error')} ">
-	<label for="target">
-		<g:message code="product.target.label" default="Target" />
-		
-	</label>
-	<g:select id="target" name="target.id" from="${draco.tasks.Adapter.list()}" optionKey="id" value="${productInstance?.target?.id}" class="many-to-one" noSelection="['null': '']"/>
-
-</div>
-			
-
-			
-<g:if test="${productInstance?.logs}">
-	<div class="fieldcontain">
-		<span id="logs-label" class="property-label"><g:message code="product.logs.label" default="Logs" /></span>
-		<g:each in="${productInstance.logs}" var="l">
-			<span class="property-value" aria-labelledby="logs-label">
-				<g:link controller="Task" action="edit" id="${l.task.id}">
-					<g:message code="product.logs.log" args="${[message(code:'log.type.'+l.type), l.task.req, l.user.name]}"/>
-				</g:link>
-				<g:link controller="product" action="removeLog" resource="${productInstance}" params="${[lId:l.id] }">x</g:link>
-			</span>
-		</g:each>
+<div class="line_grid">
+	<div class="g_3">
+		<span class="label"><g:message code="product.itemId.label"/></span>
 	</div>
-</g:if>
-<g:if test="${productInstance?.tags}">
-	<div class="fieldcontain">
-		<span id="tags-label" class="property-label"><g:message code="product.tags.label" default="Tags" /></span>
-		<g:each in="${productInstance.tags}" var="t">
-			<span class="property-value" aria-labelledby="tags-label">
-				<g:link controller="Tag" action="edit" id="${t.id}"><%t?.encodeAsHTML() %></g:link>
-				<g:link controller="product" action="removeTag" resource="${productInstance}" params="${[tId:t.id] }">x</g:link>
-			</span>
-		</g:each>
+	<div class="g_9">
+		<g:textField name="itemId" value="${productInstance.itemId }" required="" autofocus=""/>
 	</div>
-</g:if>
-
-<div class="fieldcontain">
-	<label for="taskReq">
-		<g:message code="default.add.label" default="Add" args="${[message(code:'task.label', default:'Task') ]}" />
-		
-	</label>
-	<g:textField name="taskReq" />
-
-</div><div class="fieldcontain">
-	<label for="tagNames">
-		<g:message code="default.add.label" default="Add" args="${[message(code:'tag.label', default:'Tag') ]}" />
-		
-	</label>
-	<g:textField name="tagNames" placeholder="${message(code: 'default.textField.placeholder.separated') }" />
-
 </div>
-<g:if test="${!productInstance.activate }">
-	<div class="fieldcontain">
-		<span id="activate-label" class="property-label"><g:message code="product.activate.label" default="Status" /></span>
-		<span class="property-value" aria-labelledby="activate-label">
-			<g:message code="product.activate.${productInstance.activate }"/>
+
+<div class="line_grid">
+	<div class="g_3">
+		<span class="label"><g:message code="product.title.label"/></span>
+	</div>
+	<div class="g_9">
+		<g:textField name="title" value="${productInstance.title }"/>
+	</div>
+</div>
+
+<div class="line_grid">
+	<div class="g_3">
+		<span class="label"><g:message code="product.remark.label"/></span>
+	</div>
+	<div class="g_9">
+		<g:textField name="remark" value="${productInstance.remark }"/>
+	</div>
+</div>
+
+<div class="line_grid">
+	<div class="g_3">
+		<span class="label"><g:message code="product.mode.label"/></span>
+	</div>
+	<div class="g_9">
+		<span class="label">
+			<g:message code="product.mode.a"/>
+			<input type="radio" class="simple_form" name="mode" value="a" 
+				${productInstance.mode=='a'? 'checked="checked"' : '' } />
+		</span>
+		<span class="label">
+			<g:message code="product.mode.s"/>
+			<input type="radio" class="simple_form" name="mode" value="s"
+				${productInstance.mode=='s'? 'checked="checked"' : '' } />
 		</span>
 	</div>
-</g:if>
-<g:hiddenField name="activate" value="${productInstance?.activate}" />
-<g:each in="${productInstance?.tags }" var="t">
-	<g:hiddenField name="tags" value="${t.id }"/>
-</g:each>
+</div>
+
+<div class="line_grid">
+	<div class="g_3">
+		<span class="label"><g:message code="product.sender.label"/></span>
+	</div>
+	<div class="g_9">
+		<select class="simple_form" name="sender.id">
+			<option value="null" ${productInstance.sender ? '':'selected="selected"' }><g:message code="product.sender.label"/>
+			<g:each in="${Service.list() }" var="s">
+				<option value="${s.id }" ${productInstance.sender?.id==s.id ? 'selected="selected"':'' }>${s.encodeAsHTML() }
+			</g:each>
+		</select>
+	</div>
+</div>
+
+<div class="line_grid">
+	<div class="g_3">
+		<span class="label"><g:message code="product.receiver.label"/></span>
+	</div>
+	<div class="g_9">
+		<select class="simple_form" name="receiver.id">
+			<option value="null" ${productInstance.receiver ? '':'selected="selected"' }><g:message code="product.receiver.label"/>
+			<g:each in="${Service.list() }" var="s">
+				<option value="${s.id }" ${productInstance.receiver?.id==s.id ? 'selected="selected"':'' }>${s.encodeAsHTML() }
+			</g:each>
+		</select>
+	</div>
+</div>
+
+<div class="line_grid">
+	<div class="g_3">
+		<span class="label"><g:message code="product.source.label"/></span>
+	</div>
+	<div class="g_9">
+		<select class="simple_form" name="source.id">
+			<option value="null" ${productInstance.source ? '':'selected="selected"' }><g:message code="product.source.label"/>
+			<g:each in="${Adapter.list() }" var="a">
+				<option value="${a.id }" ${productInstance.source?.id==a.id ? 'selected="selected"':'' }>${a.encodeAsHTML() }
+			</g:each>
+		</select>
+	</div>
+</div>
+
+<div class="line_grid">
+	<div class="g_3">
+		<span class="label"><g:message code="product.target.label"/></span>
+	</div>
+	<div class="g_9">
+		<select class="simple_form" name="target.id">
+			<option value="null" ${productInstance.source ? '':'selected="selected"' }><g:message code="product.target.label"/>
+			<g:each in="${Adapter.list() }" var="a">
+				<option value="${a.id }" ${productInstance.target?.id==a.id ? 'selected="selected"':'' }>${a.encodeAsHTML() }
+			</g:each>
+		</select>
+	</div>
+</div>
+
+<div class="line_grid">
+	<div class="g_3">
+		<span class="label"><g:message code="product.logs.label"/></span>
+	</div>
+	<div class="g_9">
+		<g:each in="${productInstance.logs}" var="l">
+			<g:link controller="product" action="changeLogType" resource="${productInstance}" params="${[lId:l.id] }"
+				title="${message(code:'default.button.change.label') }">
+				<span class="label">
+					[<g:message code="log.type.${l.type}"/>]
+				</span>
+			</g:link>
+			<g:link controller="task" action="edit" id="${l.task.id }"
+				title="${message(code:'default.button.edit.label') }">
+				<span class="label">${l.task?.encodeAsHTML() }</span>
+			</g:link>
+			<g:link controller="product" action="removeLog" resource="${productInstance}" params="${[lId:l.id] }" class="delete"
+				title="${message(code:'default.button.delete.label') }">
+				<asset:image src="Icons/16/i_16_close.png"/>
+			</g:link>
+			<br />
+		</g:each>
+		<g:textField name="taskReq"
+			placeholder="${message(code: 'default.placeholder.add', args:[message(code:'task.label')]) }" />
+	</div>
+</div>
+
+<div class="line_grid">
+	<div class="g_3">
+		<span class="label"><g:message code="product.tags.label"/></span>
+	</div>
+	<div class="g_9">
+		<g:each in="${productInstance.tags}" var="t">
+			<g:link controller="tag" action="edit" id="${t.id }" 
+				title="${message(code:'default.button.edit.label') }">
+				<span class="label">
+					${t?.encodeAsHTML()}
+				</span>
+			</g:link>
+			<g:link controller="product" action="removeTag" resource="${productInstance}" params="${[tId:t.id] }" class="delete"
+				title="${message(code:'default.button.delete.label') }">
+				<asset:image src="Icons/16/i_16_close.png"/>
+			</g:link>
+			<br />
+		</g:each>
+		<g:textField name="tagNames"
+			placeholder="${message(code: 'default.placeholder.add.separated', args:[message(code:'tag.label')]) }" />
+	</div>
+</div>

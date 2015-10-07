@@ -22,8 +22,15 @@ class ProductController {
     }
 	
 	def search() {
-		if(params.keyword?.trim()) {
-			def keyword = params.keyword.trim()
+		def keyword = params.keyword?.trim()
+		def mode = null
+		if(message(code:'product.mode.a')==keyword) {
+			mode = 'a'
+		} else if(message(code:'product.mode.s')==keyword) {
+			mode = 's'
+		}
+		
+		if(keyword) {
 			def results = Product.withCriteria {
 				order(params.sort?:'itemId', params.order?:'asc')
 				createAlias('tags', 't', CriteriaSpecification.LEFT_JOIN)
@@ -39,6 +46,9 @@ class ProductController {
 					eq('source', Adapter.findByNameIlike(keyword))
 					eq('target', Adapter.findByNameIlike(keyword))
 					eq('l.task', Task.findByReqIlike(keyword))
+					if(mode) {
+						eq('mode', mode)
+					}
 				}
 			}
 			render view:'index', model:[productInstanceList: results, action: 'search', keyword: keyword]
@@ -46,10 +56,6 @@ class ProductController {
 			respond Product.list(params), [view:'index']
 		}
 	}
-
-    def show(Product productInstance) {
-        respond productInstance
-    }
 
     def create() {
         respond new Product(params)
@@ -152,6 +158,13 @@ class ProductController {
 		productInstance.save flush:true
         flash.message = message(code: 'default.updated.message', args: ['', productInstance.getItemId()])
 		redirect action: 'edit', id: productInstance.getId()
+	}
+	
+	@Transactional
+	def changeLogType(Product productInstance) {
+		logService.changeLogType(params.lId)
+		flash.message = message(code: 'default.updated.message', args: ['', productInstance.getItemId()])
+        redirect action: 'edit', id: productInstance.getId()
 	}
 
 	protected void notFound() {

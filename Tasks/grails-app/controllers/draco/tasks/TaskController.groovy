@@ -87,10 +87,6 @@ class TaskController {
 		}
 	}
 
-    def show(Task taskInstance) {
-        respond taskInstance
-    }
-
     def create() {
         respond new Task(params)
     }
@@ -161,7 +157,7 @@ class TaskController {
 		taskInstance.setActivate(false)
 		taskInstance.setUpdateDate(new Date())
 		taskInstance.save flush:true
-	    flash.message = message(code: 'task.deactivated.message', args: [taskInstance.getReq()])
+	    flash.message = message(code: 'default.deactivated.message', args: [taskInstance.getReq()])
 		redirect action: 'edit', id: taskInstance.getId()
 	}
 
@@ -170,7 +166,7 @@ class TaskController {
 		taskInstance.setActivate(true)
 		taskInstance.setUpdateDate(new Date())
 		taskInstance.save flush:true
-	    flash.message = message(code: 'task.activated.message', args: [taskInstance.getReq()])
+	    flash.message = message(code: 'defaults.activated.message', args: [taskInstance.getReq()])
 		redirect action: 'edit', id: taskInstance.getId()
 	}
 
@@ -182,8 +178,8 @@ class TaskController {
 			flash.message = message(code: 'default.stage.changed.message')
 	        redirect action: 'edit', id: taskInstance.getId()
 		} else {
-			flash.error = message(code:'default.update.failed.message', 
-				args:[message(code:'task.closed.message', args:[taskInstance.getReq()])])
+			flash.errors = [message(code:'default.update.failed.message', 
+				args:[message(code:'default.deactivated.message', args:[taskInstance.getReq()])])]
 	        redirect action: 'edit', id: taskInstance.getId()
 		}
 		
@@ -198,7 +194,7 @@ class TaskController {
 	        redirect action: 'edit', id: taskInstance.getId()
 		} else {
 			flash.errors = [message(code:'default.update.failed.message', 
-				args:[message(code:'task.deactivated.message', args:[taskInstance.getReq()])])]
+				args:[message(code:'default.deactivated.message', args:[taskInstance.getReq()])])]
 	        redirect action: 'edit', id: taskInstance.getId()
 		}
 	}

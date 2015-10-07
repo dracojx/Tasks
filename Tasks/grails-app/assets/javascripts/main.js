@@ -37,15 +37,31 @@ $(function () {
 			wH.addClass("i_16_cHorizontal").removeClass("i_16_downT");
 			wC.css('height','0').addClass('noPadding');
 		}
-	})	
+	})
 	
 	
-/* Login ============================================= */
+/* MD5 ============================================= */
 	
 	$("#login_form").submit(function(e){
+        $("#pass").val(
+				$.md5($("#pass").val())
+			);
+	});
+	
+	$("#user_create_form").submit(function(e){
         $("#password").val(
 				$.md5($("#password").val())
 			);
+	});
+	
+	$("#user_reset_form").submit(function(e){
+		if($("#password").val() != $("#repeat").val()) {
+			return false
+		} else {
+	        $("#password").val(
+					$.md5($("#password").val())
+				);
+		}
 	});
 
 });

@@ -1,70 +1,82 @@
-
 <%@ page import="draco.tasks.Cr" %>
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta name="layout" content="main">
-		<g:set var="entityName" value="${message(code: 'cr.label', default: 'Cr')}" />
-		<title><g:message code="default.list.label" args="[entityName]" /></title>
+		<meta name="layout" content="main" />
+		<g:set var="entityName" value="${message(code: 'cr.label', default: 'CR')}" />
 	</head>
 	<body>
-		<a href="#list-cr" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-		<div class="nav" role="navigation">
-			<ul>
-				<li><a class="home" href="${createLink(uri: '/index')}"><g:message code="default.home.label"/></a></li>
-				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
-				<li>
-					<g:form action="search" >
-						<g:textField name="keyword"  placeholder="${message(code: 'default.textField.placeholder.keyword') }" autofocus="" />
-						<g:actionSubmit class="search" action="search" value="${message(code: 'default.button.search.label', default: 'Search')}" />
-						<g:hiddenField name="sort" value="${params.sort }"/>
-						<g:hiddenField name="order" value="${params.order }"/>
-					</g:form>
-				</li>
-			</ul>
+		<!-- Search -->
+		<div class="g_12">
+			<g:form action="search">
+				<div class="g_3">
+				<g:textField name="keyword" autofocus=""
+					placeholder="${message(code:'default.placeholder.keyword') }" />
+				</div>
+				<div class="g_3">
+				<g:actionSubmit class="simple_buttons" action="search"
+					value="${message(code: 'default.button.search.label', default: 'Search')}" />
+				</div>
+			</g:form>
 		</div>
-		<div id="list-cr" class="content scaffold-list" role="main">
-			<h1><g:message code="default.list.label" args="[entityName]" />(${crInstanceList?.size() ?: 0  })</h1>
-			<g:if test="${flash.message}">
-				<div class="message" role="status">${flash.message}</div>
-			</g:if>
-			<table>
-			<thead>
-					<tr>
-					
-						<g:sortableColumn property="number" title="${message(code: 'cr.number.label', default: 'Number')}" 
-							action="${action?:'index' }" params="${['keyword':keyword] }" />
-					
-						<g:sortableColumn property="description" title="${message(code: 'cr.description.label', default: 'Description')}"
-							action="${action?:'index' }" params="${['keyword':keyword] }" />
-					
-						<g:sortableColumn property="status" title="${message(code: 'cr.status.label', default: 'Status')}"
-							action="${action?:'index' }" params="${['keyword':keyword] }" />
-							
-						<th><g:message code="cr.products.label" default="Products" /></th>
-					
-					</tr>
-				</thead>
-				<tbody>
-				<g:each in="${crInstanceList}" status="i" var="crInstance">
-					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-					
-						<td><g:link action="edit" id="${crInstance.id}">${fieldValue(bean: crInstance, field: "number")}</g:link></td>
-					
-						<td>${fieldValue(bean: crInstance, field: "description")}</td>
-					
-						<td><g:message code="cr.status.${fieldValue(bean: crInstance, field: "status")}"/></td>
-						
-						<td>
-							<g:each in="${crInstance.products }" var="p">
-								<g:link controller="product" action="edit" id="${p.id}">${p?.encodeAsHTML()}</g:link>
-								<br/>
-							</g:each>
-						</td>
-					</tr>
-				</g:each>
-				</tbody>
-			</table>
+	
+		<div class="g_12 separator">
+			<span></span>
 		</div>
+
+		<div class="g_12">
+			<div class="widget_header">
+				<h4 class="widget_header_title wwIcon i_16_tables">
+					<g:message code="default.list.label" args="[entityName]" />
+				</h4>
+			</div>
+			<div class="widget_contents noPadding">
+				<table class="tables">
+					<thead>
+						<tr>
+							<th><g:message code="cr.number.label" default="Number" /></th>
+	
+							<th><g:message code="cr.description.label" default="Description" /></th>
+	
+							<th><g:message code="cr.status.label" default="Status" /></th>
+	
+							<th><g:message code="cr.products.label" default="Products" /></th>
+						</tr>
+					</thead>
+					<tbody>
+						<g:each in="${crInstanceList}" var="crInstance">
+							<tr>
+								<td>
+									<g:link action="edit" id="${crInstance.id}"
+										title="${message(code:'default.button.edit.label') }">
+										<span class="label"> ${fieldValue(bean: crInstance, field: "number")}
+										</span>
+									</g:link>
+								</td>
+	
+								<td>
+									${fieldValue(bean: crInstance, field: "description")}
+								</td>
+	
+								<td><g:message code="cr.status.${crInstance.status}" /></td>
+								
+								<td>
+									<g:each in="${crInstance.products }" var="p">
+										<g:link controller="product" action="edit" id="${p.id}"
+											title="${message(code:'default.button.edit.label') }">
+											<span class="label">
+												${p.encodeAsHTML() }
+											</span>
+										</g:link>
+										<br />
+									</g:each>
+								</td>
+							</tr>
+						</g:each>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	
 	</body>
 </html>

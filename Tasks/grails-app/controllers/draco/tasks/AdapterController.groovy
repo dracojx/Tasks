@@ -10,13 +10,7 @@ class AdapterController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "PUT"]
 
-    def index() {
-		params.sort = params.sort ?: 'name'
-		params.order = params.order ?: 'asc'
-        respond Adapter.list(params)
-    }
-	
-	def search() {
+    def search() {
 		if(params.keyword?.trim()) {
 			def keyword = params.keyword.trim()
 			def results = Adapter.withCriteria {
@@ -28,10 +22,6 @@ class AdapterController {
 			respond Adapter.list(params), [view:'index']
 		}
 	}
-
-    def show(Adapter adapterInstance) {
-        respond adapterInstance
-    }
 
     def create() {
         respond new Adapter(params)

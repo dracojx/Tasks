@@ -33,12 +33,14 @@
 	<div class="top_panel">
 		<g:if test="${session?.userId }">
 			<div class="wrapper">
-				<div class="user">
-					<asset:image src="user_avatar.png" class="user_avatar"
-						alt="user_avatar" />
-					<span class="label"> ${session.name }
-					</span>
-				</div>
+				<g:link controller="user" action="edit" id="${session.userId }" title="${message(code:'default.button.edit.label') }">
+					<div class="user">
+						<asset:image src="user_avatar.png" class="user_avatar"
+							alt="user_avatar" />
+						<span class="label"> ${session.name }
+						</span>
+					</div>
+				</g:link>
 				<div class="top_links">
 					<ul>
 						<li class="i_22_logout"><g:link controller="user"
@@ -59,6 +61,14 @@
 			<li>
 				<g:link title="${message(code:'task.summary.label') }" controller="task" action="index"
 				 	class="i_22_tasks ${params.controller=='task' ? 'smActive':'' }"></g:link>
+			</li>
+			<li>
+				<g:link title="${message(code:'product.summary.label') }" controller="product" action="index"
+				 	class="i_22_tables ${params.controller=='product' ? 'smActive':'' }"></g:link>
+			</li>
+			<li>
+				<g:link title="${message(code:'cr.summary.label') }" controller="cr" action="index"
+				 	class="i_22_forms ${params.controller=='cr' ? 'smActive':'' }"></g:link>
 			</li>
 			<li>
 				<g:link title="${message(code:'setting.summary.label') }" controller="setting" action="index"
@@ -87,6 +97,22 @@
 					</g:link>
 				</li>
 				<li
+					class="i_32_tables ${params.controller=='product'? 'active_tab':'' }">
+					<g:link controller="product" action="index"
+						title="${message(code:'product.summary.label') }">
+						<span class="tab_label"><g:message code="product.label" /></span>
+						<span class="tab_info"><g:message code="product.summary.label" /></span>
+					</g:link>
+				</li>
+				<li
+					class="i_32_forms ${params.controller=='cr'? 'active_tab':'' }">
+					<g:link controller="cr" action="index"
+						title="${message(code:'cr.summary.label') }">
+						<span class="tab_label"><g:message code="cr.label" /></span>
+						<span class="tab_info"><g:message code="cr.summary.label" /></span>
+					</g:link>
+				</li>
+				<li
 					class="i_32_settings ${(params.controller in ['user','adapter','service','setting']) ? 'active_tab':'' }">
 					<g:link controller="setting" action="index"
 						title="${message(code:'setting.summary.label') }">
@@ -108,15 +134,31 @@
 						</div>
 					</g:if>
 					<g:elseif test="${params.controller=='task'}">
-						<h3 class="i_16_dashboard tab_label">
+						<h3 class="i_16_tasks tab_label">
 								<g:message code="task.label" />
 						</h3>
 						<div>
 							<span class="label"><g:message code="task.summary.label" /></span>
 						</div>
 					</g:elseif>
+					<g:elseif test="${params.controller=='product'}">
+						<h3 class="i_16_tables tab_label">
+								<g:message code="product.label" />
+						</h3>
+						<div>
+							<span class="label"><g:message code="product.summary.label" /></span>
+						</div>
+					</g:elseif>
+					<g:elseif test="${params.controller=='cr'}">
+						<h3 class="i_16_forms tab_label">
+								<g:message code="cr.label" />
+						</h3>
+						<div>
+							<span class="label"><g:message code="cr.summary.label" /></span>
+						</div>
+					</g:elseif>
 					<g:elseif test="${params.controller in ['user','adapter','service','setting']}">
-						<h3 class="i_16_dashboard tab_label">
+						<h3 class="i_16_settings tab_label">
 								<g:message code="setting.label" />
 						</h3>
 						<div>
@@ -145,6 +187,16 @@
 							</div>
 						</g:link>
 					</g:if>
+					<g:elseif test="${params.controller=='cr'}">
+						<g:link controller="cr" action="create"
+							title="${message(code:'default.new.label',args:[message(code:'cr.label')]) }">
+							<div class="simple_buttons">
+								<div class="bwIcon i_16_add">
+									<g:message code="default.new.label" args="${[message(code:'cr.label') ]}" />
+								</div>
+							</div>
+						</g:link>
+					</g:elseif>
 					<g:elseif test="${params.controller in ['user','adapter','service','setting']}">
 						<g:link controller="adapter" action="create"
 							title="${message(code:'default.new.label',args:[message(code:'adapter.label')]) }">
@@ -177,10 +229,73 @@
 						</g:if>
 					</g:elseif>
 				</div>
-			
+				
 				<div class="g_12 separator">
 					<span></span>
 				</div>
+			
+				<g:hasErrors bean="${adapterInstance}">
+					<div class="g_12">
+						<g:eachError bean="${adapterInstance}" var="error">
+							<div class="alert iDialog"><g:message error="${error}"/></div>
+						</g:eachError>
+					</div>
+				</g:hasErrors>
+			
+				<g:hasErrors bean="${crInstance}">
+					<div class="g_12">
+						<g:eachError bean="${crInstance}" var="error">
+							<div class="alert iDialog"><g:message error="${error}"/></div>
+						</g:eachError>
+					</div>
+				</g:hasErrors>
+			
+				<g:hasErrors bean="${productInstance}">
+					<div class="g_12">
+						<g:eachError bean="${productInstance}" var="error">
+							<div class="alert iDialog"><g:message error="${error}"/></div>
+						</g:eachError>
+					</div>
+				</g:hasErrors>
+			
+				<g:hasErrors bean="${serviceInstance}">
+					<div class="g_12">
+						<g:eachError bean="${serviceInstance}" var="error">
+							<div class="alert iDialog"><g:message error="${error}"/></div>
+						</g:eachError>
+					</div>
+				</g:hasErrors>
+			
+				<g:hasErrors bean="${taskInstance}">
+					<div class="g_12">
+						<g:eachError bean="${taskInstance}" var="error">
+							<div class="alert iDialog"><g:message error="${error}"/></div>
+						</g:eachError>
+					</div>
+				</g:hasErrors>
+			
+				<g:hasErrors bean="${userInstance}">
+					<div class="g_12">
+						<g:eachError bean="${userInstance}" var="error">
+							<div class="alert iDialog"><g:message error="${error}"/></div>
+						</g:eachError>
+					</div>
+				</g:hasErrors>
+				
+				<g:if test="${flash.errors }">
+					<div class="g_12">
+						<g:each in="${flash.errors }" var="error">
+							<div class="alert iDialog">${error }</div>
+						</g:each>
+					</div>
+				</g:if>
+				
+				<g:if test="${flash.message }">
+					<div class="g_12">
+						<div class="success iDialog">${flash.message }</div>
+					</div>
+				</g:if>
+				
 				<g:layoutBody />
 			</div>
 		</div>

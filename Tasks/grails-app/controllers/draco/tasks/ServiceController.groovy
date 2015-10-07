@@ -10,13 +10,7 @@ class ServiceController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "PUT"]
 	
-    def index() {
-		params.sort = params.sort ?: 'name'
-		params.order = params.order ?: 'asc'
-        respond Service.list(params)
-    }
-	
-	def search() {
+    def search() {
 		if(params.keyword?.trim()) {
 			def keyword = params.keyword.trim()
 			def results = Service.withCriteria {
@@ -32,10 +26,6 @@ class ServiceController {
 			redirect action: 'index', params: [sort: params.sort, order: params.order]
 		}
 	}
-
-    def show(Service serviceInstance) {
-        respond serviceInstance
-    }
 
     def create() {
         respond new Service(params)

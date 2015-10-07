@@ -1,48 +1,41 @@
 <%@ page import="draco.tasks.Product" %>
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta name="layout" content="main">
-		<g:set var="entityName" value="${message(code: 'product.label', default: 'Product')}" />
-		<title><g:message code="default.edit.label" args="[entityName]" /></title>
-	</head>
-	<body>
-		<a href="#edit-product" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-		<div class="nav" role="navigation">
-			<ul>
-				<li><a class="home" href="${createLink(uri: '/index')}"><g:message code="default.home.label"/></a></li>
-				<li><g:link class="list" action="index"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
-				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
-			</ul>
+<head>
+<meta name="layout" content="main">
+<g:set var="entityName"
+	value="${message(code: 'product.label', default: 'Product')}" />
+</head>
+<body>
+	
+	<div class="g_12">
+		<div class="widget_header">
+			<h4 class="widget_header_title wwIcon i_16_forms">
+				<g:message code="default.edit.label" args="[entityName]" />
+			</h4>
 		</div>
-		<div id="edit-product" class="content scaffold-edit" role="main">
-			<h1><g:message code="default.edit.label" args="[entityName]" /></h1>
-			<g:if test="${flash.message}">
-			<div class="message" role="status">${flash.message}</div>
-			</g:if>
-			<g:hasErrors bean="${productInstance}">
-			<ul class="errors" role="alert">
-				<g:eachError bean="${productInstance}" var="error">
-				<li <g:if test="${error in org.springframework.validation.FieldError}">data-field-id="${error.field}"</g:if>><g:message error="${error}"/></li>
-				</g:eachError>
-			</ul>
-			</g:hasErrors>
-			<g:form url="[resource:productInstance, action:'update']" method="PUT" >
-				<g:hiddenField name="version" value="${productInstance?.version}" />
-				<fieldset class="form">
-					<g:render template="form"/>
-				</fieldset>
-				<fieldset class="buttons">
-					<g:actionSubmit class="save" action="update" value="${message(code: 'default.button.update.label', default: 'Update')}" />
-					<g:actionSubmit class="copy" action="copy" value="${message(code: 'default.button.copy.label', default: 'Copy')}" />
-					<g:if test="${productInstance?.activate}">
-						<g:link class="delete" action="deactivate" resource="${productInstance}"><g:message code="default.button.deactivate.label" default="Deactivate" /></g:link>
-					</g:if>
-					<g:if test="${!productInstance?.activate}">
-						<g:link action="activate" resource="${productInstance}"><g:message code="default.button.activate.label" default="Activate" /></g:link>
-					</g:if>
-				</fieldset>
+		<div class="widget_contents noPadding">
+			<g:form url="[resource:productInstance, action:'update']" method="PUT">
+				<g:render template="form" model="${[productInstance:productInstance] }"></g:render>
+				<div class="line_grid">
+					<div class="g_3">
+						<span class="label"><g:message code="default.actions.label"/></span>
+					</div>
+					<div class="g_9">
+						<g:actionSubmit action="update" class="simple_buttons"
+							 value="${message(code: 'default.button.update.label', default: 'Update')}" />
+						<g:if test="${productInstance.activate }">
+							<g:actionSubmit action="delete" class="simple_buttons"
+								 value="${message(code: 'default.button.deactivate.label', default: 'Deactivate')}" />
+						</g:if>
+						<g:else>
+							<g:actionSubmit action="activate" class="simple_buttons"
+								 value="${message(code: 'default.button.activate.label', default: 'Activate')}" />
+						</g:else>
+					</div>
+				</div>
 			</g:form>
-		</div>
-	</body>
+		</div>	
+	</div>
+</body>
 </html>

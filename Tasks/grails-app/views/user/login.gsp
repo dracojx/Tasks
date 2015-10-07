@@ -41,7 +41,7 @@
 					url="[resource:userInstance, controller:'user', action:'auth']">
 					<div class="line_grid">
 						<div class="g_10">
-							<g:textField class="simple_field" name="username"
+							<g:textField class="simple_field" name="user"
 								placeholder="${message(code:'user.username.label') }"
 								required="" autofocus="" />
 						</div>
@@ -49,8 +49,7 @@
 					</div>
 					<div class="line_grid">
 						<div class="g_10">
-							<g:passwordField class="simple_field" name="password"
-								name="password"
+							<g:passwordField class="simple_field" name="pass"
 								placeholder="${message(code:'user.password.label') }"
 								required="" />
 						</div>

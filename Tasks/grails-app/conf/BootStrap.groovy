@@ -9,7 +9,7 @@ class BootStrap {
 		environments { 
 			development {
 				def admin = new User(username:"admin",password:"123456".encodeAsMD5(), name:"管理员", 
-					admin:true, system:true, reset:true, activate:true)
+					admin:true, system:true, reset:false, activate:true)
 				if(!admin.save()) {
 					admin.errors.each {
 						println it

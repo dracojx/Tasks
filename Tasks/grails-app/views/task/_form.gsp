@@ -93,7 +93,7 @@
 			</g:link>
 			<br />
 		</g:each>
-		<g:textField name="productItemIds" class="add"
+		<g:textField name="productItemIds"
 			placeholder="${message(code: 'default.placeholder.add.separated', args:[message(code:'product.label')]) }" />
 	</div>
 </div>
@@ -115,7 +115,7 @@
 			</g:link>
 			<br />
 		</g:each>
-		<g:textField name="crNumbers" class="add"
+		<g:textField name="crNumbers"
 			placeholder="${message(code: 'default.placeholder.add.separated', args:[message(code:'cr.label')]) }" />
 	</div>
 </div>
@@ -137,7 +137,7 @@
 			</g:link>
 			<br />
 		</g:each>
-		<g:textField name="tagNames" class="add"
+		<g:textField name="tagNames"
 			placeholder="${message(code: 'default.placeholder.add.separated', args:[message(code:'tag.label')]) }" />
 	</div>
 </div>

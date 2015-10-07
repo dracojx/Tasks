@@ -12,7 +12,7 @@ import org.hibernate.criterion.CriteriaSpecification
 class CrController {
 	def crService
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "PUT"]
+    static allowedMethods = [save: "POST", update: "PUT"]
 
     def index() {
 		params.sort = params.sort ?: 'number'
@@ -100,24 +100,6 @@ class CrController {
     }
 
     @Transactional
-    def delete(Cr crInstance) {
-        if (crInstance == null) {
-            notFound()
-            return
-        }
-		
-		crService.delete(crInstance)
-
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: ['', crInstance.getNumber()])
-                redirect action:"index", method:"GET"
-            }
-            '*'{ render status: NO_CONTENT }
-        }
-    }
-	
-	@Transactional
 	def prev(Cr crInstance) {
 		crService.prev(crInstance)
         flash.message = message(code: 'default.updated.message', args: ['', crInstance.getNumber()])

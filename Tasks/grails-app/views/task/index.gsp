@@ -1,7 +1,4 @@
 <%@ page import="draco.tasks.Task"%>
-<%@ page import="draco.tasks.Product"%>
-<%@ page import="draco.tasks.Service"%>
-<%@ page import="draco.tasks.User"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -66,11 +63,13 @@
 					<g:each in="${taskInstanceList}" status="i" var="taskInstance">
 						<tr
 							class="${taskInstance.activate? '':'inactivate'}">
-							<td><g:link action="edit" id="${taskInstance.id}"
+							<td>
+								<g:link action="edit" id="${taskInstance.id}"
 									title="${message(code:'default.button.edit.label') }">
 									<span class="label"> ${fieldValue(bean: taskInstance, field: "req")}
 									</span>
-								</g:link></td>
+								</g:link>
+							</td>
 
 							<td>
 								${fieldValue(bean: taskInstance, field: "title")}

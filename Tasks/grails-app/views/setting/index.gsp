@@ -9,24 +9,6 @@
 <body>
 
 	<div class="g_12">
-
-		<g:if test="${flash.errors }">
-			<div class="g_12">
-				<g:each in="${flash.errors }" var="error">
-					<div class="error iDialog">
-						${error }
-					</div>
-				</g:each>
-			</div>
-		</g:if>
-
-		<g:if test="${flash.message }">
-			<div class="g_12">
-				<div class="success iDialog">
-					${flash.message }
-				</div>
-			</div>
-		</g:if>
 		<div class="g_2">
 			<g:link controller="setting" action="download"
 				title="${message(code:'default.button.download.label') }">
@@ -68,11 +50,13 @@
 							
 							<th><g:message code="user.name.label"/></th>
 							
+							<th><g:message code="user.status.label"/></th>
+							
 							<th><g:message code="default.actions.label"/></th>
 						</tr>
 					</thead>
 					<tbody>
-						<g:each in="${User.list()}" status="i" var="userInstance">
+						<g:each in="${User.list()}" var="userInstance">
 							<tr>
 								<td><g:link controller="user" action="edit"
 										id="${userInstance.id}"
@@ -85,8 +69,62 @@
 								<td>
 									${fieldValue(bean: userInstance, field: "name")}
 								</td>
+								
+								<td>
+									<g:message code="user.activate.${userInstance.activate }"/>
+								</td>
 	
 								<td>
+									<g:if test="${!userInstance.system && userInstance.id != session.userId }">
+										<g:if test="${userInstance.activate }">
+											<g:if test="${userInstance.admin }">
+												<g:link controller="user" action="removeAdmin" id="${userInstance.id }"
+													title="${message(code:'default.button.removeAdmin.label') }">
+													<div class="simple_buttons">
+														<div>
+															<g:message code="default.button.removeAdmin.label" />
+														</div>
+													</div>
+												</g:link>
+											</g:if> 
+											<g:else>
+												<g:link controller="user" action="setAdmin" id="${userInstance.id }"
+													title="${message(code:'default.button.setAdmin.label') }">
+													<div class="simple_buttons">
+														<div>
+															<g:message code="default.button.setAdmin.label" />
+														</div>
+													</div>
+												</g:link>
+											</g:else>
+											<g:link controller="user" action="delete" id="${userInstance.id }"
+												title="${message(code:'default.button.deactivate.label') }">
+												<div class="simple_buttons">
+													<div>
+														<g:message code="default.button.deactivate.label" />
+													</div>
+												</div>
+											</g:link>
+											<g:link controller="user" action="reset" id="${userInstance.id }"
+												title="${message(code:'default.button.reset.label') }">
+												<div class="simple_buttons">
+													<div>
+														<g:message code="default.button.reset.label" />
+													</div>
+												</div>
+											</g:link>
+										</g:if> 
+										<g:else>
+											<g:link controller="user" action="activate" id="${userInstance.id }"
+												title="${message(code:'default.button.activate.label') }">
+												<div class="simple_buttons">
+													<div>
+														<g:message code="default.button.activate.label" />
+													</div>
+												</div>
+											</g:link>
+										</g:else>
+									</g:if>
 								</td>
 							</tr>
 						</g:each>
@@ -116,7 +154,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<g:each in="${Service.list()}" status="i" var="serviceInstance">
+					<g:each in="${Service.list()}" var="serviceInstance">
 						<tr>
 							<td><g:link controller="service" action="edit"
 									id="${serviceInstance.id}"
@@ -155,7 +193,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<g:each in="${Adapter.list()}" status="i" var="adapterInstance">
+					<g:each in="${Adapter.list()}" var="adapterInstance">
 						<tr>
 							<td><g:link controller="adapter" action="edit"
 									id="${adapterInstance.id}"

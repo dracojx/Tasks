@@ -1058,6 +1058,14 @@
 		background: url("../Images/Icons/16/i_16_logout.png") no-repeat scroll transparent;
 	}
 
+	.i_16_up {
+		background: url("../Images/Icons/16/i_16_up.png") no-repeat scroll transparent;
+	}
+
+	.i_16_down {
+		background: url("../Images/Icons/16/i_16_down.png") no-repeat scroll transparent;
+	}
+
 	.i_22_inbox {
 		background: url("../Images/Icons/22/i_22_inbox.png") no-repeat scroll transparent;
 	}

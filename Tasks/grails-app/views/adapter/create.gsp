@@ -6,14 +6,6 @@
 	</head>
 	<body>
 	
-	<g:hasErrors bean="${adapterInstance}">
-		<div class="g_12">
-			<g:eachError bean="${adapterInstance}" var="error">
-				<div class="alert iDialog"><g:message error="${error}"/></div>
-			</g:eachError>
-		</div>
-	</g:hasErrors>
-	
 	<div class="g_12">
 		<div class="widget_header">
 			<h4 class="widget_header_title wwIcon i_16_forms">
