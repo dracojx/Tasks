@@ -23,6 +23,8 @@
 <asset:javascript src="jQueryUI/jquery-ui-1.8.21.min.js" />
 <!-- Uniform -->
 <asset:javascript src="Uniform/jquery.uniform.js" />
+<!-- MD5 -->
+<asset:javascript src="jQuery/md5.js" />
 <!-- The Main JS File -->
 <asset:javascript src="main.js" />
 <g:layoutHead />
@@ -34,7 +36,7 @@
 				<div class="user">
 					<asset:image src="user_avatar.png" class="user_avatar"
 						alt="user_avatar" />
-					<span class="label"> ${User.get(session.userId)?.getName() }
+					<span class="label"> ${session.name }
 					</span>
 				</div>
 				<div class="top_links">
@@ -52,11 +54,15 @@
 		<ul class="menu_small_buttons">
 			<li>
 				<g:link title="${message(code:'overview.summary.label') }" uri="/index"
-				 	class="i_22_dashboard ${!params.controller&&(params.action='index') ? 'smActive':'' }"></g:link>
+				 	class="i_22_dashboard  ${!params ? 'smActive':'' }"></g:link>
 			</li>
 			<li>
-				<g:link title="${message(code:'overview.summary.label') }" controller="task" action="index"
+				<g:link title="${message(code:'task.summary.label') }" controller="task" action="index"
 				 	class="i_22_tasks ${params.controller=='task' ? 'smActive':'' }"></g:link>
+			</li>
+			<li>
+				<g:link title="${message(code:'setting.summary.label') }" controller="setting" action="index"
+				 	class="i_22_settings ${(params.controller in ['user','adapter','service','setting']) ? 'smActive':'' }"></g:link>
 			</li>
 		</ul>
 	</div>
@@ -64,7 +70,7 @@
 		<aside class="sidebar">
 			<ul class="tab_nav">
 				<li
-					class="i_32_dashboard ${!params.controller&&(params.action='index')? 'active_tab':'' }">
+					class="i_32_dashboard ${!params ? 'active_tab':'' }">
 					<g:link uri="/index"
 						title="${message(code:'overview.summary.label') }">
 						<span class="tab_label"><g:message code="overview.label" /></span>
@@ -80,10 +86,101 @@
 						<span class="tab_info"><g:message code="task.summary.label" /></span>
 					</g:link>
 				</li>
+				<li
+					class="i_32_settings ${(params.controller in ['user','adapter','service','setting']) ? 'active_tab':'' }">
+					<g:link controller="setting" action="index"
+						title="${message(code:'setting.summary.label') }">
+						<span class="tab_label"><g:message code="setting.label" /></span>
+						<span class="tab_info"><g:message code="setting.summary.label" /></span>
+					</g:link>
+				</li>
 			</ul>
 		</aside>
 		<div class="contents">
 			<div class="grid_wrapper">
+				<div class="g_6 contents_header">
+					<g:if test="${!params }">
+						<h3 class="i_16_dashboard tab_label">
+								<g:message code="overview.label" />
+						</h3>
+						<div>
+							<span class="label"><g:message code="overview.summary.label" /></span>
+						</div>
+					</g:if>
+					<g:elseif test="${params.controller=='task'}">
+						<h3 class="i_16_dashboard tab_label">
+								<g:message code="task.label" />
+						</h3>
+						<div>
+							<span class="label"><g:message code="task.summary.label" /></span>
+						</div>
+					</g:elseif>
+					<g:elseif test="${params.controller in ['user','adapter','service','setting']}">
+						<h3 class="i_16_dashboard tab_label">
+								<g:message code="setting.label" />
+						</h3>
+						<div>
+							<span class="label"><g:message code="setting.summary.label" /></span>
+						</div>
+					</g:elseif>
+				</div>
+				<div class="g_6 contents_options">
+					<g:if test="${!params || params.controller in ['task', 'product']}">
+						<g:link controller="product" action="create"
+							title="${message(code:'default.new.label',args:[message(code:'product.label')]) }">
+							<div class="simple_buttons">
+								<div class="bwIcon i_16_add">
+									<g:message code="default.new.label"
+										args="${[message(code:'product.label') ]}" />
+								</div>
+							</div>
+						</g:link>
+						<g:link controller="task" action="create"
+							title="${message(code:'default.new.label',args:[message(code:'task.label')]) }">
+							<div class="simple_buttons">
+								<div class="bwIcon i_16_add">
+									<g:message code="default.new.label"
+										args="${[message(code:'task.label') ]}" />
+								</div>
+							</div>
+						</g:link>
+					</g:if>
+					<g:elseif test="${params.controller in ['user','adapter','service','setting']}">
+						<g:link controller="adapter" action="create"
+							title="${message(code:'default.new.label',args:[message(code:'adapter.label')]) }">
+							<div class="simple_buttons">
+								<div class="bwIcon i_16_add">
+									<g:message code="default.new.label"
+										args="${[message(code:'adapter.label') ]}" />
+								</div>
+							</div>
+						</g:link>
+						<g:link controller="service" action="create"
+							title="${message(code:'default.new.label',args:[message(code:'service.label')]) }">
+							<div class="simple_buttons">
+								<div class="bwIcon i_16_add">
+									<g:message code="default.new.label"
+										args="${[message(code:'service.label') ]}" />
+								</div>
+							</div>
+						</g:link>
+						<g:if test="${session.admin }">
+							<g:link controller="user" action="create"
+								title="${message(code:'default.new.label',args:[message(code:'user.label')]) }">
+								<div class="simple_buttons">
+									<div class="bwIcon i_16_add">
+										<g:message code="default.new.label"
+											args="${[message(code:'user.label') ]}" />
+									</div>
+								</div>
+							</g:link>
+						</g:if>
+					</g:elseif>
+				</div>
+			
+				<div class="g_12 separator">
+					<span></span>
+				</div>
 				<g:layoutBody />
 			</div>
 		</div>

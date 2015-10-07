@@ -5,8 +5,9 @@ class User {
 	String password
 	String name
 	boolean admin = false
-	boolean edit = false
-	boolean activate = false
+	boolean system = false
+	boolean reset = false
+	boolean activate = true
 
     static constraints = {
 		username(unique:true, nullable:false, blank:false)

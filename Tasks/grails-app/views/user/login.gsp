@@ -11,6 +11,12 @@
 <asset:stylesheet src="style.css" />
 <!-- jQuery -->
 <asset:javascript src="jQuery/jquery-1.7.2.min.js" />
+<!-- jQuryUI -->
+<asset:javascript src="jQueryUI/jquery-ui-1.8.21.min.js" />
+<!-- Uniform -->
+<asset:javascript src="Uniform/jquery.uniform.js" />
+<!-- MD5 -->
+<asset:javascript src="jQuery/md5.js" />
 <!-- The Main JS File -->
 <asset:javascript src="main.js" />
 </head>
@@ -31,7 +37,7 @@
 				</h4>
 			</div>
 			<div class="widget_contents lgNoPadding">
-				<g:form
+				<g:form id="login_form"
 					url="[resource:userInstance, controller:'user', action:'auth']">
 					<div class="line_grid">
 						<div class="g_10">

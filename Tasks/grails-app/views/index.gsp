@@ -8,38 +8,6 @@
 <meta name="layout" content="main" />
 </head>
 <body>
-	<div class="g_6 contents_header">
-		<h3 class="i_16_dashboard tab_label">
-			<g:message code="overview.label" />
-		</h3>
-		<div>
-			<span class="label"><g:message code="overview.summary.label" /></span>
-		</div>
-	</div>
-	<div class="g_6 contents_options">
-		<g:link controller="product" action="create"
-			title="${message(code:'default.new.label',args:[message(code:'product.label')]) }">
-			<div class="simple_buttons">
-				<div class="bwIcon i_16_add">
-					<g:message code="default.new.label"
-						args="${[message(code:'product.label') ]}" />
-				</div>
-			</div>
-		</g:link>
-		<g:link controller="task" action="create"
-			title="${message(code:'default.new.label',args:[message(code:'task.label')]) }">
-			<div class="simple_buttons">
-				<div class="bwIcon i_16_add">
-					<g:message code="default.new.label"
-						args="${[message(code:'task.label') ]}" />
-				</div>
-			</div>
-		</g:link>
-	</div>
-
-	<div class="g_12 separator">
-		<span></span>
-	</div>
 	<div class="g_3 quick_stats">
 		<div class="big_stats visitor_stats">
 			${Task.count() }

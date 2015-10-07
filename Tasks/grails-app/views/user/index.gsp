@@ -34,8 +34,6 @@
 					
 						<g:sortableColumn property="admin" title="${message(code: 'user.admin.label', default: 'Admin')}" />
 					
-						<g:sortableColumn property="edit" title="${message(code: 'user.edit.label', default: 'Edit')}" />
-					
 					</tr>
 				</thead>
 				<tbody>
@@ -51,8 +49,6 @@
 						<td><g:formatBoolean boolean="${userInstance.activate}" /></td>
 					
 						<td><g:formatBoolean boolean="${userInstance.admin}" /></td>
-					
-						<td><g:formatBoolean boolean="${userInstance.edit}" /></td>
 					
 					</tr>
 				</g:each>

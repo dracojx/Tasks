@@ -1,0 +1,172 @@
+<%@ page import="draco.tasks.Service"%>
+<%@ page import="draco.tasks.Adapter"%>
+<%@ page import="draco.tasks.User"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="layout" content="main" />
+</head>
+<body>
+
+	<div class="g_12">
+
+		<g:if test="${flash.errors }">
+			<div class="g_12">
+				<g:each in="${flash.errors }" var="error">
+					<div class="error iDialog">
+						${error }
+					</div>
+				</g:each>
+			</div>
+		</g:if>
+
+		<g:if test="${flash.message }">
+			<div class="g_12">
+				<div class="success iDialog">
+					${flash.message }
+				</div>
+			</div>
+		</g:if>
+		<div class="g_2">
+			<g:link controller="setting" action="download"
+				title="${message(code:'default.button.download.label') }">
+				<div class="simple_buttons">
+					<div class="bwIcon i_16_data">
+						<g:message code="default.button.download.label" />
+					</div>
+				</div>
+			</g:link>
+		</div>
+		<g:if test="${session.admin }">
+			<div class="g_6">
+				<g:form action="upload" enctype="multipart/form-data">
+					<g:actionSubmit class="simple_buttons" action="upload"
+						value="${message(code:'default.button.upload.label') }" />
+					<input type="file" class="simple_buttons" name="excelFile" />
+				</g:form>
+			</div>
+		</g:if>
+	</div>
+
+	<div class="g_12 separator">
+		<span></span>
+	</div>
+	
+	<g:if test="${session.admin }">
+		<div class="g_12">
+			<div class="widget_header">
+				<h4 class="widget_header_title wwIcon i_16_tables">
+					<g:message code="default.list.label"
+						args="${[message(code:'user.label')] }" />
+				</h4>
+			</div>
+			<div class="widget_contents noPadding">
+				<table class="tables">
+					<thead>
+						<tr>
+							<th><g:message code="user.username.label"/></th>
+							
+							<th><g:message code="user.name.label"/></th>
+							
+							<th><g:message code="default.actions.label"/></th>
+						</tr>
+					</thead>
+					<tbody>
+						<g:each in="${User.list()}" status="i" var="userInstance">
+							<tr>
+								<td><g:link controller="user" action="edit"
+										id="${userInstance.id}"
+										title="${message(code:'default.button.edit.label') }">
+										<span class="label">
+											${fieldValue(bean: userInstance, field: "username")}
+										</span>
+									</g:link></td>
+	
+								<td>
+									${fieldValue(bean: userInstance, field: "name")}
+								</td>
+	
+								<td>
+								</td>
+							</tr>
+						</g:each>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</g:if>
+
+	<div class="g_6">
+		<div class="widget_header">
+			<h4 class="widget_header_title wwIcon i_16_tables">
+				<g:message code="default.list.label"
+					args="${[message(code:'service.label')] }" />
+			</h4>
+		</div>
+		<div class="widget_contents noPadding">
+			<table class="tables">
+				<thead>
+					<tr>
+						<th><g:message code="service.name.label" default="Name" /></th>
+
+						<th><g:message code="service.description.label"
+								default="Description" /></th>
+
+						<th><g:message code="service.vendor.label" default="Vendor" /></th>
+					</tr>
+				</thead>
+				<tbody>
+					<g:each in="${Service.list()}" status="i" var="serviceInstance">
+						<tr>
+							<td><g:link controller="service" action="edit"
+									id="${serviceInstance.id}"
+									title="${message(code:'default.button.edit.label') }">
+									<span class="label">
+										${fieldValue(bean: serviceInstance, field: "name")}
+									</span>
+								</g:link></td>
+
+							<td>
+								${fieldValue(bean: serviceInstance, field: "description")}
+							</td>
+
+							<td>
+								${fieldValue(bean: serviceInstance, field: "vendor")}
+							</td>
+						</tr>
+					</g:each>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<div class="g_6">
+		<div class="widget_header">
+			<h4 class="widget_header_title wwIcon i_16_tables">
+				<g:message code="default.list.label"
+					args="${[message(code:'adapter.label')] }" />
+			</h4>
+		</div>
+		<div class="widget_contents noPadding">
+			<table class="tables">
+				<thead>
+					<tr>
+						<th><g:message code="adapter.name.label" default="Name" /></th>
+					</tr>
+				</thead>
+				<tbody>
+					<g:each in="${Adapter.list()}" status="i" var="adapterInstance">
+						<tr>
+							<td><g:link controller="adapter" action="edit"
+									id="${adapterInstance.id}"
+									title="${message(code:'default.button.edit.label') }">
+									<span class="label"> ${fieldValue(bean: adapterInstance, field: "name")}</span>
+								</g:link></td>
+						</tr>
+					</g:each>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</body>
+</html>

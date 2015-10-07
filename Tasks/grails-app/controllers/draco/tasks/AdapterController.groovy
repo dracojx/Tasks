@@ -87,25 +87,6 @@ class AdapterController {
         }
     }
 
-    @Transactional
-    def delete(Adapter adapterInstance) {
-
-        if (adapterInstance == null) {
-            notFound()
-            return
-        }
-
-        adapterInstance.delete flush:true
-
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: ['', adapterInstance.getName()])
-                redirect action:"index", method:"GET"
-            }
-            '*'{ render status: NO_CONTENT }
-        }
-    }
-
     protected void notFound() {
         request.withFormat {
             form multipartForm {

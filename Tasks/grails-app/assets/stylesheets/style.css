@@ -1117,6 +1117,10 @@
 	.i_32_tasks {
 		background: url("../Images/Icons/32/i_32_tasks.png") no-repeat scroll transparent;
 	}
+
+	.i_32_settings {
+		background: url("../Images/Icons/32/i_32_settings.png") no-repeat scroll transparent;
+	}
 	
 	.i_22_dashboard {
 		background: url("../Images/Icons/22/i_22_dashboard.png") no-repeat scroll transparent;

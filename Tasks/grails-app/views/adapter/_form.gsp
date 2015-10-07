@@ -1,12 +1,12 @@
-<%@ page import="draco.tasks.Adapter" %>
+<%@ page import="draco.tasks.Adapter"%>
 
 
-
-<div class="fieldcontain ${hasErrors(bean: adapterInstance, field: 'name', 'error')} required">
-	<label for="name">
-		<g:message code="adapter.name.label" default="Name" />
-	</label>
-	<g:textField name="name" required="" value="${adapterInstance?.name}" autofocus="" />
-
+<div class="line_grid">
+	<div class="g_3">
+		<span class="label"><g:message code="adapter.name.label" /></span>
+	</div>
+	<div class="g_9">
+		<g:textField name="name" value="${adapterInstance?.name }" required="" autofocus="" />
+	</div>
 </div>
 

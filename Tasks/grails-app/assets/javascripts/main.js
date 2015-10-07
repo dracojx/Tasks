@@ -39,5 +39,13 @@ $(function () {
 		}
 	})	
 	
+	
+/* Login ============================================= */
+	
+	$("#login_form").submit(function(e){
+        $("#password").val(
+				$.md5($("#password").val())
+			);
+	});
 
 });

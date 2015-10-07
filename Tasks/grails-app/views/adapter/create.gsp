@@ -3,36 +3,36 @@
 	<head>
 		<meta name="layout" content="main">
 		<g:set var="entityName" value="${message(code: 'adapter.label', default: 'Adapter')}" />
-		<title><g:message code="default.create.label" args="[entityName]" /></title>
 	</head>
 	<body>
-		<a href="#create-adapter" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-		<div class="nav" role="navigation">
-			<ul>
-				<li><a class="home" href="${createLink(uri: '/index')}"><g:message code="default.home.label"/></a></li>
-				<li><g:link class="list" action="index"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
-			</ul>
+	
+	<g:hasErrors bean="${adapterInstance}">
+		<div class="g_12">
+			<g:eachError bean="${adapterInstance}" var="error">
+				<div class="alert iDialog"><g:message error="${error}"/></div>
+			</g:eachError>
 		</div>
-		<div id="create-adapter" class="content scaffold-create" role="main">
-			<h1><g:message code="default.create.label" args="[entityName]" /></h1>
-			<g:if test="${flash.message}">
-			<div class="message" role="status">${flash.message}</div>
-			</g:if>
-			<g:hasErrors bean="${adapterInstance}">
-			<ul class="errors" role="alert">
-				<g:eachError bean="${adapterInstance}" var="error">
-				<li <g:if test="${error in org.springframework.validation.FieldError}">data-field-id="${error.field}"</g:if>><g:message error="${error}"/></li>
-				</g:eachError>
-			</ul>
-			</g:hasErrors>
-			<g:form url="[resource:adapterInstance, action:'save']" >
-				<fieldset class="form">
-					<g:render template="form"/>
-				</fieldset>
-				<fieldset class="buttons">
-					<g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" />
-				</fieldset>
+	</g:hasErrors>
+	
+	<div class="g_12">
+		<div class="widget_header">
+			<h4 class="widget_header_title wwIcon i_16_forms">
+				<g:message code="default.new.label" args="[entityName]" />
+			</h4>
+		</div>
+		<div class="widget_contents noPadding">
+			<g:form url="[resource:adapterInstance, action:'save']">
+				<g:render template="form" model="${[adapterInstance:adapterInstance] }"></g:render>
+				<div class="line_grid">
+					<div class="g_3">
+						<span class="label"><g:message code="default.actions.label"/></span>
+					</div>
+					<div class="g_9">
+						<g:actionSubmit action="save" class="simple_buttons" value="${message(code: 'default.button.create.label')}"/>
+					</div>
+				</div>
 			</g:form>
-		</div>
+		</div>	
+	</div>
 	</body>
 </html>

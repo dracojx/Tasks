@@ -91,25 +91,6 @@ class ServiceController {
         }
     }
 
-    @Transactional
-    def delete(Service serviceInstance) {
-
-        if (serviceInstance == null) {
-            notFound()
-            return
-        }
-
-        serviceInstance.delete flush:true
-
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: ['', serviceInstance.getName()])
-                redirect action:"index", method:"GET"
-            }
-            '*'{ render status: NO_CONTENT }
-        }
-    }
-
     protected void notFound() {
         request.withFormat {
             form multipartForm {

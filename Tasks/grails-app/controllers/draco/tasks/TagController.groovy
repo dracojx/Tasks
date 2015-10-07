@@ -89,25 +89,6 @@ class TagController {
         }
     }
 
-    @Transactional
-    def delete(Tag tagInstance) {
-
-        if (tagInstance == null) {
-            notFound()
-            return
-        }
-		
-		tagService.delete(tagInstance)
-
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: ['', tagInstance.getName()])
-                redirect action:"index", method:"GET"
-            }
-            '*'{ render status: NO_CONTENT }
-        }
-    }
-
     protected void notFound() {
         request.withFormat {
             form multipartForm {

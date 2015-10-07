@@ -8,7 +8,15 @@ class BootStrap {
 		// environment specific settings
 		environments { 
 			development {
-				def user = new User(username:"jingxuan",password:"Abc1234", name:"景轩", admin:true, edit:true, activate:true)
+				def admin = new User(username:"admin",password:"123456".encodeAsMD5(), name:"管理员", 
+					admin:true, system:true, reset:true, activate:true)
+				if(!admin.save()) {
+					admin.errors.each {
+						println it
+					}
+				}
+				def user = new User(username:"jingxuan",password:"123456".encodeAsMD5(), name:"景轩", 
+					admin:false, system:false, reset:true, activate:true)
 				if(!user.save()) {
 					user.errors.each {
 						println it

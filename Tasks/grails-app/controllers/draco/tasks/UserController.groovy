@@ -103,6 +103,7 @@ class UserController {
 	}
 
     def auth() {
+		println "======================${params.password}"
 		User user = User.findByUsernameAndPassword(params.username?.trim().toUpperCase(), params.password)
 	
 	    if (user == null) {
@@ -111,6 +112,8 @@ class UserController {
 	    }
 		
 		session.userId = user.getId()
+		session.name = user.getName()
+		session.admin = user.isAdmin()
 		def task = Task.findByUser(user,[sort:'createDate', order:'desc'])
 		if(task==null) {
 			task = new Task()
