@@ -38,7 +38,7 @@
 			</div>
 			<div class="widget_contents lgNoPadding">
 				<g:form id="login_form"
-					url="[resource:userInstance, controller:'user', action:'auth']">
+					url="[resource:userInstance, controller:'user', action:'auth']" method="post">
 					<div class="line_grid">
 						<div class="g_10">
 							<g:textField class="simple_field" name="user"

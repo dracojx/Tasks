@@ -55,23 +55,23 @@
 	<div class="wrapper small_menu">
 		<ul class="menu_small_buttons">
 			<li>
-				<g:link title="${message(code:'overview.summary.label') }" uri="/index"
-				 	class="i_22_dashboard  ${!params ? 'smActive':'' }"></g:link>
+				<g:link title="${message(code:'overview.summary.label') }" controller="overview"
+				 	class="i_22_dashboard  ${params.controller=='overview' ? 'smActive':'' }"></g:link>
 			</li>
 			<li>
-				<g:link title="${message(code:'task.summary.label') }" controller="task" action="index"
+				<g:link title="${message(code:'task.summary.label') }" controller="task"
 				 	class="i_22_tasks ${params.controller=='task' ? 'smActive':'' }"></g:link>
 			</li>
 			<li>
-				<g:link title="${message(code:'product.summary.label') }" controller="product" action="index"
+				<g:link title="${message(code:'product.summary.label') }" controller="product"
 				 	class="i_22_tables ${params.controller=='product' ? 'smActive':'' }"></g:link>
 			</li>
 			<li>
-				<g:link title="${message(code:'cr.summary.label') }" controller="cr" action="index"
+				<g:link title="${message(code:'cr.summary.label') }" controller="cr"
 				 	class="i_22_forms ${params.controller=='cr' ? 'smActive':'' }"></g:link>
 			</li>
 			<li>
-				<g:link title="${message(code:'setting.summary.label') }" controller="setting" action="index"
+				<g:link title="${message(code:'setting.summary.label') }" controller="setting"
 				 	class="i_22_settings ${(params.controller in ['user','adapter','service','setting']) ? 'smActive':'' }"></g:link>
 			</li>
 		</ul>
@@ -80,8 +80,8 @@
 		<aside class="sidebar">
 			<ul class="tab_nav">
 				<li
-					class="i_32_dashboard ${!params ? 'active_tab':'' }">
-					<g:link uri="/index"
+					class="i_32_dashboard ${params.controller=='overview' ? 'active_tab':'' }">
+					<g:link controller="overview"
 						title="${message(code:'overview.summary.label') }">
 						<span class="tab_label"><g:message code="overview.label" /></span>
 						<span class="tab_info"><g:message
@@ -90,7 +90,7 @@
 				</li>
 				<li
 					class="i_32_tasks ${params.controller=='task'? 'active_tab':'' }">
-					<g:link controller="task" action="index"
+					<g:link controller="task"
 						title="${message(code:'task.summary.label') }">
 						<span class="tab_label"><g:message code="task.label" /></span>
 						<span class="tab_info"><g:message code="task.summary.label" /></span>
@@ -98,7 +98,7 @@
 				</li>
 				<li
 					class="i_32_tables ${params.controller=='product'? 'active_tab':'' }">
-					<g:link controller="product" action="index"
+					<g:link controller="product"
 						title="${message(code:'product.summary.label') }">
 						<span class="tab_label"><g:message code="product.label" /></span>
 						<span class="tab_info"><g:message code="product.summary.label" /></span>
@@ -106,7 +106,7 @@
 				</li>
 				<li
 					class="i_32_forms ${params.controller=='cr'? 'active_tab':'' }">
-					<g:link controller="cr" action="index"
+					<g:link controller="cr"
 						title="${message(code:'cr.summary.label') }">
 						<span class="tab_label"><g:message code="cr.label" /></span>
 						<span class="tab_info"><g:message code="cr.summary.label" /></span>
@@ -114,7 +114,7 @@
 				</li>
 				<li
 					class="i_32_settings ${(params.controller in ['user','adapter','service','setting']) ? 'active_tab':'' }">
-					<g:link controller="setting" action="index"
+					<g:link controller="setting"
 						title="${message(code:'setting.summary.label') }">
 						<span class="tab_label"><g:message code="setting.label" /></span>
 						<span class="tab_info"><g:message code="setting.summary.label" /></span>
@@ -125,7 +125,7 @@
 		<div class="contents">
 			<div class="grid_wrapper">
 				<div class="g_6 contents_header">
-					<g:if test="${!params }">
+					<g:if test="${params.controller=='overview' }">
 						<h3 class="i_16_dashboard tab_label">
 								<g:message code="overview.label" />
 						</h3>
@@ -167,7 +167,7 @@
 					</g:elseif>
 				</div>
 				<div class="g_6 contents_options">
-					<g:if test="${!params || params.controller in ['task', 'product']}">
+					<g:if test="${params.controller in ['overview', 'task', 'product']}">
 						<g:link controller="product" action="create"
 							title="${message(code:'default.new.label',args:[message(code:'product.label')]) }">
 							<div class="simple_buttons">

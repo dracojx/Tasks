@@ -8,7 +8,7 @@ import grails.transaction.Transactional
 @Transactional(readOnly = true)
 class UserController {
 
-    static allowedMethods = [save: "POST", update: "PUT"]
+    static allowedMethods = [save: "POST", update: "PUT", auth: "POST"]
 
     def reset(){
         respond User.get(params.id as Long)
@@ -132,7 +132,7 @@ class UserController {
 		    request.withFormat {
 		        form multipartForm {
 		            flash.message = message(code: 'default.welcome.message', args:[user.getName()])
-		            redirect url: "/index"
+		            redirect url: "/"
 		        }
 		        '*'{ render status: NO_CONTENT }
 		    }
@@ -232,7 +232,7 @@ class UserController {
 			userInstance.setReset(false)
 			userInstance.save flush:true
 			flash.message = message(code: 'default.welcome.message', args: [userInstance.getName()])
-			redirect url:'/index'
+			redirect url:'/'
 		} else {
 			userInstance.setReset(true)
 			userInstance.save flush:true
