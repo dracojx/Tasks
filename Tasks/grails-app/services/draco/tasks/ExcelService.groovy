@@ -11,6 +11,8 @@ import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
+import org.springframework.web.context.request.RequestContextHolder
+import org.springframework.web.servlet.support.RequestContextUtils
 
 @Transactional
 class ExcelService {
@@ -35,6 +37,8 @@ class ExcelService {
 	
 	//Download Excel
 	def writeExcel(OutputStream os, Locale locale) {
+		def request = RequestContextHolder.currentRequestAttributes().request
+		println RequestContextUtils.getLocale(request)
 		Workbook wb = new XSSFWorkbook()
 		
 		Font defaultFont = this.defaultFont(wb, locale)
@@ -432,11 +436,12 @@ class ExcelService {
 			if(it.getLogs()) {
 				StringBuffer sb = new StringBuffer()
 				it.getLogs().each {Log log ->
-					def message = messageSource.getMessage('task.logs.log', 
-						[
-							messageSource.getMessage('log.type.'+log.getType(), null, locale),
-							log.getProduct().toString()
-						] as Object[], locale)
+					def message = "[${messageSource.getMessage('log.type.'+log.getType(), null, locale)}] ${log.getProduct().toString()}"
+//					messageSource.getMessage('task.logs.log', 
+//						[
+//							messageSource.getMessage('log.type.'+log.getType(), null, locale),
+//							log.getProduct().toString()
+//						] as Object[], locale)
 					sb.append(message).append("\n")
 				}
 				row.createCell(4).setCellValue(sb.toString().trim())
