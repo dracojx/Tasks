@@ -86,6 +86,15 @@ class BootStrap {
 					}
 				}
 			}
+			production {
+				def admin = new User(username:"admin",password:"vnHFhgRwXaXKb2xt".encodeAsMD5(), name:"管理员", 
+					admin:true, system:true, reset:false, activate:true)
+				if(!admin.save()) {
+					admin.errors.each {
+						println it
+					}
+				}
+			}
 		}
 	}
 	def destroy = {

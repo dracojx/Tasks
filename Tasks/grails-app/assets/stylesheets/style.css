@@ -2349,6 +2349,11 @@
 		width:11px;
 		height:11px;
 	}
+	
+	tr.inactivate {
+		text-decoration:line-through;
+		background-color:#c0c0c0;
+	}
 
 /* Change Pattern -- For Demonstration only */
 

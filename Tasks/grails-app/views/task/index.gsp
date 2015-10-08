@@ -37,6 +37,7 @@
 		<div class="widget_header">
 			<h4 class="widget_header_title wwIcon i_16_tables">
 				<g:message code="default.list.label" args="[entityName]" />
+				( ${taskInstanceList?.size() ?: '0' } )
 			</h4>
 		</div>
 		<div class="widget_contents noPadding">

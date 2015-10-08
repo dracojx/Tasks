@@ -13,7 +13,7 @@ class ProductController {
 	def logService
 	def productService
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+    static allowedMethods = [save: "POST", update: "PUT"]
 
     def index() {
 		params.sort = params.sort ?: 'itemId'
@@ -148,15 +148,15 @@ class ProductController {
 	def activate(Product productInstance) {
 		productInstance.setActivate(true)
 		productInstance.save flush:true
-	    flash.message = message(code: 'default.updated.message', args: ['', productInstance.getItemId()])
+	    flash.message = message(code: 'default.activated.message', args: [productInstance.getItemId()])
 		redirect action: 'edit', id: productInstance.getId()
 	}
 
 	@Transactional
-	def deactivate(Product productInstance) {
+	def delete(Product productInstance) {
 		productInstance.setActivate(false)
 		productInstance.save flush:true
-        flash.message = message(code: 'default.updated.message', args: ['', productInstance.getItemId()])
+        flash.message = message(code: 'default.deactivated.message', args: [productInstance.getItemId()])
 		redirect action: 'edit', id: productInstance.getId()
 	}
 	

@@ -16,32 +16,37 @@
 		</div>
 		<div class="widget_contents noPadding">
 			<g:form url="[resource:taskInstance, action:'update']" method="PUT">
-				<g:render template="form" model="${[taskInstance:taskInstance] }"></g:render>
-				<div class="line_grid">
-					<div class="g_3">
-						<span class="label"><g:message code="default.actions.label"/></span>
-					</div>
-					<div class="g_9">
-						<g:actionSubmit action="update" class="simple_buttons"
-							 value="${message(code: 'default.button.update.label', default: 'Update')}" />
-						<g:if test="${taskInstance.activate }">
-							<g:actionSubmit action="delete" class="simple_buttons"
-								 value="${message(code: 'default.button.deactivate.label', default: 'Deactivate')}" />
-							<g:if test="${taskInstance?.status.toInteger() > 0 }">
-								<g:actionSubmit action="prev" class="simple_buttons"
-									 value="${message(code: 'default.button.prev.label', default: 'Prev Stage')}" />
+				<g:if test="${!session.admin && taskInstance.user.id != session.userId }">
+					<g:render template="show" model="${[taskInstance:taskInstance] }"></g:render>
+				</g:if>
+				<g:else>
+					<g:render template="form" model="${[taskInstance:taskInstance] }"></g:render>
+					<div class="line_grid">
+						<div class="g_3">
+							<span class="label"><g:message code="default.actions.label"/></span>
+						</div>
+						<div class="g_9">
+							<g:actionSubmit action="update" class="simple_buttons"
+								 value="${message(code: 'default.button.update.label', default: 'Update')}" />
+							<g:if test="${taskInstance.activate }">
+								<g:actionSubmit action="delete" class="simple_buttons"
+									 value="${message(code: 'default.button.deactivate.label', default: 'Deactivate')}" />
+								<g:if test="${taskInstance?.status.toInteger() > 0 }">
+									<g:actionSubmit action="prev" class="simple_buttons"
+										 value="${message(code: 'default.button.prev.label', default: 'Prev Stage')}" />
+								</g:if>
+								<g:if test="${taskInstance?.status.toInteger() < 4 }">
+									<g:actionSubmit action="next" class="simple_buttons"
+										 value="${message(code: 'default.button.next.label', default: 'Next Stage')}" />
+								</g:if>
 							</g:if>
-							<g:if test="${taskInstance?.status.toInteger() < 4 }">
-								<g:actionSubmit action="next" class="simple_buttons"
-									 value="${message(code: 'default.button.next.label', default: 'Next Stage')}" />
-							</g:if>
-						</g:if>
-						<g:else>
-							<g:actionSubmit action="activate" class="simple_buttons"
-								 value="${message(code: 'default.button.activate.label', default: 'Activate')}" />
-						</g:else>
+							<g:else>
+								<g:actionSubmit action="activate" class="simple_buttons"
+									 value="${message(code: 'default.button.activate.label', default: 'Activate')}" />
+							</g:else>
+						</div>
 					</div>
-				</div>
+				</g:else>
 			</g:form>
 		</div>	
 	</div>

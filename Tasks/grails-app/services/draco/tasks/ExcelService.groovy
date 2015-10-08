@@ -20,7 +20,9 @@ class ExcelService {
 	def messageSource
 	
 	//Upload Excel
-	def List<String> readExcel(InputStream is, Locale locale, def userId) {
+	def List<String> readExcel(InputStream is, def userId) {
+		def request = RequestContextHolder.currentRequestAttributes().request
+		Locale locale = RequestContextUtils.getLocale(request)
 		def errors = []
 		Workbook wb = null
 		try {
@@ -36,9 +38,10 @@ class ExcelService {
 	}
 	
 	//Download Excel
-	def writeExcel(OutputStream os, Locale locale) {
+	def writeExcel(OutputStream os) {
 		def request = RequestContextHolder.currentRequestAttributes().request
-		println RequestContextUtils.getLocale(request)
+		Locale locale = RequestContextUtils.getLocale(request)
+		
 		Workbook wb = new XSSFWorkbook()
 		
 		Font defaultFont = this.defaultFont(wb, locale)

@@ -13,8 +13,7 @@ class SettingController {
 			def file = request.getFile('excelFile')
 			if(!file.isEmpty()) {
 				InputStream is = file.getInputStream()
-				Locale locale = RequestContextUtils.getLocale(request)
-				def errors = excelService.readExcel(is, locale, session.userId)
+				def errors = excelService.readExcel(is, session.userId)
 				if(errors.isEmpty()) {
 					flash.message = message(code:'default.import.successed.message')
 				} else {
@@ -31,12 +30,11 @@ class SettingController {
 	}
 
 	def download() {
-		def filename = message(code:'default.download.filename') + "_${new Date().format('yyyyMMddHHmmssSSS')}.xlsx"
+		def filename = message(code:'default.download.filename') + "_${new Date().format('yyyyMMdd')}.xlsx"
 		response.setCharacterEncoding('utf-8')
 		response.setContentType('application/vnd.ms-excel')
 		response.setHeader('Content-Disposition', "Attachment;Filename='$filename'")
 		
-		Locale locale = RequestContextUtils.getLocale(request)
-		excelService.writeExcel(response.outputStream, locale)
+		excelService.writeExcel(response.outputStream)
 	}
 }

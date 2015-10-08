@@ -1,20 +1,14 @@
 <%@ page import="draco.tasks.User"%>
 <%@ page import="draco.tasks.Task"%>
 <!DOCTYPE html>
-<!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
-<!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
-<!--[if IE 8 ]>    <html lang="en" class="no-js ie8"> <![endif]-->
-<!--[if IE 9 ]>    <html lang="en" class="no-js ie9"> <![endif]-->
-<!--[if (gt IE 9)|!(IE)]><!-->
-<html lang="en" class="no-js">
-<!--<![endif]-->
+<html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <title><g:message code="project.label" default="Task Management" /></title>
 <!-- The Fonts -->
-<link href="http://fonts.useso.com/css?family=Oswald|Droid+Sans:400,700"
-	rel="stylesheet">
+<link href='http://fonts.useso.com/css?family=Roboto+Condensed:400,700' rel='stylesheet' type='text/css'>
 <!-- The Main CSS File -->
 <asset:stylesheet src="style.css" />
 <!-- jQuery -->
@@ -58,18 +52,20 @@
 				<g:link title="${message(code:'overview.summary.label') }" controller="overview"
 				 	class="i_22_dashboard  ${params.controller=='overview' ? 'smActive':'' }"></g:link>
 			</li>
-			<li>
-				<g:link title="${message(code:'task.summary.label') }" controller="task"
-				 	class="i_22_tasks ${params.controller=='task' ? 'smActive':'' }"></g:link>
-			</li>
-			<li>
-				<g:link title="${message(code:'product.summary.label') }" controller="product"
-				 	class="i_22_tables ${params.controller=='product' ? 'smActive':'' }"></g:link>
-			</li>
-			<li>
-				<g:link title="${message(code:'cr.summary.label') }" controller="cr"
-				 	class="i_22_forms ${params.controller=='cr' ? 'smActive':'' }"></g:link>
-			</li>
+			<g:if test="${!session.system }">
+				<li>
+					<g:link title="${message(code:'task.summary.label') }" controller="task"
+					 	class="i_22_tasks ${params.controller=='task' ? 'smActive':'' }"></g:link>
+				</li>
+				<li>
+					<g:link title="${message(code:'product.summary.label') }" controller="product"
+					 	class="i_22_forms ${params.controller=='product' ? 'smActive':'' }"></g:link>
+				</li>
+				<li>
+					<g:link title="${message(code:'cr.summary.label') }" controller="cr"
+					 	class="i_22_inbox ${params.controller=='cr' ? 'smActive':'' }"></g:link>
+				</li>
+			</g:if>
 			<li>
 				<g:link title="${message(code:'setting.summary.label') }" controller="setting"
 				 	class="i_22_settings ${(params.controller in ['user','adapter','service','setting']) ? 'smActive':'' }"></g:link>
@@ -88,30 +84,32 @@
 								code="overview.summary.label" /></span>
 					</g:link>
 				</li>
-				<li
-					class="i_32_tasks ${params.controller=='task'? 'active_tab':'' }">
-					<g:link controller="task"
-						title="${message(code:'task.summary.label') }">
-						<span class="tab_label"><g:message code="task.label" /></span>
-						<span class="tab_info"><g:message code="task.summary.label" /></span>
-					</g:link>
-				</li>
-				<li
-					class="i_32_tables ${params.controller=='product'? 'active_tab':'' }">
-					<g:link controller="product"
-						title="${message(code:'product.summary.label') }">
-						<span class="tab_label"><g:message code="product.label" /></span>
-						<span class="tab_info"><g:message code="product.summary.label" /></span>
-					</g:link>
-				</li>
-				<li
-					class="i_32_forms ${params.controller=='cr'? 'active_tab':'' }">
-					<g:link controller="cr"
-						title="${message(code:'cr.summary.label') }">
-						<span class="tab_label"><g:message code="cr.label" /></span>
-						<span class="tab_info"><g:message code="cr.summary.label" /></span>
-					</g:link>
-				</li>
+				<g:if test="${!session.system }">
+					<li
+						class="i_32_tasks ${params.controller=='task'? 'active_tab':'' }">
+						<g:link controller="task"
+							title="${message(code:'task.summary.label') }">
+							<span class="tab_label"><g:message code="task.label" /></span>
+							<span class="tab_info"><g:message code="task.summary.label" /></span>
+						</g:link>
+					</li>
+					<li
+						class="i_32_forms ${params.controller=='product'? 'active_tab':'' }">
+						<g:link controller="product"
+							title="${message(code:'product.summary.label') }">
+							<span class="tab_label"><g:message code="product.label" /></span>
+							<span class="tab_info"><g:message code="product.summary.label" /></span>
+						</g:link>
+					</li>
+					<li
+						class="i_32_inbox ${params.controller=='cr'? 'active_tab':'' }">
+						<g:link controller="cr"
+							title="${message(code:'cr.summary.label') }">
+							<span class="tab_label"><g:message code="cr.label" /></span>
+							<span class="tab_info"><g:message code="cr.summary.label" /></span>
+						</g:link>
+					</li>
+				</g:if>
 				<li
 					class="i_32_settings ${(params.controller in ['user','adapter','service','setting']) ? 'active_tab':'' }">
 					<g:link controller="setting"
@@ -142,7 +140,7 @@
 						</div>
 					</g:elseif>
 					<g:elseif test="${params.controller=='product'}">
-						<h3 class="i_16_tables tab_label">
+						<h3 class="i_16_forms tab_label">
 								<g:message code="product.label" />
 						</h3>
 						<div>
@@ -150,7 +148,7 @@
 						</div>
 					</g:elseif>
 					<g:elseif test="${params.controller=='cr'}">
-						<h3 class="i_16_forms tab_label">
+						<h3 class="i_16_message tab_label">
 								<g:message code="cr.label" />
 						</h3>
 						<div>
@@ -167,7 +165,7 @@
 					</g:elseif>
 				</div>
 				<div class="g_6 contents_options">
-					<g:if test="${params.controller in ['overview', 'task', 'product']}">
+					<g:if test="${params.controller in ['overview', 'task', 'product'] && !session.system}">
 						<g:link controller="product" action="create"
 							title="${message(code:'default.new.label',args:[message(code:'product.label')]) }">
 							<div class="simple_buttons">
@@ -216,7 +214,7 @@
 								</div>
 							</div>
 						</g:link>
-						<g:if test="${session.admin }">
+						<g:if test="${session.system }">
 							<g:link controller="user" action="create"
 								title="${message(code:'default.new.label',args:[message(code:'user.label')]) }">
 								<div class="simple_buttons">

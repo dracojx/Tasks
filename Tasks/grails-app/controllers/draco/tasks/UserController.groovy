@@ -11,6 +11,11 @@ class UserController {
     static allowedMethods = [save: "POST", update: "PUT", auth: "POST"]
 
     def reset(){
+		if(!session.system && (params.id as Long != session.userId)) {
+			flash.errors = [message(code: 'default.unauthorized.message')]
+			redirect controller:'setting', action:'index'
+			return
+		}
         respond User.get(params.id as Long)
 	}
 
@@ -42,7 +47,7 @@ class UserController {
     }
 
     def edit(User userInstance) {
-		if((!session.admin && (params.id as long != session.userId)) || userInstance.isSystem()) {
+		if((!session.system && (params.id as long != session.userId)) || userInstance.isSystem()) {
 			flash.errors = [message(code: 'default.unauthorized.message')]
 			redirect controller:'setting', action:'index'
 			return
@@ -57,7 +62,7 @@ class UserController {
             return
         }
 		
-		if((!session.admin && (params.id as long != session.userId)) || userInstance.isSystem()) {
+		if((!session.system && (params.id as long != session.userId)) || userInstance.isSystem()) {
 			flash.errors = [message(code: 'default.unauthorized.message')]
 			redirect controller:'setting', action:'index'
 			return
@@ -123,8 +128,10 @@ class UserController {
 		session.userId = user.getId()
 		session.name = user.getName()
 		session.admin = user.isAdmin()
+		session.system = user.isSystem()
 		
 		if(user.isReset()) {
+			session.reset = true
 		    flash.message = message(code: 'user.password.needchange.message')
 			redirect action:'reset', id:user.id
 			return
@@ -222,7 +229,7 @@ class UserController {
 	
 	@Transactional
 	def resetPass(User userInstance) {
-		if((!session.admin && (userInstance.id != session.userId)) || userInstance.isSystem()) {
+		if((!session.system && (userInstance.id != session.userId)) || userInstance.isSystem()) {
 			flash.errors = [message(code: 'default.unauthorized.message')]
 			redirect controller:'setting', action:'index'
 			return
@@ -231,6 +238,7 @@ class UserController {
 		if(userInstance.id == session.userId) {
 			userInstance.setReset(false)
 			userInstance.save flush:true
+			session.removeAttribute('reset')
 			flash.message = message(code: 'default.welcome.message', args: [userInstance.getName()])
 			redirect url:'/'
 		} else {

@@ -166,7 +166,7 @@ class TaskController {
 		taskInstance.setActivate(true)
 		taskInstance.setUpdateDate(new Date())
 		taskInstance.save flush:true
-	    flash.message = message(code: 'defaults.activated.message', args: [taskInstance.getReq()])
+	    flash.message = message(code: 'default.activated.message', args: [taskInstance.getReq()])
 		redirect action: 'edit', id: taskInstance.getId()
 	}
 

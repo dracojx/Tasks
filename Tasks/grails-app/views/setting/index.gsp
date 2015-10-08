@@ -9,6 +9,18 @@
 <body>
 
 	<div class="g_12">
+		<g:if test="${!session.system }">
+			<div class="g_2">
+				<g:link controller="user" action="reset"  id="${session.userId }"
+					title="${message(code:'default.button.reset.label') }">
+					<div class="simple_buttons">
+						<div class="bwIcon i_16_spinner">
+							<g:message code="default.button.reset.label" />
+						</div>
+					</div>
+				</g:link>
+			</div>
+		</g:if>
 		<div class="g_2">
 			<g:link controller="setting" action="download"
 				title="${message(code:'default.button.download.label') }">
@@ -19,14 +31,16 @@
 				</div>
 			</g:link>
 		</div>
-		<g:if test="${session.admin }">
-			<div class="g_6">
-				<g:form action="upload" enctype="multipart/form-data">
+		<g:if test="${session.admin && !session.system }">
+			<g:form action="upload" enctype="multipart/form-data">
+				<div class="g_3">
+					<input type="file" class="simple_form" name="excelFile" />
+				</div>
+				<div class="g_2">
 					<g:actionSubmit class="simple_buttons" action="upload"
 						value="${message(code:'default.button.upload.label') }" />
-					<input type="file" class="simple_buttons" name="excelFile" />
-				</g:form>
-			</div>
+				</div>
+			</g:form>
 		</g:if>
 	</div>
 
@@ -34,12 +48,12 @@
 		<span></span>
 	</div>
 	
-	<g:if test="${session.admin }">
+	<g:if test="${session.system }">
 		<div class="g_12">
 			<div class="widget_header">
 				<h4 class="widget_header_title wwIcon i_16_tables">
-					<g:message code="default.list.label"
-						args="${[message(code:'user.label')] }" />
+					<g:message code="default.list.label" args="${[message(code:'user.label')] }" />
+					( ${User.count() } )
 				</h4>
 			</div>
 			<div class="widget_contents noPadding">
@@ -77,7 +91,7 @@
 								<td>
 									<g:if test="${!userInstance.system && userInstance.id != session.userId }">
 										<g:if test="${userInstance.activate }">
-											<g:if test="${userInstance.admin }">
+											<g:if test="${userInstance.system }">
 												<g:link controller="user" action="removeAdmin" id="${userInstance.id }"
 													title="${message(code:'default.button.removeAdmin.label') }">
 													<div class="simple_buttons">
@@ -134,11 +148,11 @@
 		</div>
 	</g:if>
 
-	<div class="g_6">
+	<div class="g_8">
 		<div class="widget_header">
 			<h4 class="widget_header_title wwIcon i_16_tables">
-				<g:message code="default.list.label"
-					args="${[message(code:'service.label')] }" />
+				<g:message code="default.list.label" args="${[message(code:'service.label')] }" />
+				( ${Service.count() } )
 			</h4>
 		</div>
 		<div class="widget_contents noPadding">
@@ -178,11 +192,11 @@
 		</div>
 	</div>
 
-	<div class="g_6">
+	<div class="g_4">
 		<div class="widget_header">
 			<h4 class="widget_header_title wwIcon i_16_tables">
-				<g:message code="default.list.label"
-					args="${[message(code:'adapter.label')] }" />
+				<g:message code="default.list.label" args="${[message(code:'adapter.label')] }" />
+				( ${Adapter.count() } )
 			</h4>
 		</div>
 		<div class="widget_contents noPadding">

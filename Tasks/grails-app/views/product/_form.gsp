@@ -2,6 +2,19 @@
 <%@ page import="draco.tasks.Service" %>
 <%@ page import="draco.tasks.Adapter" %>
 
+<g:if test="${!productInstance.activate }">
+	<div class="line_grid">
+		<div class="g_3">
+			<span class="label"><g:message code="product.status.label"/></span>
+		</div>
+		<div class="g_9">
+			<span class="label">
+				<g:message code="product.activate.${productInstance.activate }"/>
+			</span>
+		</div>
+	</div>
+</g:if>
+
 <div class="line_grid">
 	<div class="g_3">
 		<span class="label"><g:message code="product.itemId.label"/></span>
@@ -53,7 +66,8 @@
 	</div>
 	<div class="g_9">
 		<select class="simple_form" name="sender.id">
-			<option value="null" ${productInstance.sender ? '':'selected="selected"' }><g:message code="product.sender.label"/>
+			<option value="null" ${productInstance.sender ? '':'selected="selected"' }>
+			<g:message code="default.select.label" args="${[message(code:'service.label')] }"/>
 			<g:each in="${Service.list() }" var="s">
 				<option value="${s.id }" ${productInstance.sender?.id==s.id ? 'selected="selected"':'' }>${s.encodeAsHTML() }
 			</g:each>
@@ -67,7 +81,8 @@
 	</div>
 	<div class="g_9">
 		<select class="simple_form" name="receiver.id">
-			<option value="null" ${productInstance.receiver ? '':'selected="selected"' }><g:message code="product.receiver.label"/>
+			<option value="null" ${productInstance.receiver ? '':'selected="selected"' }>
+			<g:message code="default.select.label" args="${[message(code:'service.label')] }"/>
 			<g:each in="${Service.list() }" var="s">
 				<option value="${s.id }" ${productInstance.receiver?.id==s.id ? 'selected="selected"':'' }>${s.encodeAsHTML() }
 			</g:each>
@@ -81,7 +96,8 @@
 	</div>
 	<div class="g_9">
 		<select class="simple_form" name="source.id">
-			<option value="null" ${productInstance.source ? '':'selected="selected"' }><g:message code="product.source.label"/>
+			<option value="null" ${productInstance.source ? '':'selected="selected"' }>
+			<g:message code="default.select.label" args="${[message(code:'adapter.label')] }"/>
 			<g:each in="${Adapter.list() }" var="a">
 				<option value="${a.id }" ${productInstance.source?.id==a.id ? 'selected="selected"':'' }>${a.encodeAsHTML() }
 			</g:each>
@@ -95,7 +111,8 @@
 	</div>
 	<div class="g_9">
 		<select class="simple_form" name="target.id">
-			<option value="null" ${productInstance.source ? '':'selected="selected"' }><g:message code="product.target.label"/>
+			<option value="null" ${productInstance.source ? '':'selected="selected"' }>
+			<g:message code="default.select.label" args="${[message(code:'adapter.label')] }"/>
 			<g:each in="${Adapter.list() }" var="a">
 				<option value="${a.id }" ${productInstance.target?.id==a.id ? 'selected="selected"':'' }>${a.encodeAsHTML() }
 			</g:each>

@@ -64,7 +64,7 @@ class TaskService {
 
 	def prev(Task task) {
 		def status = task.getStatus().toInteger()
-		status--
+		status = Math.max(status - 1, 0)
 		task.setStatus(status.toString())
 		task.getCrs().each {
 			if(status > it.getStatus().toInteger()) {
@@ -76,7 +76,7 @@ class TaskService {
 
 	def next(Task task) {
 		def status = task.getStatus().toInteger()
-		status++
+		status = Math.min(status + 1, 4)
 		task.setStatus(status.toString())
 		task.getCrs().each {
 			if(status > it.getStatus().toInteger()) {
