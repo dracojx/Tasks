@@ -11,7 +11,7 @@
 	<div class="g_12">
 		<g:if test="${!session.system }">
 			<div class="g_2">
-				<g:link controller="user" action="reset"  id="${session.userId }"
+				<g:link controller="user" action="reset" id="${session.userId }"
 					title="${message(code:'default.button.reset.label') }">
 					<div class="simple_buttons">
 						<div class="bwIcon i_16_spinner">
@@ -47,26 +47,29 @@
 	<div class="g_12 separator">
 		<span></span>
 	</div>
-	
+
 	<g:if test="${session.system }">
 		<div class="g_12">
 			<div class="widget_header">
 				<h4 class="widget_header_title wwIcon i_16_tables">
-					<g:message code="default.list.label" args="${[message(code:'user.label')] }" />
-					( ${User.count() } )
+					<g:message code="default.list.label"
+						args="${[message(code:'user.label')] }" />
+					(
+					${User.count() }
+					)
 				</h4>
 			</div>
 			<div class="widget_contents noPadding">
 				<table class="tables">
 					<thead>
 						<tr>
-							<th><g:message code="user.username.label"/></th>
-							
-							<th><g:message code="user.name.label"/></th>
-							
-							<th><g:message code="user.status.label"/></th>
-							
-							<th><g:message code="default.actions.label"/></th>
+							<th><g:message code="user.username.label" /></th>
+
+							<th><g:message code="user.name.label" /></th>
+
+							<th><g:message code="user.status.label" /></th>
+
+							<th><g:message code="default.actions.label" /></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -75,24 +78,23 @@
 								<td><g:link controller="user" action="edit"
 										id="${userInstance.id}"
 										title="${message(code:'default.button.edit.label') }">
-										<span class="label">
-											${fieldValue(bean: userInstance, field: "username")}
+										<span class="label"> ${fieldValue(bean: userInstance, field: "username")}
 										</span>
 									</g:link></td>
-	
-								<td>
-									${fieldValue(bean: userInstance, field: "name")}
-								</td>
-								
-								<td>
-									<g:message code="user.activate.${userInstance.activate }"/>
-								</td>
-	
-								<td>
-									<g:if test="${!userInstance.system && userInstance.id != session.userId }">
+
+								<td><span class="label"> ${fieldValue(bean: userInstance, field: "name")}
+								</span></td>
+
+								<td><span class="label"> <g:message
+											code="user.activate.${userInstance.activate }" />
+								</span></td>
+
+								<td><g:if
+										test="${!userInstance.system && userInstance.id != session.userId }">
 										<g:if test="${userInstance.activate }">
-											<g:if test="${userInstance.system }">
-												<g:link controller="user" action="removeAdmin" id="${userInstance.id }"
+											<g:if test="${userInstance.admin }">
+												<g:link controller="user" action="removeAdmin"
+													id="${userInstance.id }"
 													title="${message(code:'default.button.removeAdmin.label') }">
 													<div class="simple_buttons">
 														<div>
@@ -100,9 +102,10 @@
 														</div>
 													</div>
 												</g:link>
-											</g:if> 
+											</g:if>
 											<g:else>
-												<g:link controller="user" action="setAdmin" id="${userInstance.id }"
+												<g:link controller="user" action="setAdmin"
+													id="${userInstance.id }"
 													title="${message(code:'default.button.setAdmin.label') }">
 													<div class="simple_buttons">
 														<div>
@@ -111,7 +114,8 @@
 													</div>
 												</g:link>
 											</g:else>
-											<g:link controller="user" action="delete" id="${userInstance.id }"
+											<g:link controller="user" action="delete"
+												id="${userInstance.id }"
 												title="${message(code:'default.button.deactivate.label') }">
 												<div class="simple_buttons">
 													<div>
@@ -119,7 +123,8 @@
 													</div>
 												</div>
 											</g:link>
-											<g:link controller="user" action="reset" id="${userInstance.id }"
+											<g:link controller="user" action="reset"
+												id="${userInstance.id }"
 												title="${message(code:'default.button.reset.label') }">
 												<div class="simple_buttons">
 													<div>
@@ -127,9 +132,10 @@
 													</div>
 												</div>
 											</g:link>
-										</g:if> 
+										</g:if>
 										<g:else>
-											<g:link controller="user" action="activate" id="${userInstance.id }"
+											<g:link controller="user" action="activate"
+												id="${userInstance.id }"
 												title="${message(code:'default.button.activate.label') }">
 												<div class="simple_buttons">
 													<div>
@@ -138,8 +144,7 @@
 												</div>
 											</g:link>
 										</g:else>
-									</g:if>
-								</td>
+									</g:if></td>
 							</tr>
 						</g:each>
 					</tbody>
@@ -151,8 +156,11 @@
 	<div class="g_8">
 		<div class="widget_header">
 			<h4 class="widget_header_title wwIcon i_16_tables">
-				<g:message code="default.list.label" args="${[message(code:'service.label')] }" />
-				( ${Service.count() } )
+				<g:message code="default.list.label"
+					args="${[message(code:'service.label')] }" />
+				(
+				${Service.count() }
+				)
 			</h4>
 		</div>
 		<div class="widget_contents noPadding">
@@ -173,18 +181,15 @@
 							<td><g:link controller="service" action="edit"
 									id="${serviceInstance.id}"
 									title="${message(code:'default.button.edit.label') }">
-									<span class="label">
-										${fieldValue(bean: serviceInstance, field: "name")}
+									<span class="label"> ${fieldValue(bean: serviceInstance, field: "name")}
 									</span>
 								</g:link></td>
 
-							<td>
-								${fieldValue(bean: serviceInstance, field: "description")}
-							</td>
+							<td><span class="label"> ${fieldValue(bean: serviceInstance, field: "description")}
+							</span></td>
 
-							<td>
-								${fieldValue(bean: serviceInstance, field: "vendor")}
-							</td>
+							<td><span class="label"> ${fieldValue(bean: serviceInstance, field: "vendor")}
+							</span></td>
 						</tr>
 					</g:each>
 				</tbody>
@@ -195,8 +200,11 @@
 	<div class="g_4">
 		<div class="widget_header">
 			<h4 class="widget_header_title wwIcon i_16_tables">
-				<g:message code="default.list.label" args="${[message(code:'adapter.label')] }" />
-				( ${Adapter.count() } )
+				<g:message code="default.list.label"
+					args="${[message(code:'adapter.label')] }" />
+				(
+				${Adapter.count() }
+				)
 			</h4>
 		</div>
 		<div class="widget_contents noPadding">

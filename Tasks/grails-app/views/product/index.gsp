@@ -11,12 +11,12 @@
 	<div class="g_12">
 		<g:form action="search">
 			<div class="g_3">
-			<g:textField name="keyword" autofocus=""
-				placeholder="${message(code:'default.placeholder.keyword') }" />
+				<g:textField name="keyword" autofocus=""
+					placeholder="${message(code:'default.placeholder.keyword') }" />
 			</div>
 			<div class="g_3">
-			<g:actionSubmit class="simple_buttons" action="search"
-				value="${message(code: 'default.button.search.label', default: 'Search')}" />
+				<g:actionSubmit class="simple_buttons" action="search"
+					value="${message(code: 'default.button.search.label', default: 'Search')}" />
 			</div>
 		</g:form>
 	</div>
@@ -29,54 +29,53 @@
 		<div class="widget_header">
 			<h4 class="widget_header_title wwIcon i_16_tables">
 				<g:message code="default.list.label" args="[entityName]" />
-				( ${productInstanceList?.size() ?: '0' } )
+				(
+				${productInstanceList?.size() ?: '0' }
+				)
 			</h4>
 		</div>
 		<div class="widget_contents noPadding">
 			<table class="tables">
 				<thead>
 					<tr>
-						<th><g:message code="product.itemId.label" default="INTERFACE ID" /></th>
-						
+						<th><g:message code="product.itemId.label"
+								default="INTERFACE ID" /></th>
+
 						<th><g:message code="product.title.label" default="Title" /></th>
-						
-						<th><g:message code="product.mode.label" default="Mode" /></th>
-						
+
+						<th width="30"><g:message code="product.mode.label" default="Mode" /></th>
+
 						<th><g:message code="product.sender.label" default="Sender" /></th>
-						
-						<th><g:message code="product.receiver.label" default="Receiver" /></th>
-						
-						<th><g:message code="product.logs.label" default="Logs" /></th>
+
+						<th><g:message code="product.receiver.label"
+								default="Receiver" /></th>
+
+						<th width="100"><g:message code="product.logs.label" default="Logs" /></th>
 					</tr>
 				</thead>
 				<tbody>
 					<g:each in="${productInstanceList}" var="productInstance">
-						<tr
-							class="${productInstance.activate? '':'inactivate'}">
-							<td>
-								<g:link action="edit" id="${productInstance.id}"
+						<tr class="${productInstance.activate? '':'inactivate'}">
+							<td><g:link action="edit" id="${productInstance.id}"
 									title="${message(code:'default.button.edit.label') }">
 									<span class="label"> ${fieldValue(bean: productInstance, field: "itemId")}
 									</span>
-								</g:link>
-							</td>
+								</g:link></td>
 
-							<td>
-								${fieldValue(bean: productInstance, field: "title")}
-							</td>
+							<td><span class="label"> ${fieldValue(bean: productInstance, field: "title")}
+							</span></td>
 
-							<td><g:message code="product.mode.${productInstance.mode}" /></td>
+							<td><span class="label"> <g:message
+										code="product.mode.${productInstance.mode}" />
+							</span></td>
 
-							<td>
-								${productInstance.sender?.encodeAsHTML() }
-							</td>
+							<td><span class="label"> ${productInstance.sender?.encodeAsHTML() }
+							</span></td>
 
-							<td>
-								${productInstance.receiver?.encodeAsHTML() }
-							</td>
+							<td><span class="label"> ${productInstance.receiver?.encodeAsHTML() }
+							</span></td>
 
-							<td>
-								<g:each in="${productInstance.logs }" var="l">
+							<td><g:each in="${productInstance.logs }" var="l">
 									<g:link controller="task" action="edit" id="${l.task.id}"
 										title="${message(code:'default.button.edit.label') }">
 										<span class="label"> [<g:message
@@ -84,8 +83,7 @@
 										</span>
 									</g:link>
 									<br />
-								</g:each>
-							</td>
+								</g:each></td>
 						</tr>
 					</g:each>
 				</tbody>

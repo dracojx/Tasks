@@ -11,20 +11,20 @@
 	<div class="g_12">
 		<g:form action="search">
 			<div class="g_3">
-			<g:textField name="keyword" autofocus=""
-				placeholder="${message(code:'default.placeholder.keyword') }" />
+				<g:textField name="keyword" autofocus=""
+					placeholder="${message(code:'default.placeholder.keyword') }" />
 			</div>
 			<div class="g_3">
-			<g:textField name="begin" class="pick_date"
-				placeholder="${message(code:'default.placeholder.begin') }" />
+				<g:textField name="begin" class="pick_date"
+					placeholder="${message(code:'default.placeholder.begin') }" />
 			</div>
 			<div class="g_3">
-			<g:textField name="end" class="pick_date"
-				placeholder="${message(code:'default.placeholder.end') }" />
+				<g:textField name="end" class="pick_date"
+					placeholder="${message(code:'default.placeholder.end') }" />
 			</div>
 			<div class="g_3">
-			<g:actionSubmit class="simple_buttons" action="search"
-				value="${message(code: 'default.button.search.label', default: 'Search')}" />
+				<g:actionSubmit class="simple_buttons" action="search"
+					value="${message(code: 'default.button.search.label', default: 'Search')}" />
 			</div>
 		</g:form>
 	</div>
@@ -37,7 +37,9 @@
 		<div class="widget_header">
 			<h4 class="widget_header_title wwIcon i_16_tables">
 				<g:message code="default.list.label" args="[entityName]" />
-				( ${taskInstanceList?.size() ?: '0' } )
+				(
+				${taskInstanceList?.size() ?: '0' }
+				)
 			</h4>
 		</div>
 		<div class="widget_contents noPadding">
@@ -48,11 +50,11 @@
 
 						<th><g:message code="task.title.label" default="Title" /></th>
 
-						<th><g:message code="task.status.label" default="Status" /></th>
+						<th width="60"><g:message code="task.status.label" default="Status" /></th>
 
-						<th><g:message code="task.user.label" default="User" /></th>
+						<th width="70"><g:message code="task.user.label" default="User" /></th>
 
-						<th><g:message code="task.logs.label" default="Products" /></th>
+						<th width="100"><g:message code="task.logs.label" default="Products" /></th>
 
 						<th><g:message code="task.crs.label" default="Crs" /></th>
 
@@ -62,25 +64,22 @@
 				</thead>
 				<tbody>
 					<g:each in="${taskInstanceList}" status="i" var="taskInstance">
-						<tr
-							class="${taskInstance.activate? '':'inactivate'}">
-							<td>
-								<g:link action="edit" id="${taskInstance.id}"
+						<tr class="${taskInstance.activate? '':'inactivate'}">
+							<td><g:link action="edit" id="${taskInstance.id}"
 									title="${message(code:'default.button.edit.label') }">
 									<span class="label"> ${fieldValue(bean: taskInstance, field: "req")}
 									</span>
-								</g:link>
-							</td>
+								</g:link></td>
 
-							<td>
-								${fieldValue(bean: taskInstance, field: "title")}
-							</td>
+							<td><span class="label"> ${fieldValue(bean: taskInstance, field: "title")}
+							</span></td>
 
-							<td><g:message code="task.status.${taskInstance.status}" /></td>
+							<td><span class="label"> <g:message
+										code="task.status.${taskInstance.status}" />
+							</span></td>
 
-							<td>
-								${fieldValue(bean: taskInstance, field: "user")}
-							</td>
+							<td><span class="label"> ${fieldValue(bean: taskInstance, field: "user")}
+							</span></td>
 
 							<td><g:each in="${taskInstance.logs }" var="l">
 									<g:link controller="product" action="edit" id="${l.product.id}"
@@ -101,9 +100,8 @@
 									<br />
 								</g:each></td>
 
-							<td>
-								${taskInstance.updateDate?.format("yyyy/MM/dd") }
-							</td>
+							<td><span class="label"> ${taskInstance.updateDate?.format("yyyy/MM/dd") }
+							</span></td>
 						</tr>
 					</g:each>
 				</tbody>

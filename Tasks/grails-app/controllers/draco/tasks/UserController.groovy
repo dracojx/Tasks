@@ -147,7 +147,7 @@ class UserController {
 	}
 	
 	def setAdmin() {
-		if(User.get(session.userId)?.isAdmin()) {
+		if(session.system) {
 			User userInstance = User.get(params.id)
 			if(userInstance) {
 				if(!userInstance.isActivate()) {
