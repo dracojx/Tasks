@@ -20,7 +20,7 @@
 		<span class="label"><g:message code="product.itemId.label"/></span>
 	</div>
 	<div class="g_9">
-		<g:textField name="itemId" value="${productInstance.itemId }" required="" autofocus=""/>
+		<g:textField name="itemId" value="${productInstance.itemId }" class="simple_field" required="" autofocus=""/>
 	</div>
 </div>
 
@@ -29,7 +29,7 @@
 		<span class="label"><g:message code="product.title.label"/></span>
 	</div>
 	<div class="g_9">
-		<g:textField name="title" value="${productInstance.title }"/>
+		<g:textField name="title" value="${productInstance.title }" class="simple_field"/>
 	</div>
 </div>
 
@@ -38,7 +38,7 @@
 		<span class="label"><g:message code="product.remark.label"/></span>
 	</div>
 	<div class="g_9">
-		<g:textField name="remark" value="${productInstance.remark }"/>
+		<g:textField name="remark" value="${productInstance.remark }" class="simple_field"/>
 	</div>
 </div>
 
@@ -142,7 +142,7 @@
 			</g:link>
 			<br />
 		</g:each>
-		<g:textField name="taskReq"
+		<g:textField name="taskReq" class="simple_field"
 			placeholder="${message(code: 'default.placeholder.add', args:[message(code:'task.label')]) }" />
 	</div>
 </div>
@@ -165,7 +165,7 @@
 			</g:link>
 			<br />
 		</g:each>
-		<g:textField name="tagNames"
+		<g:textField name="tagNames" class="simple_field"
 			placeholder="${message(code: 'default.placeholder.add.separated', args:[message(code:'tag.label')]) }" />
 	</div>
 </div>

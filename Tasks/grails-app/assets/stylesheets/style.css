@@ -2402,3 +2402,22 @@
 	#pattern6 {
 		background: url("../Images/Patterns/pattern6.png") no-repeat 0 0;
 	}
+	
+	
+
+/* User Defined */
+
+	.delete img {
+		width:11px;
+		height:11px;
+	}
+	
+	tr.inactivate {
+		text-decoration:line-through;
+		background-color:#c0c0c0;
+	}
+	
+	table th, td.nowrap  {
+		word-break: keep-all;
+		white-space:nowrap;
+	}

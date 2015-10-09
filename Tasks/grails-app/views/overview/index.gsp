@@ -1,6 +1,7 @@
 <%@ page import="draco.tasks.Task"%>
 <%@ page import="draco.tasks.Product"%>
 <%@ page import="draco.tasks.Service"%>
+<%@ page import="draco.tasks.Adapter"%>
 <%@ page import="draco.tasks.User"%>
 <!DOCTYPE html>
 <html>
@@ -34,10 +35,10 @@
 	</div>
 	<div class="g_3 quick_stats">
 		<div class="big_stats orders_stats">
-			${User.count() }
+			${Adapter.count() }
 		</div>
 		<h5 class="stats_info">
-			<g:message code="user.label" />
+			<g:message code="adapter.label" />
 		</h5>
 	</div>
 
@@ -46,23 +47,7 @@
 	</div>
 
 	<g:each
-		in="${Task.findAllByUserAndStatus(User.get(session.userId), '1') }"
-		var="taskInstance">
-		<div class="g_6">
-			<div class="widget_header cwhToggle">
-				<h4 class="widget_header_title wwIcon i_16_downT">
-					<g:message code="task.incomplete.label" />
-				</h4>
-			</div>
-			<div class="widget_contents noPadding">
-				<g:render template="/task/show"
-					model="${[taskInstance:taskInstance] }"></g:render>
-			</div>
-		</div>
-	</g:each>
-
-	<g:each
-		in="${Task.findAllByUserAndStatus(User.get(session.userId), '0') }"
+		in="${Task.where{ user == User.get(session.userId) && status in ['0', '1']}.order('status', 'desc')}"
 		var="taskInstance">
 		<div class="g_6">
 			<div class="widget_header cwhToggle">

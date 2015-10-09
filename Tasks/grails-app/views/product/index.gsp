@@ -43,14 +43,14 @@
 
 						<th><g:message code="product.title.label" default="Title" /></th>
 
-						<th width="30"><g:message code="product.mode.label" default="Mode" /></th>
+						<th><g:message code="product.mode.label" default="Mode" /></th>
 
 						<th><g:message code="product.sender.label" default="Sender" /></th>
 
 						<th><g:message code="product.receiver.label"
 								default="Receiver" /></th>
 
-						<th width="100"><g:message code="product.logs.label" default="Logs" /></th>
+						<th><g:message code="product.logs.label" default="Logs" /></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -65,7 +65,7 @@
 							<td><span class="label"> ${fieldValue(bean: productInstance, field: "title")}
 							</span></td>
 
-							<td><span class="label"> <g:message
+							<td class="nowrap"><span class="label"> <g:message
 										code="product.mode.${productInstance.mode}" />
 							</span></td>
 
@@ -75,7 +75,7 @@
 							<td><span class="label"> ${productInstance.receiver?.encodeAsHTML() }
 							</span></td>
 
-							<td><g:each in="${productInstance.logs }" var="l">
+							<td class="nowrap"><g:each in="${productInstance.logs }" var="l">
 									<g:link controller="task" action="edit" id="${l.task.id}"
 										title="${message(code:'default.button.edit.label') }">
 										<span class="label"> [<g:message

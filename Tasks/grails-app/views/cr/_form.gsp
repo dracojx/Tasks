@@ -6,7 +6,7 @@
 		<span class="label"><g:message code="cr.number.label" /></span>
 	</div>
 	<div class="g_9">
-		<g:textField name="number" value="${crInstance?.number }" required="" autofocus="" />
+		<g:textField name="number" value="${crInstance?.number }" class="simple_field" required="" autofocus="" />
 	</div>
 </div>
 
@@ -15,7 +15,7 @@
 		<span class="label"><g:message code="cr.description.label" /></span>
 	</div>
 	<div class="g_9">
-		<g:textField name="description" value="${crInstance?.description }" required="" autofocus="" />
+		<g:textField name="description" value="${crInstance?.description }" class="simple_field" />
 	</div>
 </div>
 
@@ -35,7 +35,7 @@
 			</g:link>
 			<br />
 		</g:each>
-		<g:textField name="productItemIds" class="add"
+		<g:textField name="productItemIds" class="simple_field"
 			placeholder="${message(code: 'default.placeholder.add.separated', args:[message(code:'product.label')]) }" />
 	</div>
 </div>
@@ -46,7 +46,9 @@
 			<span class="label"><g:message code="cr.status.label" /></span>
 		</div>
 		<div class="g_9">
-			<g:message code="cr.status.${crInstance?.status}" />
+			<span class="label">
+				<g:message code="cr.status.${crInstance?.status}" />
+			</span>
 		</div>
 	</div>
 </g:if>

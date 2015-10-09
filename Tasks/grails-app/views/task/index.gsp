@@ -50,11 +50,11 @@
 
 						<th><g:message code="task.title.label" default="Title" /></th>
 
-						<th width="60"><g:message code="task.status.label" default="Status" /></th>
+						<th><g:message code="task.status.label" default="Status" /></th>
 
-						<th width="70"><g:message code="task.user.label" default="User" /></th>
+						<th><g:message code="task.user.label" default="User" /></th>
 
-						<th width="100"><g:message code="task.logs.label" default="Products" /></th>
+						<th><g:message code="task.logs.label" default="Products" /></th>
 
 						<th><g:message code="task.crs.label" default="Crs" /></th>
 
@@ -74,14 +74,14 @@
 							<td><span class="label"> ${fieldValue(bean: taskInstance, field: "title")}
 							</span></td>
 
-							<td><span class="label"> <g:message
+							<td class="nowrap"><span class="label"> <g:message
 										code="task.status.${taskInstance.status}" />
 							</span></td>
 
-							<td><span class="label"> ${fieldValue(bean: taskInstance, field: "user")}
+							<td class="nowrap"><span class="label"> ${fieldValue(bean: taskInstance, field: "user")}
 							</span></td>
 
-							<td><g:each in="${taskInstance.logs }" var="l">
+							<td class="nowrap"><g:each in="${taskInstance.logs }" var="l">
 									<g:link controller="product" action="edit" id="${l.product.id}"
 										title="${message(code:'default.button.edit.label') }">
 										<span class="label"> [<g:message

@@ -6,7 +6,7 @@
 		<span class="label"><g:message code="adapter.name.label" /></span>
 	</div>
 	<div class="g_9">
-		<g:textField name="name" value="${adapterInstance?.name }" required="" autofocus="" />
+		<g:textField name="name" value="${adapterInstance?.name }" class="simple_field" required="" autofocus="" />
 	</div>
 </div>
 

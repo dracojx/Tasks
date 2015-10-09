@@ -5,7 +5,7 @@
 			<span class="label"><g:message code="task.req.label"/></span>
 		</div>
 		<div class="g_9">
-			<g:textField name="req" value="${taskInstance.req }" required="" autofocus=""/>
+			<g:textField name="req" value="${taskInstance.req }" class="simple_field" required="" autofocus=""/>
 		</div>
 	</div>
 	<div class="line_grid">
@@ -13,7 +13,7 @@
 			<span class="label"><g:message code="task.title.label"/></span>
 		</div>
 		<div class="g_9">
-			<g:textField name="title" value="${taskInstance.title }"/>
+			<g:textField name="title" value="${taskInstance.title }" class="simple_field"/>
 		</div>
 	</div>
 	<div class="line_grid">
@@ -21,7 +21,7 @@
 			<span class="label"><g:message code="task.remark.label"/></span>
 		</div>
 		<div class="g_9">
-			<g:textField name="remark" value="${taskInstance.remark }"/>
+			<g:textField name="remark" value="${taskInstance.remark }" class="simple_field"/>
 		</div>
 	</div>
 <g:if test="${taskInstance.user }">
@@ -93,7 +93,7 @@
 			</g:link>
 			<br />
 		</g:each>
-		<g:textField name="productItemIds"
+		<g:textField name="productItemIds" class="simple_field"
 			placeholder="${message(code: 'default.placeholder.add.separated', args:[message(code:'product.label')]) }" />
 	</div>
 </div>
@@ -115,7 +115,7 @@
 			</g:link>
 			<br />
 		</g:each>
-		<g:textField name="crNumbers"
+		<g:textField name="crNumbers" class="simple_field"
 			placeholder="${message(code: 'default.placeholder.add.separated', args:[message(code:'cr.label')]) }" />
 	</div>
 </div>
@@ -137,7 +137,7 @@
 			</g:link>
 			<br />
 		</g:each>
-		<g:textField name="tagNames"
+		<g:textField name="tagNames" class="simple_field"
 			placeholder="${message(code: 'default.placeholder.add.separated', args:[message(code:'tag.label')]) }" />
 	</div>
 </div>

@@ -125,6 +125,12 @@ class UserController {
 	        return
 	    }
 		
+		if(!user.isActivate()) {
+		    flash.errors = [message(code: 'default.deactivated.message', args:[user.getUsername()])]
+			redirect action:'login'
+			return
+		}
+		
 		session.userId = user.getId()
 		session.name = user.getName()
 		session.admin = user.isAdmin()
