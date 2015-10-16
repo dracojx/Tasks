@@ -129,6 +129,31 @@ class ProductController {
             '*'{ respond productInstance, [status: OK] }
         }
     }
+	
+    @Transactional
+	def delete(Product productInstance) {
+        if (productInstance == null) {
+            notFound()
+            return
+        }
+		
+		if(productInstance.isActivate()) {
+			flash.errors = [message(code: 'default.delete.failed.message')]
+            redirect action: 'edit', id: productInstance.getId()
+			return
+		}
+		
+		def itemId = productInstance.getItemId()
+		productInstance.delete flush:true
+
+        request.withFormat {
+            form multipartForm {
+                flash.message = message(code: 'default.deleted.message', args: ['', itemId])
+                redirect action: 'index'
+            }
+            '*'{ respond productInstance, [status: OK] }
+        }
+	}
 
     @Transactional
 	def removeLog(Product productInstance) {
@@ -153,7 +178,7 @@ class ProductController {
 	}
 
 	@Transactional
-	def delete(Product productInstance) {
+	def deactivate(Product productInstance) {
 		productInstance.setActivate(false)
 		productInstance.save flush:true
         flash.message = message(code: 'default.deactivated.message', args: [productInstance.getItemId()])

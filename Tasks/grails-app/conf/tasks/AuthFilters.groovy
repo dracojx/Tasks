@@ -28,7 +28,7 @@ class AuthFilters {
 			}
 		}
 
-		authTask(controller:'task', action:'update|delete|activate|prev|next|changeLogType|removeCr|removeLog|removeTag') {
+		authTask(controller:'task', action:'update|delete|activate|deactivate|prev|next|changeLogType|removeCr|removeLog|removeTag') {
 			before = {
 				User user = User.get(session.userId)
 				Task task = Task.get(params.id as Long)

@@ -47,7 +47,7 @@
 	</div>
 
 	<g:each
-		in="${Task.where{ user == User.get(session.userId) && status in ['0', '1']}.order('status', 'desc')}"
+		in="${Task.where{activate == true && user == User.get(session.userId) && status in ['0', '1']}.order('status', 'desc')}"
 		var="taskInstance">
 		<div class="g_6">
 			<div class="widget_header cwhToggle">

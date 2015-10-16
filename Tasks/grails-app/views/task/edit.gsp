@@ -29,7 +29,7 @@
 							<g:actionSubmit action="update" class="simple_buttons"
 								 value="${message(code: 'default.button.update.label', default: 'Update')}" />
 							<g:if test="${taskInstance.activate }">
-								<g:actionSubmit action="delete" class="simple_buttons"
+								<g:actionSubmit action="deactivate" class="simple_buttons"
 									 value="${message(code: 'default.button.deactivate.label', default: 'Deactivate')}" />
 								<g:if test="${taskInstance?.status.toInteger() > 0 }">
 									<g:actionSubmit action="prev" class="simple_buttons"
@@ -43,6 +43,9 @@
 							<g:else>
 								<g:actionSubmit action="activate" class="simple_buttons"
 									 value="${message(code: 'default.button.activate.label', default: 'Activate')}" />
+								<g:actionSubmit action="delete" class="simple_buttons"
+									value="${message(code: 'default.button.delete.label', default: 'Delete')}"
+									onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
 							</g:else>
 						</div>
 					</div>

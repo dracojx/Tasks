@@ -153,7 +153,32 @@ class TaskController {
     }
 
     @Transactional
-	def delete(Task taskInstance) {
+    def delete(Task taskInstance) {
+        if (taskInstance == null) {
+            notFound()
+            return
+        }
+		
+		if(taskInstance.isActivate()) {
+			flash.errors = [message(code: 'default.delete.failed.message')]
+            redirect action: 'edit', id: taskInstance.getId()
+			return
+		}
+		
+		def req = taskInstance.getReq()
+		taskInstance.delete flush:true
+
+        request.withFormat {
+            form multipartForm {
+                flash.message = message(code: 'default.deleted.message', args: ['', req])
+                redirect action: 'index'
+            }
+            '*'{ respond taskInstance, [status: OK] }
+        }
+	}
+
+    @Transactional
+	def deactivate(Task taskInstance) {
 		taskInstance.setActivate(false)
 		taskInstance.setUpdateDate(new Date())
 		taskInstance.save flush:true
