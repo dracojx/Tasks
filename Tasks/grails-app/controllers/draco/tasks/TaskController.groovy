@@ -30,14 +30,22 @@ class TaskController {
 		def beginDate = null
 		def endDate = null
 		def status = null
+		def activate = null
 		def df = new SimpleDateFormat('yyyy/MM/dd')
 		
 		if(params.keyword) {
-			for(i in 0..4) {
-				def message = message(code:"task.status.$i")
-				if(message.equalsIgnoreCase(keyword)) {
-					status = i.toString()
-					break
+		
+			if(message(code:'task.activate.true') == keyword) {
+				activate = true
+			} else if(message(code:'task.activate.false') == keyword) {
+				activate = false
+			} else {
+				for(i in 0..4) {
+					def message = message(code:"task.status.$i")
+					if(message.equalsIgnoreCase(keyword)) {
+						status = i.toString()
+						break
+					}
 				}
 			}
 		}
@@ -60,15 +68,18 @@ class TaskController {
 				and {
 					if(keyword) {
 						or {
-							ilike('req', "%$keyword%")
-							ilike('title', "%$keyword%")
-							ilike('remark', "%$keyword%")
-							ilike('c.number', keyword)
-							ilike('t.name', keyword)
-							eq('l.product', Product.findByItemIdIlike(keyword))
-							eq('user', User.findByNameIlike(keyword))
-							if(status) {
+							if(activate != null) {
+								eq('activate', activate)
+							} else if(status) {
 								eq('status', status)
+							} else {
+								ilike('req', "%$keyword%")
+								ilike('title', "%$keyword%")
+								ilike('remark', "%$keyword%")
+								ilike('c.number', keyword)
+								ilike('t.name', keyword)
+								eq('l.product', Product.findByItemIdIlike(keyword))
+								eq('user', User.findByNameIlike(keyword))
 							}
 						}
 					}

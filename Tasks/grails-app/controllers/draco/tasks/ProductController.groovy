@@ -23,11 +23,17 @@ class ProductController {
 	
 	def search() {
 		def keyword = params.keyword?.trim()
+		def activate = null
 		def mode = null
-		if(message(code:'product.mode.a')==keyword) {
-			mode = 'a'
-		} else if(message(code:'product.mode.s')==keyword) {
-			mode = 's'
+		
+		if(message(code:'product.activate.true').equalsIgnoreCase(keyword)) {
+			activate = true
+		} else if(message(code:'product.activate.false').equalsIgnoreCase(keyword)) {
+			activate = false
+		} else if(message(code:'product.mode.a').equalsIgnoreCase(keyword)) {
+				mode = 'a'
+		} else if(message(code:'product.mode.s').equalsIgnoreCase(keyword)) {
+				mode = 's'
 		}
 		
 		if(keyword) {
@@ -37,18 +43,21 @@ class ProductController {
 				createAlias('logs', 'l', CriteriaSpecification.LEFT_JOIN)
 				setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
 				or {
-					ilike('itemId', "%$keyword%")
-					ilike('title', "%$keyword%")
-					ilike('remark', "%$keyword%")
-					ilike('t.name', keyword)
-					eq('sender', Service.findByNameIlike(keyword))
-					eq('receiver', Service.findByNameIlike(keyword))
-					eq('source', Adapter.findByNameIlike(keyword))
-					eq('target', Adapter.findByNameIlike(keyword))
-					eq('l.task', Task.findByReqIlike(keyword))
-					if(mode) {
+					if(activate != null) {
+						eq('activate', activate)
+					} else if(mode) {
 						eq('mode', mode)
-					}
+					} else {
+						ilike('itemId', "%$keyword%")
+						ilike('title', "%$keyword%")
+						ilike('remark', "%$keyword%")
+						ilike('t.name', keyword)
+						eq('sender', Service.findByNameIlike(keyword))
+						eq('receiver', Service.findByNameIlike(keyword))
+						eq('source', Adapter.findByNameIlike(keyword))
+						eq('target', Adapter.findByNameIlike(keyword))
+						eq('l.task', Task.findByReqIlike(keyword))
+						}
 				}
 			}
 			render view:'index', model:[productInstanceList: results, action: 'search', keyword: keyword]

@@ -28,7 +28,7 @@
 			<span class="label"><g:message code="user.password.label" /></span>
 		</div>
 		<div class="g_9">
-			<g:passwordField name="password" class="simple_field" required=""/>
+			<g:passwordField name="password" class="simple_field" required="" autofocus=""/>
 		</div>
 	</div>
 	

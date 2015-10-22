@@ -32,11 +32,27 @@ class AuthFilters {
 			before = {
 				User user = User.get(session.userId)
 				Task task = Task.get(params.id as Long)
-				if(!user.isAdmin() && !task.getUser().equals(user)) {
+				if(!session.admin && !task.getUser().equals(user)) {
 					flash.errors = [
 						messageSource.getMessage('default.unauthorized.message', null, RequestContextUtils.getLocale(request))
 					]
 					redirect controller:'task', action:'edit',id:params.id
+					return false
+				}
+			}
+			after = { Map model ->
+			}
+			afterView = { Exception e ->
+			}
+		}
+		
+		authProduct(controller:'product', action:'delete') {
+			before = {
+				if(!session.admin) {
+					flash.errors = [
+						messageSource.getMessage('default.unauthorized.message', null, RequestContextUtils.getLocale(request))
+					]
+					redirect controller:'product', action:'edit',id:params.id
 					return false
 				}
 			}
