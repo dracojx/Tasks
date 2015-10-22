@@ -10,7 +10,7 @@ class CrService {
 			if(!cr.getProducts()) {
 				cr.setProducts([] as SortedSet)
 			}
-			def itemIds = params.productItemIds.split(" ")
+			def itemIds = params.productItemIds.trim().split(" ")
 			itemIds.each {
 				Product product = Product.findByItemId(it.toUpperCase())
 				if(!product) {
@@ -26,14 +26,14 @@ class CrService {
 	
 	def prev(Cr cr) {
 		def status = cr.getStatus().toInteger()
-		status--
+		status = Math.max(status - 1, 1)
 		cr.setStatus(status.toString())
 		cr.save flush:true
 	}
 	
 	def next(Cr cr) {
 		def status = cr.getStatus().toInteger()
-		status++
+		status = Math.min(status + 1, 5)
 		cr.setStatus(status.toString())
 		cr.save flush:true
 	}

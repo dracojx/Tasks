@@ -34,7 +34,8 @@ class UserController {
             respond userInstance.errors, view:'create'
             return
         }
-
+		
+		userInstance.setPassword(userInstance.getPassword().encodeAsMD5())
         userInstance.save flush:true
 
         request.withFormat {
@@ -118,7 +119,7 @@ class UserController {
 	}
 
     def auth() {
-		User user = User.findByUsernameAndPassword(params.user?.trim().toUpperCase(), params.pass)
+		User user = User.findByUsernameAndPassword(params.user?.trim().toUpperCase(), params.pass.encodeAsMD5())
 	
 	    if (user == null) {
 	        wrongUser()
@@ -243,12 +244,14 @@ class UserController {
 		
 		if(userInstance.id == session.userId) {
 			userInstance.setReset(false)
+			userInstance.setPassword(userInstance.getPassword().encodeAsMD5())
 			userInstance.save flush:true
 			session.removeAttribute('reset')
 			flash.message = message(code: 'default.welcome.message', args: [userInstance.getName()])
 			redirect url:'/'
 		} else {
 			userInstance.setReset(true)
+			userInstance.setPassword(userInstance.getPassword().encodeAsMD5())
 			userInstance.save flush:true
 			flash.message = message(code: 'default.updated.message', args: ['', userInstance.getName()])
 			redirect controller:'setting', action:'index'

@@ -12,19 +12,19 @@ import org.hibernate.criterion.CriteriaSpecification
 
 @Transactional(readOnly = true)
 class TaskController {
-	
+
 	def crService
 	def logService
 	def taskService
 
-    static allowedMethods = [save: "POST", update: "PUT"]
+	static allowedMethods = [save: "POST", update: "PUT"]
 
-    def index() {
+	def index() {
 		params.sort = params.sort ?: 'updateDate'
 		params.order = params.order ?: 'desc'
-        respond Task.list(params)
-    }
-	
+		respond Task.list(params)
+	}
+
 	def search() {
 		def keyword = params.keyword?.trim()
 		def beginDate = null
@@ -32,15 +32,15 @@ class TaskController {
 		def status = null
 		def activate = null
 		def df = new SimpleDateFormat('yyyy/MM/dd')
-		
+
 		if(params.keyword) {
-		
-			if(message(code:'task.activate.true') == keyword) {
+
+			if(message(code:'task.activate.true').equalsIgnoreCase(keyword)) {
 				activate = true
-			} else if(message(code:'task.activate.false') == keyword) {
+			} else if(message(code:'task.activate.false').equalsIgnoreCase(keyword)) {
 				activate = false
 			} else {
-				for(i in 0..4) {
+				for(i in 0..5) {
 					def message = message(code:"task.status.$i")
 					if(message.equalsIgnoreCase(keyword)) {
 						status = i.toString()
@@ -49,15 +49,15 @@ class TaskController {
 				}
 			}
 		}
-		
+
 		if(params.begin ==~ /\d{4}\/(0[1-9]|1[0-2])\/(0[1-9]|[1-3][0-9])/) {
 			beginDate = df.parse(params.begin)
 		}
-		
+
 		if(params.end ==~ /\d{4}\/(0[1-9]|1[0-2])\/(0[1-9]|[1-3][0-9])/) {
 			endDate = df.parse(params.end)
 		}
-		
+
 		if(keyword || beginDate || endDate) {
 			def results = Task.withCriteria {
 				order(params.sort?:'updateDate', params.order?:'desc')
@@ -98,102 +98,102 @@ class TaskController {
 		}
 	}
 
-    def create() {
-        respond new Task(params)
-    }
+	def create() {
+		respond new Task(params)
+	}
 
-    @Transactional
-    def save(Task taskInstance) {
-        if (taskInstance == null) {
-            notFound()
-            return
-        }
-		
+	@Transactional
+	def save(Task taskInstance) {
+		if (taskInstance == null) {
+			notFound()
+			return
+		}
+
 		taskInstance.setStatus('0')
 		taskInstance.setUser(User.get(session.userId))
 		taskInstance.setCreateDate(new Date())
 		taskInstance.setUpdateDate(taskInstance.getCreateDate())
 		taskInstance.validate()
-		
-        if (taskInstance.hasErrors()) {
+
+		if (taskInstance.hasErrors()) {
 			taskInstance.setStatus(null)
 			taskInstance.setUser(null)
 			taskInstance.setCreateDate(null)
 			taskInstance.setUpdateDate(null)
-            respond taskInstance.errors, view:'create'
-            return
-        }
-		def logs = taskService.save(params, taskInstance)
-
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.created.message', args: ['', taskInstance.getReq()])
-	            redirect action: 'edit', id: taskInstance.getId()
-            }
-            '*' { respond taskInstance, [status: CREATED] }
-        }
-    }
-
-    def edit(Task taskInstance) {
-        respond taskInstance
-    }
-
-    @Transactional
-    def update(Task taskInstance) {
-        if (taskInstance == null) {
-            notFound()
-            return
-        }
-		
-		taskInstance.setUpdateDate(new Date())
-		taskInstance.validate()
-        if (taskInstance.hasErrors()) {
-            respond taskInstance.errors, view:'edit'
-            return
-        }
-		
-		def logs = taskService.save(params, taskInstance)
-		
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: ['', taskInstance.getReq()])
-                redirect action: 'edit', id: taskInstance.getId()
-            }
-            '*'{ respond taskInstance, [status: OK] }
-        }
-    }
-
-    @Transactional
-    def delete(Task taskInstance) {
-        if (taskInstance == null) {
-            notFound()
-            return
-        }
-		
-		if(taskInstance.isActivate()) {
-			flash.errors = [message(code: 'default.delete.failed.message')]
-            redirect action: 'edit', id: taskInstance.getId()
+			respond taskInstance.errors, view:'create'
 			return
 		}
-		
+		def logs = taskService.save(params, taskInstance)
+
+		request.withFormat {
+			form multipartForm {
+				flash.message = message(code: 'default.created.message', args: ['', taskInstance.getReq()])
+				redirect action: 'edit', id: taskInstance.getId()
+			}
+			'*' { respond taskInstance, [status: CREATED] }
+		}
+	}
+
+	def edit(Task taskInstance) {
+		respond taskInstance
+	}
+
+	@Transactional
+	def update(Task taskInstance) {
+		if (taskInstance == null) {
+			notFound()
+			return
+		}
+
+		taskInstance.setUpdateDate(new Date())
+		taskInstance.validate()
+		if (taskInstance.hasErrors()) {
+			respond taskInstance.errors, view:'edit'
+			return
+		}
+
+		def logs = taskService.save(params, taskInstance)
+
+		request.withFormat {
+			form multipartForm {
+				flash.message = message(code: 'default.updated.message', args: ['', taskInstance.getReq()])
+				redirect action: 'edit', id: taskInstance.getId()
+			}
+			'*'{ respond taskInstance, [status: OK] }
+		}
+	}
+
+	@Transactional
+	def delete(Task taskInstance) {
+		if (taskInstance == null) {
+			notFound()
+			return
+		}
+
+		if(taskInstance.isActivate()) {
+			flash.errors = [message(code: 'default.delete.failed.message')]
+			redirect action: 'edit', id: taskInstance.getId()
+			return
+		}
+
 		def req = taskInstance.getReq()
 		taskInstance.delete flush:true
 
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: ['', req])
-                redirect action: 'index'
-            }
-            '*'{ respond taskInstance, [status: OK] }
-        }
+		request.withFormat {
+			form multipartForm {
+				flash.message = message(code: 'default.deleted.message', args: ['', req])
+				redirect action: 'index'
+			}
+			'*'{ respond taskInstance, [status: OK] }
+		}
 	}
 
-    @Transactional
+	@Transactional
 	def deactivate(Task taskInstance) {
 		taskInstance.setActivate(false)
 		taskInstance.setUpdateDate(new Date())
 		taskInstance.save flush:true
-	    flash.message = message(code: 'default.deactivated.message', args: [taskInstance.getReq()])
+		flash.message = message(code: 'default.deactivated.message', args: [taskInstance.getReq()])
 		redirect action: 'edit', id: taskInstance.getId()
 	}
 
@@ -202,7 +202,7 @@ class TaskController {
 		taskInstance.setActivate(true)
 		taskInstance.setUpdateDate(new Date())
 		taskInstance.save flush:true
-	    flash.message = message(code: 'default.activated.message', args: [taskInstance.getReq()])
+		flash.message = message(code: 'default.activated.message', args: [taskInstance.getReq()])
 		redirect action: 'edit', id: taskInstance.getId()
 	}
 
@@ -212,69 +212,68 @@ class TaskController {
 			taskInstance.setUpdateDate(new Date())
 			taskService.prev(taskInstance)
 			flash.message = message(code: 'default.stage.changed.message')
-	        redirect action: 'edit', id: taskInstance.getId()
+			redirect action: 'edit', id: taskInstance.getId()
 		} else {
-			flash.errors = [message(code:'default.update.failed.message', 
+			flash.errors = [message(code:'default.update.failed.message',
 				args:[message(code:'default.deactivated.message', args:[taskInstance.getReq()])])]
-	        redirect action: 'edit', id: taskInstance.getId()
+			redirect action: 'edit', id: taskInstance.getId()
 		}
-		
 	}
-	
+
 	@Transactional
 	def next(Task taskInstance) {
 		if(taskInstance.isActivate()) {
 			taskInstance.setUpdateDate(new Date())
 			taskService.next(taskInstance)
 			flash.message = message(code: 'default.stage.changed.message')
-	        redirect action: 'edit', id: taskInstance.getId()
+			redirect action: 'edit', id: taskInstance.getId()
 		} else {
-			flash.errors = [message(code:'default.update.failed.message', 
+			flash.errors = [message(code:'default.update.failed.message',
 				args:[message(code:'default.deactivated.message', args:[taskInstance.getReq()])])]
-	        redirect action: 'edit', id: taskInstance.getId()
+			redirect action: 'edit', id: taskInstance.getId()
 		}
 	}
-	
+
 	@Transactional
 	def changeLogType(Task taskInstance) {
 		taskInstance.setUpdateDate(new Date())
 		logService.changeLogType(params.lId)
 		taskInstance.save flush:true
 		flash.message = message(code: 'default.updated.message', args: ['', taskInstance.getReq()])
-        redirect action: 'edit', id: taskInstance.getId()
+		redirect action: 'edit', id: taskInstance.getId()
 	}
-	
+
 	@Transactional
 	def removeCr(Task taskInstance) {
 		taskInstance.setUpdateDate(new Date())
 		taskService.removeCr(taskInstance, params.cId)
 		flash.message = message(code: 'default.updated.message', args: ['', taskInstance.getReq()])
-        redirect action: 'edit', id: taskInstance.getId()
+		redirect action: 'edit', id: taskInstance.getId()
 	}
-	
+
 	@Transactional
 	def removeLog(Task taskInstance) {
 		taskInstance.setUpdateDate(new Date())
 		taskService.removeLog(taskInstance, params.lId)
 		flash.message = message(code: 'default.updated.message', args: ['', taskInstance.getReq()])
-        redirect action: 'edit', id: taskInstance.getId()
+		redirect action: 'edit', id: taskInstance.getId()
 	}
-	
+
 	@Transactional
 	def removeTag(Task taskInstance) {
 		taskInstance.setUpdateDate(new Date())
 		taskService.removeTag(taskInstance, params.tId)
 		flash.message = message(code: 'default.updated.message', args: ['', taskInstance.getReq()])
-        redirect action: 'edit', id: taskInstance.getId()
+		redirect action: 'edit', id: taskInstance.getId()
 	}
 
 	protected void notFound() {
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.not.found.message', args: [message(code: 'task.label', default: 'Task'), params.id])
-                redirect action: "index", method: "GET"
-            }
-            '*'{ render status: NOT_FOUND }
-        }
-    }
+		request.withFormat {
+			form multipartForm {
+				flash.message = message(code: 'default.not.found.message', args: [message(code: 'task.label', default: 'Task'), params.id])
+				redirect action: "index", method: "GET"
+			}
+			'*'{ render status: NOT_FOUND }
+		}
+	}
 }

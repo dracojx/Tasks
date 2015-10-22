@@ -10,7 +10,7 @@ class TaskService {
 			if(!task.getCrs()) {
 				task.setCrs([] as SortedSet)
 			}
-			def numbers = params.crNumbers.split(" ")
+			def numbers = params.crNumbers.trim().split(" ")
 			numbers.each {
 				Cr cr = Cr.findByNumber(it.toUpperCase())
 				if(!cr) {
@@ -27,7 +27,7 @@ class TaskService {
 			if(!task.getLogs()) {
 				task.setLogs([] as SortedSet)
 			}
-			def itemIds = params.productItemIds.split(" ")
+			def itemIds = params.productItemIds.trim().split(" ")
 			itemIds.each {
 				Product product = Product.findByItemId(it.toUpperCase())
 				def type = "u"
@@ -50,7 +50,7 @@ class TaskService {
 			if(!task.getTags()) {
 				task.setTags([] as SortedSet)
 			}
-			def names = params.tagNames.split(" ")
+			def names = params.tagNames.trim().split(" ")
 			names.each {
 				Tag tag = Tag.findByName(it)
 				if(!tag) {
@@ -76,7 +76,7 @@ class TaskService {
 
 	def next(Task task) {
 		def status = task.getStatus().toInteger()
-		status = Math.min(status + 1, 4)
+		status = Math.min(status + 1, 5)
 		task.setStatus(status.toString())
 		task.getCrs().each {
 			if(status > it.getStatus().toInteger()) {

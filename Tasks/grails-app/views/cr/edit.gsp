@@ -27,7 +27,7 @@
 							<g:actionSubmit action="prev" class="simple_buttons"
 								 value="${message(code: 'default.button.prev.label', default: 'Prev Stage')}" />
 						</g:if>
-						<g:if test="${crInstance?.status.toInteger() < 4 }">
+						<g:if test="${crInstance?.status.toInteger() < 5 }">
 							<g:actionSubmit action="next" class="simple_buttons"
 								 value="${message(code: 'default.button.next.label', default: 'Next Stage')}" />
 						</g:if>

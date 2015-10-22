@@ -21,7 +21,7 @@ class Task {
 		req(unique:true, nullable:false, blank:false)
 		title(nullable:true, blank:true)
 		remark(nullable:true, blank:true)
-		status(inList:["0", "1", "2", "3", "4"]) //0待开发，1开发中, 2单元，3集成，4发布
+		status(inList:["0", "1", "2", "3", "4", "5"]) //0待开发，1开发中, 2单元，3集成，4待发布，5发布
 		user(nullable:false, blank:false)
     }
 	

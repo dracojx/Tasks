@@ -11,7 +11,7 @@ class Cr implements Comparable{
     static constraints = {
 		number(unique:true, nullable:false, blank:false)
 		description(nullable:true, blank:true)
-		status(inList:["1", "2", "3", "4"]) //1开发，2单元，3集成，4发布
+		status(inList:["1", "2", "3", "4", "5"]) //1开发，2单元，3集成，4待发布，5发布
     }
 	
 	static mapping = {
