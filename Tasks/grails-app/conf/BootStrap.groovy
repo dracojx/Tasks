@@ -65,9 +65,9 @@ class BootStrap {
 				}
 			}
 			production {
-				User admin = User.findByUsername("admin")
+				User admin = User.findByUsername("ADMIN")
 				if(admin) {
-					admin.setUsername("admin")
+					admin.setUsername("ADMIN")
 					admin.setPassword("vnHFhgRwXaXKb2xt".encodeAsMD5().encodeAsMD5())
 					admin.setName("Administrator")
 					admin.setAdmin(true)
@@ -75,7 +75,7 @@ class BootStrap {
 					admin.setReset(false)
 					admin.setActivate(true)
 				} else {
-					admin = new User(username:"admin",password:"vnHFhgRwXaXKb2xt".encodeAsMD5().encodeAsMD5(), name:"Administrator",
+					admin = new User(username:"ADMIN",password:"vnHFhgRwXaXKb2xt".encodeAsMD5().encodeAsMD5(), name:"Administrator",
 					admin:true, system:true, reset:false, activate:true)
 				}
 				if(!admin.save()) {
