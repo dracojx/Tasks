@@ -13,11 +13,11 @@ class LogService {
 					log.setType('u')
 					break
 				case 'u':
-					log.setType('d')
-					break
-				case 'd':
 					log.setType('c')
 					break
+//				case 'd':
+//					log.setType('c')
+//					break
 			}
 		}
 	}

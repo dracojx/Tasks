@@ -65,7 +65,8 @@
 				<tbody>
 					<g:each in="${taskInstanceList}" status="i" var="taskInstance">
 						<tr class="${taskInstance.activate? '':'inactivate'}">
-							<td><g:link action="edit" id="${taskInstance.id}"
+							<td><g:link controller="task" action="edit"
+									id="${taskInstance.id}"
 									title="${message(code:'default.button.edit.label') }">
 									<span class="label"> ${fieldValue(bean: taskInstance, field: "req")}
 									</span>
@@ -74,14 +75,19 @@
 							<td><span class="label"> ${fieldValue(bean: taskInstance, field: "title")}
 							</span></td>
 
-							<td class="nowrap"><span class="label"> <g:message
-										code="task.status.${taskInstance.status}" />
+							<td class="nowrap"><span class="label"> <g:if
+										test="${taskInstance.activate }">
+										<g:message code="task.status.${taskInstance.status}" />
+									</g:if> <g:else>
+										<g:message code="task.activate.${taskInstance.activate}" />
+									</g:else>
 							</span></td>
 
 							<td class="nowrap"><span class="label"> ${fieldValue(bean: taskInstance, field: "user")}
 							</span></td>
 
-							<td class="nowrap"><g:each in="${taskInstance.logs }" var="l">
+							<td class="nowrap"><g:each in="${taskInstance.logs }"
+									var="l">
 									<g:link controller="product" action="edit" id="${l.product.id}"
 										title="${message(code:'default.button.edit.label') }">
 										<span class="label"> [<g:message

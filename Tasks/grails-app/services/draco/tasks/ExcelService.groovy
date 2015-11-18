@@ -62,6 +62,7 @@ class ExcelService {
 		this.writeTasks(wb, cellStyles, locale)
 		this.writeCrs(wb, cellStyles, locale)
 		this.writeServices(wb, cellStyles, locale)
+		this.writePreparing(wb, cellStyles, locale)
 		
 		wb.write(os)
 		os.close()
@@ -440,11 +441,6 @@ class ExcelService {
 				StringBuffer sb = new StringBuffer()
 				it.getLogs().each {Log log ->
 					def message = "[${messageSource.getMessage('log.type.'+log.getType(), null, locale)}] ${log.getProduct().toString()}"
-//					messageSource.getMessage('task.logs.log', 
-//						[
-//							messageSource.getMessage('log.type.'+log.getType(), null, locale),
-//							log.getProduct().toString()
-//						] as Object[], locale)
 					sb.append(message).append("\n")
 				}
 				row.createCell(4).setCellValue(sb.toString().trim())
@@ -625,6 +621,129 @@ class ExcelService {
 		//Auto Size
 		for(i in 0..2) {
 			sheet.autoSizeColumn(i)
+		}
+		
+	}
+	
+	private writePreparing(Workbook wb, Map<String, CellStyle> cellStyles, Locale locale) {
+		
+		//Tasks
+		List<Task> tasks = Task.findAllByStatusAndActivate('4', true)
+		
+		if(tasks) {
+			//Task Header
+			List<String> taskHeader = [
+				messageSource.getMessage('task.req.label', null, locale),
+				messageSource.getMessage('task.title.label', null, locale),
+				messageSource.getMessage('task.logs.label', null, locale),
+				messageSource.getMessage('task.crs.label', null, locale)
+				]
+			
+			//Cr Header
+			List<String> crHeader = [
+				messageSource.getMessage('cr.number.label', null, locale),
+				messageSource.getMessage('cr.description.label', null, locale),
+				messageSource.getMessage('cr.status.label', null, locale)
+				]
+			
+			//Create Sheet
+			Sheet sheet = wb.createSheet(messageSource.getMessage('excel.sheet.preparing.label', null, locale))
+			
+			//Write taskHeader
+			Row headerRow = sheet.createRow(0)
+			taskHeader.eachWithIndex {it, i ->
+				Cell cell = headerRow.createCell(i)
+				cell.setCellValue(it)
+				cell.setCellStyle(cellStyles.get('title'))
+			}
+			
+			//Write crHeader
+			crHeader.eachWithIndex {it, i ->
+				Cell cell = headerRow.createCell(i + 5)
+				cell.setCellValue(it)
+				cell.setCellStyle(cellStyles.get('title'))
+			}
+			
+			//Crs
+			SortedSet<Cr> crs = [] as SortedSet
+			tasks.each {
+				crs.addAll(it.getCrs())
+			}
+			crs = crs.unique()
+			
+			//Write Tasks
+			def rowNumber = 1
+			tasks.each {
+				//Write Data
+				Row row = sheet.createRow(rowNumber)
+				if(it.getReq()) {
+					row.createCell(0).setCellValue(it.getReq())
+				}
+				if(it.getTitle()) {
+					row.createCell(1).setCellValue(it.getTitle())
+				}
+				if(it.getLogs()) {
+					StringBuffer sb = new StringBuffer()
+					it.getLogs().each {Log log ->
+						def message = "[${messageSource.getMessage('log.type.'+log.getType(), null, locale)}] ${log.getProduct().toString()}"
+						sb.append(message).append("\n")
+					}
+					row.createCell(2).setCellValue(sb.toString().trim())
+				}
+				if(it.getCrs()) {
+					StringBuffer sb = new StringBuffer()
+					it.getCrs().each {Cr cr ->
+						sb.append(cr.toString()).append("\n")
+					}
+					row.createCell(3).setCellValue(sb.toString().trim())
+				}
+			
+				//Set CellStyle
+				for(i in 0..3) {
+					Cell cell = row.getCell(i)
+					if(!cell) {
+						cell = row.createCell(i)
+					}
+					cell.setCellStyle(cellStyles.get('default'))
+				}
+				
+				rowNumber++
+			}
+			
+			//Write Crs
+			rowNumber = 1
+			crs.each {
+				//Write Data
+				Row row = sheet.getRow(rowNumber)
+				if(!row) {
+					row = sheet.createRow(rowNumber)
+				}
+				if(it.getNumber()) {
+					row.createCell(5).setCellValue(it.getNumber())
+				}
+				if(it.getDescription()) {
+					row.createCell(6).setCellValue(it.getDescription())
+				}
+				if(it.getStatus()) {
+					row.createCell(7).setCellValue(messageSource.getMessage('cr.status.'+it.getStatus(), null, locale))
+				}
+				
+				//Set CellStyle
+				for(i in 5..7) {
+					Cell cell = row.getCell(i)
+					if(!cell) {
+						cell = row.createCell(i)
+					}
+					cell.setCellStyle(cellStyles.get('default'))
+				}
+				
+				rowNumber++
+			}
+			
+			//Auto Size
+			for(i in 0..7) {
+				sheet.autoSizeColumn(i)
+			}
 		}
 		
 	}
