@@ -19,6 +19,8 @@
 <asset:javascript src="jQuery/md5.js" />
 <!-- The Main JS File -->
 <asset:javascript src="main.js" />
+<!-- Favicon -->
+<asset:link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
 </head>
 <body>
 	<div class="top_panel"></div>

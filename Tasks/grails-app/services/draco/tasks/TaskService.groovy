@@ -86,6 +86,14 @@ class TaskService {
 		task.save flush:true
     }
 	
+	def publish(Task task) {
+		task.setStatus("5")
+		task.getCrs().each {
+			it.setStatus("5")
+		}
+		task.save flush:true
+	}
+	
 	def removeCr(Task task, def cId) {
 		Cr cr = Cr.get(cId)
 		task.getCrs().remove(cr)

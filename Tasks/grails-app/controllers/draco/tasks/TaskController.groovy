@@ -266,6 +266,13 @@ class TaskController {
 		flash.message = message(code: 'default.updated.message', args: ['', taskInstance.getReq()])
 		redirect action: 'edit', id: taskInstance.getId()
 	}
+	
+	def publish(Task taskInstance) {
+		taskInstance.setUpdateDate(new Date())
+		taskService.publish(taskInstance)
+		flash.message = message(code: 'default.updated.message', args: ['', taskInstance.getReq()])
+		redirect controller: 'overview', action: 'index'
+	}
 
 	protected void notFound() {
 		request.withFormat {

@@ -100,7 +100,7 @@
 	</g:if>
 
 	<g:if test="${preparingList }">
-		<div class="g_6">
+		<div class="g_12">
 			<div class="widget_header">
 				<h4 class="widget_header_title wwIcon i_16_tables">
 					<g:message code="overview.task.status.4.label" />
@@ -118,6 +118,8 @@
 							<th><g:message code="task.logs.label" default="Products" /></th>
 
 							<th><g:message code="task.crs.label" default="Crs" /></th>
+							
+							<th><g:message code="default.actions.label"/></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -153,6 +155,16 @@
 										</g:link>
 										<br />
 									</g:each></td>
+									
+								<td>
+									<g:link controller="task" action="publish" id="${taskInstance.id}">
+										<div class="simple_buttons">
+											<div>
+												<g:message code="default.button.publish.label" />
+											</div>
+										</div>
+									</g:link>
+								</td>
 							</tr>
 						</g:each>
 					</tbody>
@@ -162,7 +174,7 @@
 	</g:if>
 
 	<g:if test="${crInstanceList }">
-		<div class="g_6">
+		<div class="g_12">
 			<div class="widget_header">
 				<h4 class="widget_header_title wwIcon i_16_tables">
 					<g:message code="overview.cr.status.4.label" />

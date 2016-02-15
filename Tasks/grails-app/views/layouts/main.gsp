@@ -21,6 +21,8 @@
 <asset:javascript src="jQuery/md5.js" />
 <!-- The Main JS File -->
 <asset:javascript src="main.js" />
+<!-- Favicon -->
+<asset:link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
 <g:layoutHead />
 </head>
 <body>
@@ -37,10 +39,18 @@
 				</g:link>
 				<div class="top_links">
 					<ul>
-						<li class="i_22_logout"><g:link controller="user"
-								action="logout">
+						<li class="i_22_logout">
+							<g:link controller="user" action="logout">
 								<span class="label"><g:message code="logout.label" /></span>
-							</g:link></li>
+							</g:link>
+						</li>
+						<g:if test="${!session.system }">
+							<li class="i_22_forms">
+								<g:link controller="user" action="reset" id="${session.userId }">
+									<span class="label"><g:message code="default.button.reset.label" /></span>
+								</g:link>
+							</li>
+						</g:if>
 					</ul>
 				</div>
 			</div>

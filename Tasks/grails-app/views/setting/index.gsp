@@ -9,18 +9,6 @@
 <body>
 
 	<div class="g_12">
-		<g:if test="${!session.system }">
-			<div class="g_2">
-				<g:link controller="user" action="reset" id="${session.userId }"
-					title="${message(code:'default.button.reset.label') }">
-					<div class="simple_buttons">
-						<div class="bwIcon i_16_spinner">
-							<g:message code="default.button.reset.label" />
-						</div>
-					</div>
-				</g:link>
-			</div>
-		</g:if>
 		<div class="g_2">
 			<g:link controller="setting" action="download"
 				title="${message(code:'default.button.download.label') }">
