@@ -22,6 +22,7 @@ class TaskController {
 	def index() {
 		params.sort = params.sort ?: 'updateDate'
 		params.order = params.order ?: 'desc'
+		params.max = 100
 		respond Task.list(params)
 	}
 
