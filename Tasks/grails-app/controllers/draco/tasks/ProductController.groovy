@@ -18,6 +18,7 @@ class ProductController {
     def index() {
 		params.sort = params.sort ?: 'itemId'
 		params.order = params.order ?: 'asc'
+		params.max = 100
         respond Product.list(params)
     }
 	
