@@ -215,16 +215,23 @@ class ExcelService {
 				def createDate = null
 				def updateDate = null
 				def remark = row.getCell(9).getStringCellValue()
+				def activate = true
 				def logs = [] as SortedSet
 				def crs = [] as SortedSet
 				def tags = [] as SortedSet
 				def products = []
+				
+				Cell cell = row.getCell(0)
+				if(cell) {
+					def font = wb.getFontAt(cell.getCellStyle().getFontIndex())
+					activate = !font.getStrikeout()
+				}
 
 				def userName = row.getCell(2).getStringCellValue()
 				if(userName) {
 					user = User.findByName(userName)
 					if(!user) {
-						user = new User(username:userName, name:userName, password:'123456')
+						user = new User(username:userName, name:userName, password:'123456', activate:false)
 						user.save flush:true
 					}
 				} else {
@@ -233,7 +240,7 @@ class ExcelService {
 
 				def statusName = row.getCell(3).getStringCellValue()
 				if(statusName) {
-					for(j in 0..5) {
+					for(x in 0..5) {
 						if(statusName?.equalsIgnoreCase(messageSource.getMessage('task.status.'+x, null, locale))) {
 							status = x.toString()
 							break
@@ -288,7 +295,7 @@ class ExcelService {
 					}
 				} else {
 					createDate = new Date()
-					updateDate = createDate()
+					updateDate = createDate
 				}
 				
 				def task = Task.findByReq(req)
@@ -300,6 +307,7 @@ class ExcelService {
 				task.setRemark(remark)
 				task.setStatus(status)
 				task.setUser(user)
+				task.setActivate(activate)
 				task.setCreateDate(createDate)
 				task.setUpdateDate(updateDate)
 				task.setCrs(crs)
