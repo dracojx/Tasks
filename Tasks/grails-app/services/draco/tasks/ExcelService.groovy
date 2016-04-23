@@ -2,6 +2,8 @@ package draco.tasks
 
 import grails.transaction.Transactional
 
+import java.text.SimpleDateFormat
+
 import org.apache.poi.POIXMLException
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.CellStyle
@@ -16,9 +18,9 @@ import org.springframework.web.servlet.support.RequestContextUtils
 
 @Transactional
 class ExcelService {
-	
+
 	def messageSource
-	
+
 	//Upload Excel
 	def List<String> readExcel(InputStream is, def userId) {
 		def request = RequestContextHolder.currentRequestAttributes().request
@@ -32,42 +34,43 @@ class ExcelService {
 			return errors
 		}
 		errors.addAll(this.readProducts(wb, locale, userId))
-//		errors.addAll(this.readCrs(wb, locale))
+		errors.addAll(this.readTasks(wb, locale, userId))
+		//		errors.addAll(this.readCrs(wb, locale))
 		errors.addAll(this.readServices(wb, locale))
 		return errors
 	}
-	
+
 	//Download Excel
 	def writeExcel(OutputStream os) {
 		def request = RequestContextHolder.currentRequestAttributes().request
 		Locale locale = RequestContextUtils.getLocale(request)
-		
+
 		Workbook wb = new XSSFWorkbook()
-		
+
 		Font defaultFont = this.defaultFont(wb, locale)
 		Font titleFont = this.titleFont(wb, locale)
 		Font inactivateFont = this.inactivateFont(wb, locale)
-		
+
 		CellStyle defaultCS = this.defaultCellStyle(wb, defaultFont)
 		CellStyle titleCS = this.titleCellStyle(wb, titleFont)
 		CellStyle inactivateCS = this.inactivateCellStyle(wb, inactivateFont)
-		
+
 		Map<String, CellStyle> cellStyles = [
-				default:defaultCS,
-				title:titleCS,
-				inactivate: inactivateCS
-			]
-		
+			default:defaultCS,
+			title:titleCS,
+			inactivate: inactivateCS
+		]
+
 		this.writeProducts(wb, cellStyles, locale)
 		this.writeTasks(wb, cellStyles, locale)
 		this.writeCrs(wb, cellStyles, locale)
 		this.writeServices(wb, cellStyles, locale)
 		this.writePreparing(wb, cellStyles, locale)
-		
+
 		wb.write(os)
 		os.close()
 	}
-	
+
 	private List<String> readProducts(Workbook wb, Locale locale, def userId) {
 		def errors = []
 		Sheet sheet = wb.getSheet(messageSource.getMessage('product.label', null, locale))
@@ -87,8 +90,8 @@ class ExcelService {
 				def logs = [] as SortedSet
 				def tags = [] as SortedSet
 				def tasks = []
-				
-				
+
+
 				def modeName = row.getCell(3).getStringCellValue()
 				if(modeName?.equalsIgnoreCase(messageSource.getMessage('product.mode.s', null, locale))) {
 					mode = 's'
@@ -142,7 +145,7 @@ class ExcelService {
 					}
 				}
 				Task.saveAll(tasks)
-				
+
 				def tagNames = row.getCell(9).getStringCellValue()?.split('\n')
 				tagNames.each {
 					if(it) {
@@ -153,7 +156,7 @@ class ExcelService {
 						tags.add(tag)
 					}
 				}
-				
+
 				def product = Product.findByItemId(itemId.toUpperCase())
 				if(!product) {
 					product = new Product()
@@ -168,14 +171,16 @@ class ExcelService {
 				product.setSource(source)
 				product.setTarget(target)
 				product.setTags(tags)
-				
+
 				if(product.validate()) {
 					product.save flush:true
 				} else {
-					errors.add(messageSource.getMessage('default.import.error.message', 
-						[messageSource.getMessage('product.label', null, locale), i + 1] as Object[], locale))
+					errors.add(messageSource.getMessage('default.import.error.message',
+							[
+								messageSource.getMessage('product.label', null, locale),
+								i + 1] as Object[], locale))
 				}
-				
+
 				tasks.each {
 					def log = Log.findByTaskAndProduct(it, product)
 					if(!log) {
@@ -190,10 +195,153 @@ class ExcelService {
 				Log.saveAll(logs)
 			}
 		}
-		
+
 		return errors
 	}
-	
+
+	//TODO
+	private List<String> readTasks(Workbook wb, Locale locale, def userId) {
+		def errors = []
+		Sheet sheet = wb.getSheet(messageSource.getMessage('task.label', null, locale))
+		if(sheet) {
+			def tasks = []
+			def size = sheet.getPhysicalNumberOfRows() - 1;
+			for(i in 1..size) {
+				Row row = sheet.getRow(i)
+				def req = row.getCell(0).getStringCellValue()
+				def title = row.getCell(1).getStringCellValue()
+				def user = null
+				def status = '0'
+				def createDate = null
+				def updateDate = null
+				def remark = row.getCell(9).getStringCellValue()
+				def activate = true
+				def logs = [] as SortedSet
+				def crs = [] as SortedSet
+				def tags = [] as SortedSet
+				def products = []
+				
+				Cell cell = row.getCell(0)
+				if(cell) {
+					def font = wb.getFontAt(cell.getCellStyle().getFontIndex())
+					activate = !font.getStrikeout()
+				}
+
+				def userName = row.getCell(2).getStringCellValue()
+				if(userName) {
+					user = User.findByName(userName)
+					if(!user) {
+						user = new User(username:userName, name:userName, password:'123456', activate:false)
+						user.save flush:true
+					}
+				} else {
+					user = User.get(userId)
+				}
+
+				def statusName = row.getCell(3).getStringCellValue()
+				if(statusName) {
+					for(x in 0..5) {
+						if(statusName?.equalsIgnoreCase(messageSource.getMessage('task.status.'+x, null, locale))) {
+							status = x.toString()
+							break
+						}
+					}
+				}
+				
+				def productItemIds = row.getCell(4).getStringCellValue().split('\n')
+				productItemIds.each {
+					if(it) {
+						def product = Product.findByItemId(it)
+						if(!product) {
+							product = new Product(itemId:it)
+						}
+						products.add(product)
+					}
+				}
+				Product.saveAll(products)
+				
+				def crNumbers = row.getCell(5).getStringCellValue().split('\n')
+				crNumbers.each {
+					if(it) {
+						def cr = Cr.findByNumber(it)
+						if(!cr) {
+							cr = new Cr(number:it)
+						}
+						crs.add(cr)
+					}
+				}
+				Cr.saveAll(crs)
+
+				def tagNames = row.getCell(6).getStringCellValue()?.split('\n')
+				tagNames.each {
+					if(it) {
+						def tag = Tag.findByName(it)
+						if(!tag) {
+							tag = new Tag(name:it)
+						}
+						tags.add(tag)
+					}
+				}
+				
+				def createDateString = row.getCell(7).getStringCellValue()
+				if(createDateString) {
+					def df = new SimpleDateFormat("yyyy/MM/dd")
+					createDate = df.parse(createDateString)
+					def updateDateString = row.getCell(8).getStringCellValue()
+					if(updateDateString) {
+						updateDate = df.parse(updateDateString)
+					} else {
+						updateDate = new Date()
+					}
+				} else {
+					createDate = new Date()
+					updateDate = createDate
+				}
+				
+				def task = Task.findByReq(req)
+				if(!task) {
+					task = new Task()
+				}
+				task.setReq(req)
+				task.setTitle(title)
+				task.setRemark(remark)
+				task.setStatus(status)
+				task.setUser(user)
+				task.setActivate(activate)
+				task.setCreateDate(createDate)
+				task.setUpdateDate(updateDate)
+				task.setCrs(crs)
+				task.setTags(tags)
+
+				if(task.validate()) {
+					task.save flush:true
+				} else {
+					errors.add(messageSource.getMessage('default.import.error.message',
+							[
+								messageSource.getMessage('task.label', null, locale),
+								i + 1] as Object[], locale))
+				}
+
+				products.each {
+					def log = Log.findByTaskAndProduct(task, it)
+					if(!log) {
+						def type = 'u'
+						if(!task.getLogs() || task.getLogs().isEmpty()) {
+							type = 'c'
+						}
+						log =  new Log(type:type, task:task, product:it, user:task.getUser())
+					}
+					logs.add(log)
+				}
+				Log.saveAll(logs)
+
+
+			}
+		}
+
+		return errors
+	}
+
 	private List<String> readCrs(Workbook wb, Locale locale) {
 		def errors = []
 		Sheet sheet = wb.getSheet(messageSource.getMessage('cr.label', null, locale))
@@ -206,8 +354,8 @@ class ExcelService {
 				def descripion = row.getCell(1).getStringCellValue()
 				def status = '1'
 				def products = [] as SortedSet
-				
-				
+
+
 				for(x in 1..4) {
 					def statusName = row.getCell(2).getStringCellValue()
 					if(statusName?.equalsIgnoreCase(messageSource.getMessage('cr.status.'+x, null, locale))) {
@@ -225,7 +373,7 @@ class ExcelService {
 						products.add(product)
 					}
 				}
-				
+
 				def cr = Cr.findByNumber(number.toUpperCase())
 				if(!cr) {
 					cr = new Cr()
@@ -237,15 +385,17 @@ class ExcelService {
 				if(cr.validate()) {
 					crs.add(cr)
 				} else {
-					errors.add(messageSource.getMessage('default.import.error.message', 
-						[messageSource.getMessage('cr.label', null, locale), i + 1] as Object[], locale))
+					errors.add(messageSource.getMessage('default.import.error.message',
+							[
+								messageSource.getMessage('cr.label', null, locale),
+								i + 1] as Object[], locale))
 				}
 			}
 			Cr.saveAll(crs)
 		}
 		return errors
 	}
-	
+
 	private List<String> readServices(Workbook wb, Locale locale) {
 		def errors = []
 		Sheet sheet = wb.getSheet(messageSource.getMessage('service.label', null, locale))
@@ -257,7 +407,7 @@ class ExcelService {
 				def name = row.getCell(0)?.getStringCellValue()
 				def description = row.getCell(1)?.getStringCellValue()
 				def vendor = row.getCell(2)?.getStringCellValue()
-				
+
 				def service = Service.findByName(name.toUpperCase())
 				if(!service) {
 					service = new Service()
@@ -268,17 +418,19 @@ class ExcelService {
 				if(service.validate()) {
 					services.add(service)
 				} else {
-					errors.add(messageSource.getMessage('default.import.error.message', 
-						[messageSource.getMessage('service.label', null, locale), i + 1] as Object[], locale))
+					errors.add(messageSource.getMessage('default.import.error.message',
+							[
+								messageSource.getMessage('service.label', null, locale),
+								i + 1] as Object[], locale))
 				}
 			}
 			Service.saveAll(services)
 		}
 		return errors
 	}
-		
+
 	private writeProducts(Workbook wb, Map<String, CellStyle> cellStyles, Locale locale) {
-		
+
 		//Header
 		List<String> header = [
 			messageSource.getMessage('product.itemId.label', null, locale),
@@ -291,11 +443,11 @@ class ExcelService {
 			messageSource.getMessage('product.target.label', null, locale),
 			messageSource.getMessage('product.logs.label', null, locale),
 			messageSource.getMessage('product.tags.label', null, locale)
-			]
-		
+		]
+
 		//Create Sheet
 		Sheet sheet = wb.createSheet(messageSource.getMessage('product.label', null, locale))
-		
+
 		//Write Header
 		Row headerRow = sheet.createRow(0)
 		header.eachWithIndex {it, i ->
@@ -303,8 +455,8 @@ class ExcelService {
 			cell.setCellValue(it)
 			cell.setCellStyle(cellStyles.get('title'))
 		}
-		
-		
+
+
 		//Products
 		List<Product> products = Product.list()
 		def rowNumber = 1
@@ -338,12 +490,12 @@ class ExcelService {
 			if(it.getLogs()) {
 				StringBuffer sb = new StringBuffer()
 				it.getLogs().each {Log log ->
-					def message = messageSource.getMessage('product.logs.log', 
-						[
-							messageSource.getMessage('log.type.'+log.getType(), null, locale),
-							log.getTask().toString(),
-							log.getUser().toString()
-						] as Object[], locale)
+					def message = messageSource.getMessage('product.logs.log',
+							[
+								messageSource.getMessage('log.type.'+log.getType(), null, locale),
+								log.getTask().toString(),
+								log.getUser().toString()
+							] as Object[], locale)
 					sb.append(message).append("\n")
 				}
 				row.createCell(8).setCellValue(sb.toString().trim())
@@ -355,7 +507,7 @@ class ExcelService {
 				}
 				row.createCell(9).setCellValue(sb.toString().trim())
 			}
-			
+
 			//Set CellStyle
 			if(it.isActivate()) {
 				//Activated
@@ -376,23 +528,23 @@ class ExcelService {
 					cell.setCellStyle(cellStyles.get('inactivate'))
 				}
 			}
-			
+
 			//List Wrap
 			for(i in 8..9) {
 				row.getCell(i).getCellStyle().setWrapText(true)
 			}
-			
+
 			rowNumber++
 		}
-		
+
 		//Auto Size
 		for(i in 0..9) {
 			sheet.autoSizeColumn(i)
 		}
 	}
-	
+
 	private writeTasks(Workbook wb, Map<String, CellStyle> cellStyles, Locale locale) {
-		
+
 		//Header
 		List<String> header = [
 			messageSource.getMessage('task.req.label', null, locale),
@@ -405,11 +557,11 @@ class ExcelService {
 			messageSource.getMessage('task.createDate.label', null, locale),
 			messageSource.getMessage('task.updateDate.label', null, locale),
 			messageSource.getMessage('task.remark.label', null, locale)
-			]
-		
+		]
+
 		//Create Sheet
 		Sheet sheet = wb.createSheet(messageSource.getMessage('task.label', null, locale))
-		
+
 		//Write Header
 		Row headerRow = sheet.createRow(0)
 		header.eachWithIndex {it, i ->
@@ -417,8 +569,8 @@ class ExcelService {
 			cell.setCellValue(it)
 			cell.setCellStyle(cellStyles.get('title'))
 		}
-		
-		
+
+
 		//Tasks
 		List<Task> tasks = Task.list()
 		def rowNumber = 1
@@ -468,7 +620,7 @@ class ExcelService {
 			if(it.getRemark()) {
 				row.createCell(9).setCellValue(it.getRemark())
 			}
-			
+
 			//Set CellStyle
 			if(it.isActivate()) {
 				//Activated
@@ -489,34 +641,34 @@ class ExcelService {
 					cell.setCellStyle(cellStyles.get('inactivate'))
 				}
 			}
-			
+
 			//List Wrap
 			for(i in 8..9) {
 				row.getCell(i).getCellStyle().setWrapText(true)
 			}
-			
+
 			rowNumber++
 		}
-		
+
 		//Auto Size
 		for(i in 0..9) {
 			sheet.autoSizeColumn(i)
 		}
 	}
-	
+
 	private writeCrs(Workbook wb, Map<String, CellStyle> cellStyles, Locale locale) {
-		
+
 		//Header
 		List<String> header = [
 			messageSource.getMessage('cr.number.label', null, locale),
 			messageSource.getMessage('cr.description.label', null, locale),
 			messageSource.getMessage('cr.status.label', null, locale),
 			messageSource.getMessage('cr.products.label', null, locale)
-			]
-		
+		]
+
 		//Create Sheet
 		Sheet sheet = wb.createSheet(messageSource.getMessage('cr.label', null, locale))
-		
+
 		//Write Header
 		Row headerRow = sheet.createRow(0)
 		header.eachWithIndex {it, i ->
@@ -524,7 +676,7 @@ class ExcelService {
 			cell.setCellValue(it)
 			cell.setCellStyle(cellStyles.get('title'))
 		}
-		
+
 		//Crs
 		List<Cr> crs = Cr.list()
 		def rowNumber = 1
@@ -547,7 +699,7 @@ class ExcelService {
 				}
 				row.createCell(3).setCellValue(sb.toString().trim())
 			}
-			
+
 			//Set CellStyle
 			for(i in 0..3) {
 				Cell cell = row.getCell(i)
@@ -556,32 +708,32 @@ class ExcelService {
 				}
 				cell.setCellStyle(cellStyles.get('default'))
 			}
-			
+
 			//List Wrap
 			row.getCell(3).getCellStyle().setWrapText(true)
-			
+
 			rowNumber++
 		}
-		
+
 		//Auto Size
 		for(i in 0..3) {
 			sheet.autoSizeColumn(i)
 		}
-		
+
 	}
-	
+
 	private writeServices(Workbook wb, Map<String, CellStyle> cellStyles, Locale locale) {
-		
+
 		//Header
 		List<String> header = [
 			messageSource.getMessage('service.name.label', null, locale),
 			messageSource.getMessage('service.description.label', null, locale),
 			messageSource.getMessage('service.vendor.label', null, locale)
-			]
-		
+		]
+
 		//Create Sheet
 		Sheet sheet = wb.createSheet(messageSource.getMessage('service.label', null, locale))
-		
+
 		//Write Header
 		Row headerRow = sheet.createRow(0)
 		header.eachWithIndex {it, i ->
@@ -589,7 +741,7 @@ class ExcelService {
 			cell.setCellValue(it)
 			cell.setCellStyle(cellStyles.get('title'))
 		}
-		
+
 		//Services
 		List<Service> services = Service.list()
 		def rowNumber = 1
@@ -605,7 +757,7 @@ class ExcelService {
 			if(it.getVendor()) {
 				row.createCell(2).setCellValue(it.getVendor())
 			}
-			
+
 			//Set CellStyle
 			for(i in 0..2) {
 				Cell cell = row.getCell(i)
@@ -614,22 +766,22 @@ class ExcelService {
 				}
 				cell.setCellStyle(cellStyles.get('default'))
 			}
-			
+
 			rowNumber++
 		}
-		
+
 		//Auto Size
 		for(i in 0..2) {
 			sheet.autoSizeColumn(i)
 		}
-		
+
 	}
-	
+
 	private writePreparing(Workbook wb, Map<String, CellStyle> cellStyles, Locale locale) {
-		
+
 		//Tasks
 		List<Task> tasks = Task.findAllByStatusAndActivate('4', true)
-		
+
 		if(tasks) {
 			//Task Header
 			List<String> taskHeader = [
@@ -637,18 +789,18 @@ class ExcelService {
 				messageSource.getMessage('task.title.label', null, locale),
 				messageSource.getMessage('task.logs.label', null, locale),
 				messageSource.getMessage('task.crs.label', null, locale)
-				]
-			
+			]
+
 			//Cr Header
 			List<String> crHeader = [
 				messageSource.getMessage('cr.number.label', null, locale),
 				messageSource.getMessage('cr.description.label', null, locale),
 				messageSource.getMessage('cr.status.label', null, locale)
-				]
-			
+			]
+
 			//Create Sheet
 			Sheet sheet = wb.createSheet(messageSource.getMessage('excel.sheet.preparing.label', null, locale))
-			
+
 			//Write taskHeader
 			Row headerRow = sheet.createRow(0)
 			taskHeader.eachWithIndex {it, i ->
@@ -656,21 +808,21 @@ class ExcelService {
 				cell.setCellValue(it)
 				cell.setCellStyle(cellStyles.get('title'))
 			}
-			
+
 			//Write crHeader
 			crHeader.eachWithIndex {it, i ->
 				Cell cell = headerRow.createCell(i + 5)
 				cell.setCellValue(it)
 				cell.setCellStyle(cellStyles.get('title'))
 			}
-			
+
 			//Crs
 			SortedSet<Cr> crs = [] as SortedSet
 			tasks.each {
 				crs.addAll(it.getCrs())
 			}
 			crs = crs.unique()
-			
+
 			//Write Tasks
 			def rowNumber = 1
 			tasks.each {
@@ -697,7 +849,7 @@ class ExcelService {
 					}
 					row.createCell(3).setCellValue(sb.toString().trim())
 				}
-			
+
 				//Set CellStyle
 				for(i in 0..3) {
 					Cell cell = row.getCell(i)
@@ -706,10 +858,10 @@ class ExcelService {
 					}
 					cell.setCellStyle(cellStyles.get('default'))
 				}
-				
+
 				rowNumber++
 			}
-			
+
 			//Write Crs
 			rowNumber = 1
 			crs.each {
@@ -727,7 +879,7 @@ class ExcelService {
 				if(it.getStatus()) {
 					row.createCell(7).setCellValue(messageSource.getMessage('cr.status.'+it.getStatus(), null, locale))
 				}
-				
+
 				//Set CellStyle
 				for(i in 5..7) {
 					Cell cell = row.getCell(i)
@@ -736,18 +888,18 @@ class ExcelService {
 					}
 					cell.setCellStyle(cellStyles.get('default'))
 				}
-				
+
 				rowNumber++
 			}
-			
+
 			//Auto Size
 			for(i in 0..7) {
 				sheet.autoSizeColumn(i)
 			}
 		}
-		
+
 	}
-	
+
 	private CellStyle defaultCellStyle(Workbook wb, Font font) {
 		CellStyle style = wb.createCellStyle()
 		style.setBorderTop(CellStyle.BORDER_THIN)
@@ -756,10 +908,10 @@ class ExcelService {
 		style.setBorderRight(CellStyle.BORDER_THIN)
 		style.setVerticalAlignment(CellStyle.VERTICAL_CENTER)
 		style.setFont(font)
-		
+
 		return style
 	}
-	
+
 	private CellStyle titleCellStyle(Workbook wb, Font font) {
 		CellStyle style = wb.createCellStyle()
 		style.setBorderTop(CellStyle.BORDER_THIN)
@@ -770,10 +922,10 @@ class ExcelService {
 		style.setFillPattern(CellStyle.SOLID_FOREGROUND)
 		style.setFillForegroundColor(IndexedColors.TEAL.getIndex())
 		style.setFont(font)
-		
+
 		return style
 	}
-	
+
 	private CellStyle inactivateCellStyle(Workbook wb, Font font) {
 		CellStyle style = wb.createCellStyle()
 		style.setBorderTop(CellStyle.BORDER_THIN)
@@ -784,17 +936,17 @@ class ExcelService {
 		style.setFillPattern(CellStyle.SOLID_FOREGROUND)
 		style.setFillForegroundColor(IndexedColors.GREY_40_PERCENT.getIndex())
 		style.setFont(font)
-		
+
 		return style
 	}
-	
+
 	private Font defaultFont(Workbook wb, Locale locale) {
 		Font font = wb.createFont()
 		font.setFontName(messageSource.getMessage('default.excel.font.name', null, locale))
 		font.setFontHeight(8)
 		return font
 	}
-	
+
 	private Font titleFont(Workbook wb, Locale locale) {
 		Font font = wb.createFont()
 		font.setFontName(messageSource.getMessage('default.excel.font.name', null, locale))
@@ -803,7 +955,7 @@ class ExcelService {
 		font.setColor(IndexedColors.WHITE.getIndex())
 		return font
 	}
-	
+
 	private Font inactivateFont(Workbook wb, Locale locale) {
 		Font font = wb.createFont()
 		font.setFontName(messageSource.getMessage('default.excel.font.name', null, locale))
