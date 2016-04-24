@@ -17,6 +17,7 @@ class CrController {
     def index() {
 		params.sort = params.sort ?: 'number'
 		params.order = params.order ?: 'desc'
+		params.max = 100
         respond Cr.list(params)
     }
 	
