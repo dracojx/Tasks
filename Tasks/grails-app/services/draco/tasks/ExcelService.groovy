@@ -35,7 +35,7 @@ class ExcelService {
 		}
 		errors.addAll(this.readProducts(wb, locale, userId))
 		errors.addAll(this.readTasks(wb, locale, userId))
-		//		errors.addAll(this.readCrs(wb, locale))
+		errors.addAll(this.readCrs(wb, locale))
 		errors.addAll(this.readServices(wb, locale))
 		return errors
 	}
@@ -185,7 +185,7 @@ class ExcelService {
 					def log = Log.findByTaskAndProduct(it, product)
 					if(!log) {
 						def type = 'u'
-						if(!product.getLogs() || product.getLogs().isEmpty()) {
+						if((!product.getLogs() || product.getLogs().isEmpty()) && logs.isEmpty()) {
 							type = 'c'
 						}
 						log =  new Log(type:type, task:it, product:product, user:User.get(userId))
@@ -199,7 +199,6 @@ class ExcelService {
 		return errors
 	}
 
-	//TODO
 	private List<String> readTasks(Workbook wb, Locale locale, def userId) {
 		def errors = []
 		Sheet sheet = wb.getSheet(messageSource.getMessage('task.label', null, locale))
@@ -298,11 +297,11 @@ class ExcelService {
 					updateDate = createDate
 				}
 				
-				def task = Task.findByReq(req)
+				def task = Task.findByReq(req.toUpperCase())
 				if(!task) {
 					task = new Task()
 				}
-				task.setReq(req)
+				task.setReq(req.toUpperCase())
 				task.setTitle(title)
 				task.setRemark(remark)
 				task.setStatus(status)
@@ -326,7 +325,7 @@ class ExcelService {
 					def log = Log.findByTaskAndProduct(task, it)
 					if(!log) {
 						def type = 'u'
-						if(!task.getLogs() || task.getLogs().isEmpty()) {
+						if(!it.getLogs() || it.getLogs().isEmpty()) {
 							type = 'c'
 						}
 						log =  new Log(type:type, task:task, product:it, user:task.getUser())
@@ -363,6 +362,7 @@ class ExcelService {
 						break
 					}
 				}
+				
 				def productItemIds = row.getCell(3).getStringCellValue()?.split('\n')
 				productItemIds.each {
 					if(it) {

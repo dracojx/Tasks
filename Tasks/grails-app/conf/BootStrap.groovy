@@ -14,7 +14,7 @@ class BootStrap {
 					admin.errors.each { println it }
 				}
 				def user = new User(username:"jingxuan",password:"123456".encodeAsMD5().encodeAsMD5(), name:"景轩",
-				admin:false, system:false, reset:true, activate:true)
+				admin:true, system:false, reset:false, activate:true)
 				if(!user.save()) {
 					user.errors.each { println it }
 				}
