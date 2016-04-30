@@ -27,23 +27,26 @@ class TaskService {
 			if(!task.getLogs()) {
 				task.setLogs([] as SortedSet)
 			}
+			
 			def itemIds = params.productItemIds.trim().split(" ")
 			itemIds.each {
-				Product product = Product.findByItemId(it.toUpperCase())
-				def type = "u"
-				if(!product) {
-					type = "c"
-					product = new Product(itemId:it, mode:"a", activate:true)
-					product.save flush:true
+				if(it && !it.trim().isEmpty()) {
+					Product product = Product.findByItemId(it.toUpperCase())
+					def type = "u"
+					if(!product) {
+						type = "c"
+						product = new Product(itemId:it, mode:"a", activate:true)
+						product.save flush:true
+					}
+					
+					Log log = Log.findByTaskAndProduct(task, product)
+					if(!log) {
+						log = new Log(type:type, user:task.getUser(), task:task, product:product)
+						task.getLogs().add(log)
+					}
 				}
-				
-				Log log = Log.findByTaskAndProduct(task, product)
-				if(!log) {
-					log = new Log(type:type, user:task.getUser(), task:task, product:product)
-					log.save flush:true
-				}
-				task.getLogs().add(log)
 			}
+			Log.saveAll(task.getLogs())
 		}
 		
 		if(params.tagNames) {
