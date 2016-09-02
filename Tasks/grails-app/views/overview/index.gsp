@@ -1,7 +1,7 @@
 <%@ page import="draco.tasks.Task"%>
 <%@ page import="draco.tasks.Product"%>
+<%@ page import="draco.tasks.Cr"%>
 <%@ page import="draco.tasks.Service"%>
-<%@ page import="draco.tasks.Adapter"%>
 <%@ page import="draco.tasks.User"%>
 <!DOCTYPE html>
 <html>
@@ -27,18 +27,18 @@
 	</div>
 	<div class="g_3 quick_stats">
 		<div class="big_stats users_stats">
-			${Service.count() }
+			${Cr.count() }
 		</div>
 		<h5 class="stats_info">
-			<g:message code="service.label" />
+			<g:message code="cr.label" />
 		</h5>
 	</div>
 	<div class="g_3 quick_stats">
 		<div class="big_stats orders_stats">
-			${Adapter.count() }
+			${Service.count() }
 		</div>
 		<h5 class="stats_info">
-			<g:message code="adapter.label" />
+			<g:message code="service.label" />
 		</h5>
 	</div>
 

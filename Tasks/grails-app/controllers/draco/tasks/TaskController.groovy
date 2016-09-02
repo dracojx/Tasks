@@ -268,6 +268,7 @@ class TaskController {
 		redirect action: 'edit', id: taskInstance.getId()
 	}
 	
+	@Transactional
 	def publish(Task taskInstance) {
 		taskInstance.setUpdateDate(new Date())
 		taskService.publish(taskInstance)

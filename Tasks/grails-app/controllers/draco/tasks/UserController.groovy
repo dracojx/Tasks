@@ -9,7 +9,8 @@ import grails.transaction.Transactional
 class UserController {
 
     static allowedMethods = [save: "POST", update: "PUT", auth: "POST"]
-
+	
+	@Transactional
     def reset(){
 		if(!session.system && (params.id as Long != session.userId)) {
 			flash.errors = [message(code: 'default.unauthorized.message')]
@@ -117,7 +118,7 @@ class UserController {
 		session.invalidate()
 		redirect action:'login'
 	}
-
+	
     def auth() {
 		User user = User.findByUsernameAndPassword(params.user?.trim().toUpperCase(), params.pass.encodeAsMD5())
 	
@@ -153,6 +154,7 @@ class UserController {
 		}
 	}
 	
+	@Transactional
 	def setAdmin() {
 		if(session.system) {
 			User userInstance = User.get(params.id)
@@ -182,6 +184,7 @@ class UserController {
 		}
 	}
 	
+	@Transactional
 	def removeAdmin() {
 		if(User.get(session.userId)?.isAdmin()) {
 			User userInstance = User.get(params.id)

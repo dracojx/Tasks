@@ -355,7 +355,7 @@ class ExcelService {
 				def products = [] as SortedSet
 
 
-				for(x in 1..4) {
+				for(x in 1..5) {
 					def statusName = row.getCell(2).getStringCellValue()
 					if(statusName?.equalsIgnoreCase(messageSource.getMessage('cr.status.'+x, null, locale))) {
 						status = x.toString()
