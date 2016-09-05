@@ -8,7 +8,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <title><g:message code="project.label" default="Task Management" /></title>
 <!-- The Fonts -->
-<link href='http://fonts.useso.com/css?family=Roboto+Condensed:400,700' rel='stylesheet' type='text/css'>
+<!-- <link href='http://fonts.useso.com/css?family=Roboto+Condensed:400,700' rel='stylesheet' type='text/css'> -->
 <!-- The Main CSS File -->
 <asset:stylesheet src="style.css" />
 <!-- jQuery -->
