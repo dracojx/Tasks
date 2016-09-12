@@ -38,14 +38,30 @@ environments {
 		dataSource {
 			pooled = true
 			dbCreate = "update"
-			url = "jdbc:mysql://localhost:3306/task?autoreconnect=true"
+			url = "jdbc:mysql://localhost:3306/task?autoReconnect=true"
 			driverClassName = "com.mysql.jdbc.Driver"
 			username = "taskuser"
 			password = "TASKUSER"
 
 			properties {
-				timeBetweenEvictionRunsMillis = 1000 * 60 * 60 * 3
-				minEvictableIdleTimeMillis = 1000 * 60 * 60 * 3
+				// See http://grails.org/doc/latest/guide/conf.html#dataSource for documentation
+				jmxEnabled = true
+				initialSize = 5
+				maxActive = 50
+				minIdle = 5
+				maxIdle = 25
+				maxWait = 10000
+				maxAge = 10 * 60000
+				timeBetweenEvictionRunsMillis = 1000 * 60 * 30
+				minEvictableIdleTimeMillis = 1000 * 60 * 30
+				validationQuery = "SELECT 1"
+				validationQueryTimeout = 3
+				validationInterval = 15000
+				testOnBorrow = true
+				testWhileIdle = true
+				testOnReturn = false
+				jdbcInterceptors = "ConnectionState"
+				defaultTransactionIsolation = java.sql.Connection.TRANSACTION_READ_COMMITTED
 			}
 
 			//            dbCreate = "update"
