@@ -7,7 +7,22 @@
 * You're free to add application-wide styles to this file and they'll appear at the top of the
 * compiled file, but it's generally better to create a new file per style scope.
 *
-*= require main
-*= require mobile
+*= require style
 *= require_self
 */
+
+/* User Defined */
+.delete img {
+	width: 11px;
+	height: 11px;
+}
+
+tr.inactivate {
+	text-decoration: line-through;
+	background-color: #c0c0c0;
+}
+
+table th, td.nowrap {
+	word-break: keep-all;
+	white-space: nowrap;
+}
